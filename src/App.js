@@ -1,63 +1,81 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route
-} from "react-router-dom";
+import { Switch, Route, useLocation } from "react-router-dom";
 import { Container, Nav, Navbar } from 'react-bootstrap'
 import "bootstrap"
 import './App.css';
-import Training from "./pages/Training";
 import AboutMe from "./pages/AboutMe";
+import Training from "./pages/Training";
 import LaboralExp from "./pages/LaboralExp";
 import Projects from "./pages/Projects";
+import Contact from "./pages/Contact";
 
 function App() {
+  const location = useLocation();
+
+  // I have all pages information here, in one simple array
+  const pages = [
+    {
+      name: "About Me",
+      component: (() => {return <AboutMe/>}),
+      route: "/"
+    },
+    {
+      name: "Training",
+      component: (() => {return <Training/>}),
+      route: "/training"
+    },
+    {
+      name: "Laboral Experience",
+      component: (() => {return <LaboralExp/>}),
+      route: "/laboral"
+    },
+    {
+      name: "Projects I've worked on",
+      component: (() => {return <Projects/>}),
+      route: "/projects"
+    },
+    {
+      name: "Contact",
+      component: (() => {return <Contact/>}),
+      route: "/contact"
+    }
+  ]
+
   return (
-    <div className="App d-flex justify-content-center">
-      <Router>
-        <header className=" ">
-          <Navbar fixed="top" className="navbar-dark bg-navbar pb-5 pt-3" expand="md">
-            <div className="w-100">
-              <Container>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" className=" " />
-                <Navbar.Collapse className=" ">
-                  <Nav fill className="w-100" >
-                    <Nav.Item>
-                      <Nav.Link className="text-light" href="/training">Training</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link className="text-light" href="/laboral">Laboral Experience</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link className="text-light" href="/projects">Projects I've worked on</Nav.Link>
-                    </Nav.Item>
-                    <Nav.Item>
-                      <Nav.Link className="text-light" href="/aboutme">About Me</Nav.Link>
-                    </Nav.Item>
-                  </Nav>
-                </Navbar.Collapse>
-              </Container>
-            </div>
-          </Navbar>
-        </header>
-        <div className="w-50 h-100">
-            <Switch>
-              <Route path="/aboutme">
-                <AboutMe/>
-              </Route>
-              <Route path="/training">
-                <Training/>
-              </Route>
-              <Route path="/laboral">
-                <LaboralExp/>
-              </Route>
-              <Route path="/projects">
-                <Projects/>
-              </Route>
-            </Switch>
+    <div className="App">
+      <Navbar fixed="top" className="navbar-dark bg-navbar pb-5 pt-3" expand="md">
+        <div className="w-100">
+          <Container>
+            {/* For whenever is small */}
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse>
+              <Nav fill justify className="w-100" >
+                {/* Navegation items */}
+                {pages.map((page,i) => (
+                  <Nav.Item key={i}>
+                    <Nav.Link className={location.pathname !== page.route ? "nav-link" : "nav-link-selected"} href={page.route}>
+                      {page.name}
+                    </Nav.Link>
+                  </Nav.Item>
+                ))}
+              </Nav>
+            </Navbar.Collapse>
+          </Container>
         </div>
-      </Router>
+      </Navbar>
+
+      <div>
+        <div className="h-100">
+          <Switch>
+            {/* Classic react-router route design using switch */}
+            {pages.map((page,i) => (
+              <Route key={i} exact path={page.route}>
+                {page.component}
+              </Route>
+            ))}
+          </Switch>
+        </div>
+      </div>
     </div>
   );
 }
