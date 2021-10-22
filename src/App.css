@@ -8,33 +8,52 @@ h1 {
   color: rgb(230, 218, 165);
 }
 
-
 /*--- Nav ---*/
+
 .bg-navbar {
   background-image: linear-gradient(180deg, #000 0%, #000 50%, #0000 100%);
 }
 
 .nav-link {
-  color: white !important;
-  /*will change color of text within the element */
-}
-
-.nav-link-selected {
-  color: lightsalmon !important;
-  /*will change color of text within the element */
- font-size: larger
+  position: relative;
+  color: #fff !important;
 }
 
 .nav-link:hover {
-  color: lightskyblue !important
-  /*will change color of text within the element on hover */
+  color: lightblue !important;
 }
 
+.nav-link::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  background-color: #fff;
+  width: 0%;
+  content: ' ';
+  height: 3px;
+  transition: all 0.5s;
+}
 
-.masthead {
-  height: 50vh;
-  min-height: 100px;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.nav-link-selected {
+  position: relative;
+  color: lightblue !important;
+}
+
+.nav-link-selected::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  background-color: #fff;
+  width: 100%;
+  content: ' ';
+  height: 3px;
+  transition: all 0.5s;
 }

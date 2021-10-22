@@ -1,11 +1,12 @@
 import React from "react"
 import { Container } from "react-bootstrap"
-import headerBg from "./../images/projectBg.PNG"
+import HeaderImg from "../components/HeaderImg"
+import headerBg from "./../images/trainingBg.jpg"
 
 function Training() {
     return (
         <div>
-            <header className="masthead" style={{ backgroundImage: `url(${headerBg})` }} />
+        <HeaderImg img={headerBg} title="Training" />
             <Container className=" ">
                 <div className=" align-self-center">
                     <h1>Training</h1>
