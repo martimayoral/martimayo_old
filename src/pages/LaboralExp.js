@@ -1,7 +1,7 @@
 import React from "react"
 import { Container } from "react-bootstrap"
 import HeaderImg from "../components/HeaderImg"
-import headerBg from "./../images/laboralExpBg.jpg"
+import headerBg from "./../images/laboralExpBg.PNG"
 
 function LaboralExp() {
     return (

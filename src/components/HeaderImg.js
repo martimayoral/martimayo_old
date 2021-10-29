@@ -4,19 +4,20 @@ import Typed from "react-typed"
 function HeaderImg({ img, title, subtitles }) {
     const [scrY, setScrY] = useState(0)
     useEffect(() => {
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', handleScroll)
         return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    });
+            window.removeEventListener('scroll', handleScroll)
+        }
+    })
     const handleScroll = () => {
         setScrY(window.pageYOffset)
     }
+
     return (
         <header
             style={{
                 backgroundImage: `linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(${img})`,
-                height: "60vh",
+                height: "70vh",
                 minHeight: "100px",
                 backgroundSize: "cover",
 
