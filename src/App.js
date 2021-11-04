@@ -77,6 +77,9 @@ function App() {
           </Switch>
         </div>
       </div>
+      <div className="footer" style={{height:"20vh"}}>
+        
+      </div>
     </div>
   );
 }

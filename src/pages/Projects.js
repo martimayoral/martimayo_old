@@ -1,63 +1,152 @@
-import React from "react"
-import { Container } from "react-bootstrap"
+import React, { Fragment } from "react"
+import { Col, Container, Row } from "react-bootstrap"
 import headerBg from "./../images/projectBg.PNG"
 import HeaderImg from "../components/HeaderImg"
-// REACT FONTAWESOME
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
+import Gallery from "../components/Gallery"
 
-function Projects() {
-    return (
-        <div>
-            <HeaderImg img={headerBg} title="Projects" />
-            <Container className="mt-5 ">
-                <div className=" align-self-center bg-danger d-flex">
+// Light it up
+import firstLevel from "../images/projects/lightItUp/firstLevel.PNG"
+import firstLevelBits from "../images/projects/lightItUp/firstLevelBits.PNG"
+import pallete from "../images/projects/lightItUp/pallete.png"
+import movement from "../images/projects/lightItUp/movement.gif"
+import lightBulb from "../images/projects/lightItUp/lightBulb.PNG"
 
-                    <div class="card mb-3">
-                        <img src="..." class="card-img-top" alt="..." />
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content.This content is a little bit longer.</p>
-                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                        </div>
-                    </div> 
-                    <div class="card mb-3">
-                        <img src="..." class="card-img-top" alt="..." />
-                        <div class="card-body">
-                            <h5 class="card-title">Card title</h5>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content.This content is a little bit longer.</p>
-                            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                        </div>
-                    </div>
-
-                    <h1>Projects</h1>
-                    <FontAwesomeIcon icon={faCoffee} />
-                    <br /><br />
-
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal">
-                        Launch demo modal
-                    </button>
-
-                    <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered modal-xl mt-5">
-                            <div class="modal-content bg-dark">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="modalLabel">Modal title</h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    ...
-                                    <br /><br /><br />bla bla bla
-                                    <br /><br /><br /><br />bla bla bla
-                                    <br /><br /><br /><br />bla bla bla
-                                    <br /><br /><br /><br />bla bla bla
-                                    <br /><br /><br /><br />bla bla bla
-                                    <br /><br /><br />bla bla bla
-                                </div>
-                            </div>
-                        </div>
+function Projects(props) {
+    const Items = [
+        {
+            videoId: "U3Z-96EKEes",
+            title: 'Video Game: "Light It Up"',
+            subtitle: "2019",
+            description: (
+                <Fragment>
+                    <p>This project was done for a subject of my Bachelor degree. It was made with C++ using an OpenGl framework our teacher provided.</p>
+                    <p>The format of the class was a Game Jam with the topic "TOGETHER". As requested by the teacher, the project was made in 2 weeks.</p>
+                </Fragment>
+            ),
+            seeMoreContent: (
+                <div className="">
+                    <p>This project was done for the Games subject of my Bachelor degree.</p>
+                    <p>The format of the class was a Game Jam with the topic "TOGETHER". As requested by the teacher, the project was made in 2 weeks.</p>
+                    <p>The framework provided by our teacher was in C++ and OpenGl. We had to create classes for controlling the state of the game,
+                        i.e. if the player was playing, if the game was paused, if the player was at the menu...</p>
+                    <h4 className="fw-light">The smartness in the process</h4>
+                    <p>He encoraged us to be smart about data usage, optimizing the space the game used. My highlighted on that,
+                        each level was defined in a file of extension .map. Every bit on this file contained the information on a cell of the map.</p>
+                    <p>Let's see an example with the first level:</p>
+                    <Row className="row-cols-1 row-cols-md-2 align-items-center">
+                        <Col>
+                            <img className="w-100  mb-3" src={firstLevel} alt="..." />
+                        </Col>
+                        <Col>
+                            <img className="w-100 mb-3" src={firstLevelBits} alt="..." />
+                        </Col>
+                    </Row>
+                    <p>In the first image we can see the first level as it is in the game, in the second one, we can see the value of the bits of each cell,
+                        for instance in the first cell, there is a bit of value 16, 10 in hexadecimal, that means a wall. The maps were created using this pallete:</p>
+                    <Col>
+                        <img className="w-100 mb-3" src={pallete} alt="..." />
+                    </Col>
+                    <p>As we can see, the bit 16 corresponds to the wall in the pallete. Bit number 1, 5 and 9 are the spawn points of each light bulb,
+                        and the bit 2, 6 and 10 are the goal for each color.</p>
+                    <p>You might be wondering why are some of the cells repeated, for instance, the wall has 5 cells. That is to animate and create life in the
+                        scene. The game changes the wall cell from 16 to 17, 18, 19, 20 and 16 again in a sequence to create an animation effect. Same thing for the goals.
+                        Using this tecnique, allows to create animation easily and with low usage of resources. This was used by many creators when their resources were not
+                        as big as nowadays.</p>
+                    <p>The sprites of the light bolbs are animated using the same tecnique. Using a 64x40px image we can represent the whole animation.
+                        In the left side when it's not activated and in the right side when it is.</p>
+                    <Col className="d-flex justify-content-center">
+                        <img className="w-50 mb-3" src={lightBulb} alt="..." />
+                    </Col>
+                    <p>We can see the result of this effect in the following image</p>
+                    <Col className="d-flex justify-content-center">
+                        <img className="w-75 mb-3" src={movement} alt="..." />
+                    </Col>
+                </div>
+            )
+        }, {
+            videoId: "BZuGMm8jeU8",
+            title: "Video Game: Snail Adventure",
+            subtitle: "2019",
+            description: (
+                <Fragment>
+                    <p>This the other project done for the Games subject of my Bachelor degree. It was made with C++ using a 3D OpenGl framework our teacher provided.</p>
+                    <p>We had two months for developing it, along with the theory clases of the subject. The format of the class was a Game Jam with a free topic.</p>
+                </Fragment>
+            ),
+            seeMoreContent: (
+                <div className="bg-danger">
+                    <p>This project was done for a subject of my degree. It was made with C++ using a OpenGl framework our teacher provided.</p>
+                    <p>The format of the class was a Game Jam with the topic "TOGETHER". As requested by the teacher, the project was made in 2 weeks.</p>
+                    <div className="video-responsive">
+                        <iframe src="https://www.youtube.com/embed/U3Z-96EKEes" title="YouTube video player" frameBorder="0" allowFullScreen></iframe>
                     </div>
                 </div>
+            )
+        }, {
+            videoId: "-",
+            title: "Human interaction First Person Game",
+            subtitle: "2021",
+            description: (
+                <Fragment>
+                    <p>For the third year of my degree, in the Interactive Systems subject, we had to develop a project to run in their full-body virtual environment.</p>
+                    <p>We were given a framewok with Unity that we had to populate with our idea.</p>
+                </Fragment>
+            ),
+            seeMoreContent: (
+                <div className="bg-danger">
+                    <p>For the third year of my degree, in the Interactive Systems subject, we had to develop a project to run in their full-body virtual environment.</p>
+                    <p>We were given a framewok </p>
+                    <div className="video-responsive">
+                        <iframe src="https://www.youtube.com/embed/U3Z-96EKEes" title="YouTube video player" frameBorder="0" allowFullScreen></iframe>
+                    </div>
+                </div>
+            )
+        }, {
+            videoId: "-",
+            title: "Mobile Game",
+            subtitle: "2021",
+            description: (
+                <Fragment>
+                    <p>My Bachelor degree's thesis was a Mobile Game done with React. It is avaliable at <a href="http://playtyper.herokuapp.com/" target="_blank" rel="noreferrer">
+                        playtyper.herokuapp.com</a></p>
+                    <p>It is a game where users have to write a sequence of words as fast as they can. Any registered player can create his own
+                        Typer, choosing the words of his challenge and then sharing it with his friends to see who is the fastest writing them.</p>
+                </Fragment>
+            ),
+            seeMoreContent: (
+                <div className="bg-danger">
+                    <p>For the third year of my degree, in the Interactive Systems subject, we had to develop a project to run in their full-body virtual environment.</p>
+                    <p>We were given a framewok </p>
+                    <div className="video-responsive">
+                        <iframe src="https://www.youtube.com/embed/U3Z-96EKEes" title="YouTube video player" frameBorder="0" allowFullScreen></iframe>
+                    </div>
+                </div>
+            )
+        }
+    ]
+
+
+    return (
+        <div>
+            <HeaderImg img={headerBg} title="Projects" subtitles={["Programming", "C++", "React", "Iteraction", "Optimizing", "Game", "For fun"]} />
+            <Container className="mt-4">
+                <div className="text-center text-muted mb-5">
+                    <h1 className="display-4">Projects</h1>
+                    <p>In this section we can see the projects I have worked on</p>
+                </div>
+                <Gallery>
+                    {Items.map((item, i) =>
+                        <Gallery.Item
+                            key={i}
+                            id={i}
+                            videoId={item.videoId}
+                            title={item.title}
+                            subtitle={item.subtitle}
+                            description={item.description}
+                            seeMoreContent={item.seeMoreContent}
+                        />
+                    )}
+                </Gallery>
             </Container>
         </div>
     )

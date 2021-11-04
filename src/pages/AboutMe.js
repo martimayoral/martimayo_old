@@ -4,11 +4,9 @@ import HeaderImg from "../components/HeaderImg"
 import headerBg from "./../images/aboutMeBg.jpg"
 
 function AboutMe() {
-    
-
     return (
         <div>
-            <HeaderImg img={headerBg} title="About Me" />
+            <HeaderImg img={headerBg} title="Home" subtitles={["This is my personal page", "I am so glad you are here", "Do not hesitate contacting me"]}/>
             <Container className=" ">
                 <div className=" align-self-center">
                     <h1>About Me</h1>

@@ -6,7 +6,7 @@ import headerBg from "./../images/trainingBg.PNG"
 function Training() {
     return (
         <div>
-        <HeaderImg img={headerBg} title="Training"  subtitles={["Bachelor degree", "Computer Science", "Engineering", "Learn", "Coach"]}/>
+            <HeaderImg img={headerBg} title="Training" subtitles={["Bachelor degree", "Computer Science", "Engineering", "Learn", "Coach"]} />
             <Container className=" ">
                 <div className=" align-self-center">
                     <br /><br /><br /><br />
@@ -18,6 +18,7 @@ function Training() {
                     <br /><br /><br /><br />bla bla bla
                 </div>
             </Container>
+            
         </div>
     )
 }
