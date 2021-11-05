@@ -27,6 +27,7 @@ function HeaderImg({ img, title, subtitles }) {
                 // 20(x/500) + 40
                 backgroundPosition: "50% " + (40 * scrY / 500 + 35) + "%",
             }}
+            className="mb-5"
         >
             <div className="container h-100">
                 <div className="row h-100 align-items-center">
