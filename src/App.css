@@ -9,6 +9,10 @@ h1 {
   color: rgb(230, 218, 165);
 }
 
+a {
+  color: lightskyblue !important;
+}
+
 /*--- Nav ---*/
 
 .bg-navbar {
@@ -74,7 +78,8 @@ h1 {
 .video-responsive-50 {
   height: 0;
   overflow: hidden;
-  padding-bottom: 28.125%; /* half of 56.25, 16:9 proportion */
+  padding-bottom: 28.125%;
+  /* half of 56.25, 16:9 proportion */
   padding-top: 30px;
   position: relative;
 }
@@ -87,7 +92,6 @@ h1 {
   top: 0;
   width: 50%;
 }
-
 
 /* Youtube video responsive no vorders */
 
