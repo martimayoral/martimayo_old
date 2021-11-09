@@ -9,7 +9,7 @@ h1 {
   color: rgb(230, 218, 165);
 }
 
-a {
+.link {
   color: lightskyblue !important;
 }
 
@@ -65,53 +65,31 @@ a {
 
 /*--- Card ---*/
 
-.card {
+.card-animation {
   transition: .1s transform cubic-bezier(.15, 1.1, .5, 1.5), .1s -webkit-transform cubic-bezier(.15, 1.1, .5, 1.5);
 }
 
-.card:hover {
+.card-animation:hover {
   transform: scale(1.025);
 }
 
-/* Youtube video responsive 50% */
+/* Youtube video responsive */
 
-.video-responsive-50 {
+.video-responsive {
   height: 0;
   overflow: hidden;
-  padding-bottom: 28.125%;
-  /* half of 56.25, 16:9 proportion */
+  padding-bottom: 56.25%;
+  /* 16:9 proportion */
   padding-top: 30px;
   position: relative;
 }
 
-.video-responsive-50 iframe, .video-responsive-50 object, .video-responsive-50 embed {
-  margin-left: 25%;
+.video-responsive iframe, .video-responsive object, .video-responsive embed {
   height: 100%;
   left: 0;
   position: absolute;
   top: 0;
-  width: 50%;
-}
-
-/* Youtube video responsive no vorders */
-
-.frame-container {
-  position: relative;
-  padding-bottom: 56.25%;
-  /* 16:9 */
-  padding-top: 25px;
-  width: 300%;
-  /* enlarge beyond browser width */
-  left: -100%;
-  /* center */
-}
-
-.frame-container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
-  height: 100%;
 }
 
 .wrapper {

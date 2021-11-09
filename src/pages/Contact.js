@@ -10,7 +10,6 @@ function Contact() {
             <HeaderImg img={headerBg} title="Contact" subtitles={["e-mail", "LinkedIn", "Contact Me!"]} />
             <Container className="">
                 <div className="text-center text-muted mb-5">
-                    <h1 className="display-4">Contact</h1>
                     <p>Please don't hesitate to contact me!</p>
                 </div>
                 <ContactForm />

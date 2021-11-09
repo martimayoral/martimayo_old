@@ -1,13 +1,15 @@
 import React from "react";
 import { Switch, Route, useLocation } from "react-router-dom";
-import { Container, Nav, Navbar } from 'react-bootstrap'
+import { Col, Container, Nav, Navbar, Row } from 'react-bootstrap'
 import "bootstrap"
 import './App.css';
-import AboutMe from "./pages/AboutMe";
+import Home from "./pages/Home";
 import Training from "./pages/Training";
 import LaboralExp from "./pages/LaboralExp";
 import Projects from "./pages/Projects";
 import Contact from "./pages/Contact";
+import { faLinkedin, faReact } from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function App() {
   const location = useLocation();
@@ -16,7 +18,7 @@ function App() {
   const pages = [
     {
       name: "Home",
-      component: (() => { return <AboutMe /> }),
+      component: (() => { return <Home /> }),
       route: "/"
     },
     {
@@ -77,9 +79,22 @@ function App() {
           </Switch>
         </div>
       </div>
-      <div className="footer" style={{height:"20vh"}}>
-        
-      </div>
+      <Container>
+        <footer className="py-5 mt-5 border-top border-secondary ">
+          <Row className="">
+            <Col className="">
+              <a className="btn btn-outline-light" href="https://www.linkedin.com/in/martimayoral/" role="button" target="_blank" rel="noreferrer">
+                <FontAwesomeIcon icon={faLinkedin} /> Contact me on LinkedIn!
+              </a>
+            </Col>
+            <Col className=" my-auto">
+              <p className="my-auto text-end">
+                <FontAwesomeIcon icon={faReact} style={{ color: "cyan" }} />  Made with react
+              </p>
+            </Col>
+          </Row>
+        </footer>
+      </Container>
     </div>
   );
 }
