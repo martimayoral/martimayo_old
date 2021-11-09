@@ -76,7 +76,8 @@ function Projects() {
                     <p>For the fourth year of my degree, in the Interactive Systems subject, we had to develop a project to run in their full-body virtual environment.</p>
                     <p>We were given a framewok with Unity that we had to populate with our idea.</p>
                 </Fragment>
-            )
+            ),
+            gitHub: "https://github.com/martimayoral/SaveTheSheep",
         }, {
             headVideoId: "x12yZsCnjgw",
             title: "Video Game: Snail Adventure",
