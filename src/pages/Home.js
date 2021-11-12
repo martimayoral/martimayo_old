@@ -22,7 +22,7 @@ function Home() {
                 }}>
                     <div style={{
                         backgroundImage: "linear-gradient(to right, rgba(0, 0, 0, .8), rgba(0, 0, 0, 0.5) 40%, rgba(0, 0, 0, 0) 70%)",
-                        height: "70vh"
+                        minHeight: "70vh"
                     }}>
                         <div className="p-4 px-5 h-100 d-flex flex-column">
                             <div className="h-100">
@@ -39,7 +39,7 @@ function Home() {
                                     </Col>
                                 </Row>
                             </div>
-                            <form method="get" action="CV_Public_Eng.pdf" target="_blank">
+                            <form className="mt-2" method="get" action="CV_Public_Eng.pdf" target="_blank">
                                 <button type="submit" className="btn btn-outline-light">Download my CV <FontAwesomeIcon icon={faExternalLinkAlt} size="xs" /></button>
                             </form>
                         </div>

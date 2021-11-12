@@ -63,6 +63,15 @@ h1 {
   transition: all 0.5s;
 }
 
+@media (max-width: 767px) {
+  .nav-link-selected::after {
+    height: 0px;
+  }
+  .nav-link::after {
+    height: 0px;
+  }
+}
+
 /*--- Card ---*/
 
 .card-animation {
