@@ -1,6 +1,5 @@
 import React from "react";
-import { Switch, Route, useLocation } from "react-router-dom";
-import { Col, Container, Nav, Navbar, Row } from 'react-bootstrap'
+import { Switch, Route, useLocation, Link } from "react-router-dom";
 import "bootstrap"
 import './App.css';
 import Home from "./pages/Home";
@@ -8,14 +7,18 @@ import Training from "./pages/Training";
 import LaboralExp from "./pages/LaboralExp";
 import Projects from "./pages/Projects";
 import Contact from "./pages/Contact";
-import { faLinkedin, faReact } from "@fortawesome/free-brands-svg-icons";
+import PortfolioLayout from "./layouts/PortfolioLayout";
+import TrampolineApp from "./TrampolineApp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faExternalLinkAlt, faUnlink } from "@fortawesome/free-solid-svg-icons";
+import RutineGenerator from "./pages/trampoline/RutineGenerator";
+
 
 function App() {
   const location = useLocation();
 
   // I have all pages information here, in one simple array
-  const pages = [
+  const portfolioPages = [
     {
       name: "Home",
       component: (() => { return <Home /> }),
@@ -43,59 +46,82 @@ function App() {
     }
   ]
 
+  const trampolinePages = [
+    {
+      name: "Trampoline App",
+      component: (() => { return <TrampolineApp /> }),
+      route: "/trampoli"
+    },
+    {
+      name: "Generador d'exercicis",
+      component: (() => { return <RutineGenerator /> }),
+      route: "/trampoli/rutine-generator"
+    }
+  ]
+
   return (
     <div className="App">
-      <Navbar fixed="top" className="navbar-dark bg-navbar pb-5 pt-3" expand="md">
-        <Container>
-          {/* For whenever is small */}
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Brand>
-            Martí Mayoral
-          </Navbar.Brand>
-          <Navbar.Collapse>
-            <Nav className="ms-auto" >
-              {/* Navegation items */}
-              {pages.map((page, i) => (
-                <Nav.Item className=" mx-3" key={i}>
-                  <Nav.Link className={location.pathname !== page.route ? " " : "nav-link-selected"} href={page.route}>
-                    {page.name}
-                  </Nav.Link>
-                </Nav.Item>
-              ))}
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
 
-      <div>
-        <div className="h-100">
+
+      <Switch>
+
+        {/* A Route for the pages of the portoflio */}
+        <Route exact path={portfolioPages.map(page => (page.route))}>
+          <PortfolioLayout location={location} pages={portfolioPages}>
+
+            <Switch>
+              {/* Classic react-router route design using switch */}
+              {portfolioPages.map((page, i) => (
+                <Route key={i} exact path={page.route}>
+                  {page.component}
+                </Route>
+              ))}
+            </Switch>
+
+          </PortfolioLayout>
+        </Route>
+
+        {/* Another Route for the pages of the trampoline */}
+        <Route exact path={trampolinePages.map(page => (page.route))}>
+
           <Switch>
             {/* Classic react-router route design using switch */}
-            {pages.map((page, i) => (
+            {trampolinePages.map((page, i) => (
               <Route key={i} exact path={page.route}>
                 {page.component}
               </Route>
             ))}
           </Switch>
-        </div>
-      </div>
-      <Container>
-        <footer className="py-5 mt-5 border-top border-secondary ">
-          <Row className="">
-            <Col className="">
-              <a className="btn btn-outline-light" href="https://www.linkedin.com/in/martimayoral/" role="button" target="_blank" rel="noreferrer">
-                <FontAwesomeIcon icon={faLinkedin} /> Contact me on LinkedIn!
-              </a>
-            </Col>
-            <Col className=" my-auto">
-              <p className="my-auto text-end">
-                <FontAwesomeIcon icon={faReact} style={{ color: "cyan" }} />  Made with react
-              </p>
-            </Col>
-          </Row>
-        </footer>
-      </Container>
+
+        </Route>
+
+
+        {/* Another Route for the pages not found */}
+        <Route>
+          <div className=" d-flex flex-column justify-content-center align-items-center " style={{ height: "100vh" }}>
+            <FontAwesomeIcon icon={faUnlink} size="5x" />
+            <div className="mt-5">
+              <h2>PAGE NOT FOUND</h2>
+            </div>
+            <div className="mt-4">
+              <Link to={"/"} >
+                <button className="btn btn-lg btn-success">
+                  Go to main page <FontAwesomeIcon icon={faExternalLinkAlt} />
+                </button>
+              </Link>
+            </div>
+            <div className="mt-4">
+              <Link to={"/trampoli"} >
+                <button className="btn btn-lg btn-warning">
+                  Trampolí <FontAwesomeIcon icon={faExternalLinkAlt} />
+                </button>
+              </Link>
+            </div>
+          </div>
+        </Route>
+      </Switch>
     </div>
+
   );
 }
 
