@@ -23,6 +23,7 @@ function RutineGenerator() {
         mGirSentat: false,
         aPit: false,
         esquena: false,
+        aPeu: true,
 
 
         mortals: false,
@@ -46,7 +47,7 @@ function RutineGenerator() {
         rdy: false,
         tresQuarts: false,
 
-        repetirElements: true,
+        repetirElements: false,
     })
 
     const elements = {
@@ -85,14 +86,14 @@ function RutineGenerator() {
         },
         aPeu: {
             name: "A peu",
-            canEnd: true,
+            canEnd: false,
         },
         aPit: {
             name: "A pit",
             canEnd: true,
         },
         esquena: {
-            name: "A peu",
+            name: "Esquena",
             canEnd: true,
         },
 
@@ -297,19 +298,20 @@ function RutineGenerator() {
 
 
         const continuacions = {
-            Sentat: ["mGirSentat", "aPit", "esquena", "aPeu", "aPeu", "aPeu"],
-            aPit: ["Sentat", "esquena", "aPeu", "aPeu", "aPeu"],
-            mGirSentat: ["aPit", "esquena", "aPeu", "aPeu"],
+            Sentat: ["mGirSentat", "aPit", "aPeu", "aPeu"],
+            aPit: ["esquena", "aPeu", "aPeu", "aPeu"],
+            mGirSentat: ["aPit", "aPeu", "aPeu"],
             tresQuarts: ["a40", "c40", "p40", "aPeu", "aPit", "aPeu"],
-            tresQuartsf: ["a40", "c40", "p40", "aPeu", "aPit", "aPeu"]
-
+            tresQuartsf: ["a40", "c40", "p40", "aPeu", "aPit", "aPeu"],
+            esquena: ["aPeu"]
         }
 
         const randomNum = (min, max) => { return Math.floor(Math.random() * (max - min)) }
+        var elId;
 
-        // inici
+        /* // inici
         for (var i = 0; (i < startElementIds.length * 2) && exe.length === 0; i++) {
-            var elId = startElementIds[randomNum(0, startElementIds.length)]
+            elId = startElementIds[randomNum(0, startElementIds.length)]
             if (data[elId]) {
                 exe.push(elId)
             }
@@ -317,36 +319,46 @@ function RutineGenerator() {
         if (exe.length === 0) {
             setExercici(["HAS DE SELECCIONAR ALGUN ELEMENT D'INICI"])
             return
-        }
+        } */
 
         var startNum = startElementIds.map((e) => data[e]).reduce((pr, cr) => cr & (pr + 1), 1)
 
-        for (i = 0; exe.length < 9 && i < 500; i++) {
+        for (var i = 0; exe.length < 10 && i < 500; i++) {
             console.log(i)
             elId = startElementIds[randomNum(0, startElementIds.length)]
             if (data[elId] && ((data["repetirElements"] || !exe.includes(elId)))) {
                 if (elements[elId].name) {
                     exe.push(elId)
-                    console.log("PUSH: " + elId)
+                    console.log(exe.length + " PUSH: " + elId)
+
                     while (continuacions[elId]) {
                         console.log(elId + " HAS CONTINUATIONS: " + continuacions[elId])
-                        elId = continuacions[elId][randomNum(0, continuacions[elId].length)]
-                        exe.push(elId)
-                        console.log("CPUSH: " + elId)
+                        if (exe.length < 9) {
+                            var posElId = continuacions[elId][randomNum(0, continuacions[elId].length)]
+                            if (data[posElId]) {
+                                elId = posElId
+                                exe.push(elId)
+                                console.log(exe.length + " CPUSH: " + elId)
+                            }
+                        }
+                        else{
+                            exe.push("aPeu")
+                            elId = "-"
+                        }
                     }
                 }
 
             }
         }
-
-        // fi
-        for (var i = 0; (i < startElementIds.length * 2) && exe.length === 9; i++) {
-            var elId = startElementIds[randomNum(0, startElementIds.length)]
-            if (data[elId]) {
-                if (elements[elId].canEnd)
-                    exe.push(elId)
-            }
-        }
+        /* 
+                // fi
+                for (var i = 0; (i < startElementIds.length * 2) && exe.length === 9; i++) {
+                    var elId = startElementIds[randomNum(0, startElementIds.length)]
+                    if (data[elId]) {
+                        if (elements[elId].canEnd)
+                            exe.push(elId)
+                    }
+                } */
 
 
 
@@ -363,23 +375,23 @@ function RutineGenerator() {
 
                         <AccordionItem title="Elements" >
                             <InputBoxGroup groupName="Senzills" id="base" />
-                            <InputBox subelement name="Agrupat" id="agrupat" />
-                            <InputBox subelement name="Carpa Oberta" id="cOb" />
-                            <InputBox subelement name="Carpa Tancada" id="cT" />
-                            <InputBox subelement name="Mig gir" id="mGir" />
-                            <InputBox subelement name="Gir sencer" id="Gir" />
-                            <InputBox subelement name="Sentat" id="Sentat" />
-                            <InputBox subelement name="Mig gir Sentat" id="mGirSentat" />
-                            <InputBox subelement name="A peu" id="aPit" />
-                            <InputBox subelement name="Esquena" id="esquena" />
-
+                            <InputBox subelement id="agrupat" />
+                            <InputBox subelement id="cOb" />
+                            <InputBox subelement id="cT" />
+                            <InputBox subelement id="mGir" />
+                            <InputBox subelement id="Gir" />
+                            <InputBox subelement id="Sentat" />
+                            <InputBox subelement id="mGirSentat" />
+                            <InputBox subelement id="aPit" />
+                            <InputBox subelement id="esquena" />
                             <TRIOInputGroup groupName="Mortals endavant" groupId="mortalsf" aId="a40f" cId="c40f" pId="p40f" />
                             <TRIOInputGroup groupName="Mortals endarrera" groupId="mortals" aId="a40" cId="c40" pId="p40" />
 
                             <TRIOInputGroup groupName="Baranis" groupId="baranis" aId="a41" cId="c41" pId="p41" />
 
-                            <InputBox name="Rudy" id="rdy" />
-                            <InputBox name="Tres Quarts" id="tresQuarts" />
+                            <InputBox id="rdy" />
+                            <InputBox id="tresQuarts" />
+                            <InputBox id="tresQuartsf" />
 
                         </AccordionItem>
 
