@@ -8,14 +8,18 @@ import LaboralExp from "./pages/LaboralExp";
 import Projects from "./pages/Projects";
 import Contact from "./pages/Contact";
 import PortfolioLayout from "./layouts/PortfolioLayout";
-import TrampolineApp from "./TrampolineApp";
+import TrampolineApp from "./pages/trampoline/TrampolineApp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExternalLinkAlt, faUnlink } from "@fortawesome/free-solid-svg-icons";
 import RutineGenerator from "./pages/trampoline/RutineGenerator";
+import useGaTracker from "./components/UseGaTracker";
+import Liu from "./pages/liu/Liu";
+import LiuPrivacyPolicy from "./pages/liu/LiuPrivacyPolicy";
 
 
 function App() {
   const location = useLocation();
+  useGaTracker();
 
   // I have all pages information here, in one simple array
   const portfolioPages = [
@@ -59,8 +63,22 @@ function App() {
     }
   ]
 
+  
+  const lightItUpPages = [
+    {
+      name: "Light It Up",
+      component: (() => { return <Liu /> }),
+      route: "/liu"
+    },
+    {
+      name: "Privacy policy",
+      component: (() => { return <LiuPrivacyPolicy /> }),
+      route: "/liu/privacy"
+    }
+  ]
+
   return (
-    <div className="App">
+    <div className="App" >
 
 
       <Switch>
@@ -87,6 +105,21 @@ function App() {
           <Switch>
             {/* Classic react-router route design using switch */}
             {trampolinePages.map((page, i) => (
+              <Route key={i} exact path={page.route}>
+                {page.component}
+              </Route>
+            ))}
+          </Switch>
+
+        </Route>
+
+        
+        {/* Another Route for the pages of the trampoline */}
+        <Route exact path={lightItUpPages.map(page => (page.route))}>
+
+          <Switch>
+            {/* Classic react-router route design using switch */}
+            {lightItUpPages.map((page, i) => (
               <Route key={i} exact path={page.route}>
                 {page.component}
               </Route>

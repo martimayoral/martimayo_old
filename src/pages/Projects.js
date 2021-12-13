@@ -12,13 +12,13 @@ import movement from "../images/projects/lightItUp/movement.gif"
 import lightBulb from "../images/projects/lightItUp/lightBulb.PNG"
 
 import tfg from "../images/projects/tfg.png"
+import reactLogo from "../images/react.png"
 
 function Projects() {
     const items = [
         {
-            headImg: projectBg,
             headVideoId: "-v4oWRMVQds",
-            title: 'Video Game: "Light It Up"',
+            title: 'Video Game: "Light It Up" using C++',
             subtitle: "2019",
             description: (
                 <Fragment>
@@ -68,6 +68,26 @@ function Projects() {
                 </div>
             )
         }, {
+            headVideoId: "NpiaI-Vgg1Q",
+            title: 'Video Game: "Light It Up" using Unity',
+            subtitle: "2021 - present",
+            description: (
+                <Fragment>
+                    <p>Afer graduating from computer science I wanted to work on some projects on my onw. Getting more experience in Unity.</p>
+                    <p>I have been developing the app that I developed with C++ for my degree because I believe it can have a great future as a mobile app.</p>
+                    <p>I'm currently on the process of publishing it to Google Play Store for Android.</p>
+                </Fragment>
+            ),
+            seeMoreContent: (
+                <div className="">
+                    <p>I have choosen to develop the app in Unity to get more experience in that enviorment. Alowing me to add more features and creativity.</p>
+                    <p>I have re-used some of the sprites and worked on some more. </p><br />
+                    <p>I plan on using a database system like Google Firebase to allow users to create and share their own levels.</p>
+                </div >
+            ),
+            gitHub: "https://github.com/martimayoral/lightItUpUnity",
+            webPage: "../liu/"
+        }, {
             headImg: projectBg,
             title: "Human interaction First Person Game",
             subtitle: "2021",
@@ -101,13 +121,14 @@ function Projects() {
                 </Fragment>
             )
         }, {
+            headImg: reactLogo,
             title: "This portfolio",
             subtitle: "2021",
             description: (
                 <Fragment>
                     <p>I have developed this web page to let businesses know more about me.
-                        CV's are good, but sometimes are not enough to show everything about oneself.
-                        I have also worked on this webpage as an oportunity to learn more about creating webpages using ReacJs, whilst looking for a job in 2021.</p>
+                        CV's are good, but sometimes are not enough to show everything about oneself.</p>
+                    <p>I have also worked on this webpage as an oportunity to learn more about creating webpages using ReacJs, whilst looking for a job in 2021.</p>
                 </Fragment>
             ),
             gitHub: "https://github.com/martimayoral/martimayo"
