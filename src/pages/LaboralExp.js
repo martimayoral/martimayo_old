@@ -13,6 +13,7 @@ import lessons from "./../images/labExp/lessons.PNG"
 function LaboralExp() {
     const items = [
         {
+            itemId: "beabloo-intern",
             title: "Software Developer Internship",
             subtitle: "2019 - 2020",
             description: (
@@ -27,6 +28,7 @@ function LaboralExp() {
             headImg: beablooImg
         },
         {
+            itemId: "upf-it-support",
             title: "University IT Support",
             subtitle: "2018",
             description: (
@@ -39,6 +41,7 @@ function LaboralExp() {
             headImg: itSuppImg
         },
         {
+            itemId: "trampoline-coach",
             title: "Trampoline Gymnastics Coach",
             subtitle: "Since 2015",
             description: (
@@ -50,6 +53,7 @@ function LaboralExp() {
             headImg: trampoli
         },
         {
+            itemId: "particular-lessons",
             title: "Particular lessons",
             subtitle: "2019-present",
             description: (

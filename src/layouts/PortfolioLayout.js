@@ -2,31 +2,34 @@ import React from 'react'
 import { faLinkedin, faReact } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Col, Container, Nav, Navbar, Row } from 'react-bootstrap'
+import { Link } from 'react-router-dom';
 
-const PortfolioLayout = ({location, pages, children}) => (
+const PortfolioLayout = ({ location, pages, children }) => (
     <div>
         <Navbar fixed="top" className="navbar-dark bg-navbar pb-5 pt-3" expand="md">
             <Container>
                 {/* For whenever is small */}
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Brand>
-                    Martí Mayoral
+                    <Link to="" className="nav-link" onClick={() => { window.scrollTo(0, 600) }}>Martí Mayoral</Link>
                 </Navbar.Brand>
                 <Navbar.Collapse>
                     <Nav className="ms-auto" >
                         {/* Navegation items */}
                         {pages.map((page, i) => (
                             <Nav.Item className=" mx-3" key={i}>
-                                <Nav.Link className={location.pathname !== page.route ? " " : "nav-link-selected"} href={page.route}>
-                                    {page.name}
-                                </Nav.Link>
+
+                                <Link to={page.route} onClick={() => {
+                                    window.scrollTo(0, 0)
+                                }} className={location.pathname !== page.route ? "nav-link" : "nav-link nav-link-selected"}>{page.name}</Link>
+
                             </Nav.Item>
                         ))}
                     </Nav>
                 </Navbar.Collapse>
             </Container>
         </Navbar>
-        
+
         {children}
 
         <Container>

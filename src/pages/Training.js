@@ -10,6 +10,7 @@ import ins from "./../images/training/ins.PNG"
 function Training() {
     const items = [
         {
+            itemId: "upf-bachelor",
             title: "Pompeu Fabra University",
             subtitle: "2017 - 2021",
             description: (
@@ -25,6 +26,7 @@ function Training() {
             webPage: "https://www.upf.edu/",
             headImg: headerBg
         }, {
+            itemId: "secondary-school",
             title: "Institut La Sedeta",
             subtitle: "2011 - 2017",
             description: (
@@ -35,6 +37,7 @@ function Training() {
             webPage: "https://agora.xtec.cat/ieslasedeta/linstitut/",
             headImg: ins
         }, {
+            itemId: "trampoline-level1",
             title: "Trampoline Gymnastics Coach of level 1",
             subtitle: "2018",
             description: (
@@ -43,6 +46,7 @@ function Training() {
                 </Fragment>
             )
         }, {
+            itemId: "fce-b2",
             title: "English First Certificate B2",
             subtitle: "2017",
             description: (
