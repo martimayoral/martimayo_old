@@ -32,7 +32,10 @@ function Projects() {
         {
             itemId: "light-it-up-unity",
             title: 'Video Game: "Light It Up" using Unity',
-            headVideoId: "U6mxT3KfP4w",
+            //headVideoId: "U6mxT3KfP4w",
+            customHead: (
+                <iframe width="100%" style={{ minHeight: "400px" }} src="/lightItUpJs.html" title="light it up"></iframe>
+            ),
             subtitle: "OCT 2021 - FEB 2022",
             description: (
                 <Fragment>
@@ -102,6 +105,29 @@ function Projects() {
                     </Col>
                     <p>Each created level would store the level name, the number of moves to win it, the map itself and the size.</p>
                     <p>It has been challenging to use, I came across some problems related with Unity and Firebase that made me think and come up with solutions.</p>
+
+
+                    <h4 className="fw-light">Promotion Video</h4>
+                    <p>In order to promote the app and also get to know more about how facebook ads work, I created a promotion video.</p>
+                    <Container fluid>
+                        <Row>
+                            <Col></Col>
+                            <Col md={8}>
+                                <div className="wrapper">
+                                    <div className="video-responsive">
+                                        <iframe
+                                            src={"https://www.youtube.com/embed/U6mxT3KfP4w?controls=0"} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                                    </div>
+                                </div>
+                            </Col>
+                            <Col></Col>
+                        </Row>
+                    </Container>
+
+                    <h4 className="fw-light">Javascript demo version</h4>
+                    <p>I created a simple version done with pure html, css and javascript.
+                        It is the game that you can play on the beggining of this page. You can see the embeded 
+                        element in this webpage: <a href="/lightItUpJs.html" target="_blank">lightItUpJs.html</a></p>
                 </div >
             ),
             gitHub: "https://github.com/martimayoral/lightItUpUnity",
@@ -209,7 +235,7 @@ function Projects() {
                 href: "https://drive.google.com/file/d/1RdgoeWy07Qvki-QuYzFuIuT_qYNBPnQn/view",
                 text: (
                     <div className="text-dark">
-                        <FontAwesomeIcon icon={faFile} className="me-1"/> View Work <FontAwesomeIcon icon={faExternalLinkAlt} size="xs" />
+                        <FontAwesomeIcon icon={faFile} className="me-1" /> View Work <FontAwesomeIcon icon={faExternalLinkAlt} size="xs" />
                     </div>
                 ),
                 color: "light"

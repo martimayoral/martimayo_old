@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        #light-it-up {
+            margin: 0px;
+            padding: 0px;
+            overflow: hidden;
+
+            width: 100vw;
+            height: 100vh;
+
+            display: block;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -webkit-crisp-edges;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            /* 
+            border: 1px solid #d3d3d3; */
+            background-color: #000;
+
+        }
+
+        html,
+        body {
+            margin: 0px;
+            padding: 0px;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body id="myBody">
+    <canvas id="light-it-up"></canvas>
+    <script>
+        const imgRed = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEcAAAAdCAYAAAD4pXGOAAAAAXNSR0IArs4c6QAAA8RJREFUaEPlmT2PEmEQx5/1A3gN0GiAxoIYo5WJGi/aaYwaS0utoIEEogG/ABVE+ADeZ9BGO40XrbWyBaIN0JwfwDWzl9nMPvvMy+Ke8eW6O4aZ/3/22d3fzEWuwM+n1l6M4Ze+HEXcV61xBUoHQ611rHF+kdSglgA+Pzh3Jfn+5TsP3PnnT12oQUXipEZb9Fy8cPc4xbMn7vPDfVaPNc7XkzRHM0Q/xwShBu0Sx+WRDEGd9HMUFGjQTnEkT2QxBDHXv/5wj29eS0/ei7cf3OHZU5mrZYnT6lkMYZ3vt++nek6/fsnqkeKkeklzNON4xDHu4N1H9/7M8R1Jby1LHMTsf4vdoxtXg422GKd1wPjem1eiHqh3dOuewwZS3VK9pDkQjILxRISMY3NCpwad0mZzpwti/VxYj+rhDOGjAHJAc0KnxtfDxfmNpg1MnzkW46PRKK5UKm65XLpGo+EGg0HujTWZTOIoitxisXCtVst1Op1cDD090u2pGR8Oh3G1WnWr1crV63VWDzQKYkBPu90O6gk1Og1E42Cs3+8HX9PdbjeGpkgxIKTX68UgdrvduvF4HMyFxrhcqAfyhS4C/B30NJvN5JBwmjEOdEt6Qv5T4XDFN5uNgyvBiYEYODXz+ZxlHDzOWEzKBWKhXsjYdDqN1+v1b9cDdwZqVk36YPQ//V64ORqc4cNSArwyG3ySejLN0QppsGgBSvoW0Rpo0aPRb4ZjFJL29WTGB2k80ODNbwwW0kiaG0U0U1ZYLEzSlJCtpqywaAFKvAhcA63GEe4wj887VqDkGpjjHCzk84eVfiXAo/AmjSJWU1iL8hCFVwnwkOxDtZC40+ZQU9J4oMHirxIyfaD7YEaNY5w/GvibAmoeTXMjj9/kzDNHM06BSoIzYJQ4jhOSDjGR1kCrcYgD4ATAg3ocU6EeoOTZbCYSMm1gJhAgDwpySXA0AFjkyBeEIExK1Iq1JKgsQw/kANikcBdCiZCeHCHXajURxctgFItgbLJm6iT1FIbAMsT8LTkKNUeDsn+JjsFLqTtkC0FbG6hdCA0SsY5G0JKe0nbIFoL2gfNPpuPk5FhM0eWUBIn++hN5iQJXWXSMDCTRsYWgpfFipx1yaJVqWbcWGUHoUtyHN598QzvkXemYjiA77ZD9E4FXT4O7oiMINxbQMURapVI65v47IY0ghXbIFnDTiFVroNU4xFn04GqXI3qpgenbSkuCpwPWn7DalHAdIY9bgeKOWRpBrPtqqx5pBcxd0Nz4YEHtMiDOQsmWmDK04Cn0vf8EPfq/k8W1PsYAAAAASUVORK5CYII="
+        const imgGreen = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEcAAAAdCAYAAAD4pXGOAAAAAXNSR0IArs4c6QAAA8hJREFUaEPlmbtOG1EQhscPAJWhNG5NpBRpooSkjxIpdS5FWpvClqCxXyCubMm8Qy595DZNQt4gpAVKoIIHONEsO4fZ3TOXdZZICVQIj8/8/79nd78ztKDOzxJCLH8BLfGr3ro6vVO13j7eulKPG4PWAksID788z77+7tFL2G33AVIB1ahTg3bogfvPsiUO2+9h5+sDUY+7jgTlvq7DsQyxz+n7yYBWqJPWUQ1hcHkwpCcZ0Ap1fJ0WD0Y0voSw9moNtt8+jRf76MM3uPp8VbxanjorQI+hvM/V0U7Us7Z9KOpR65R+WTim8XyLU92vj9/h8tPltTB+a3nqlhDWX69D782TdNAe46wPGl+/90PVg/0ufz6GGCDXrfTLwsFaEhx3RMI4hZPcNWSVhS3tLiytrEX9mB7RUP4owDUwnOSuKekR60pB8wDjM8djfDKZhHa7DScnJ7C1tQX7+/uVN9ZsNgutVguOj4+h1+vBYDCovtXY7tFuT8v4eDwOGxsbcHp6Cp1OR9SDOWEN6un3+0k9qaBjIRlHY3t7e8nX9HA4DBiKVoNCRqNRQLEXFxcwnU6Ta5ExaS3Sg+ulLgL+HfV0u91sj0iaqQ51a3pS/qNwvOLn5+eAV0ISgzW4aw4ODmTGybczNdPWQrHYL2VsPp+Hs7Ozv64H7wzSbJqMT807+Ev9cCw4yx+WMUuNpJsI/Bb1FMOxGlmw6AFK9hYxA3ToMemXcYxJ0iSoQMgeUxa8ldagPhZJi0cRy5QTFuuSdJGQvaacsOgBSjqjiQE6jRPc0ToV3vECpXAUqXAONarwh5N+VcBj8KYeRbymcpgs8BCHVwXwItknehFxx3C4Ke14YMLinxIye6BXwIwbz+sqR4PyC4CZj8cM4chTDrkwsjCN5+CFQKXBGTJKCCEj6SQTWQF6jefAiXqwn8RUpAcpebFYqITMAywUIuShLmkROhogLErki0IIJjVqpV4aVDahB9dA2ORwlyKIlJ4KIW9ubqoo3gSaeARTyJap29RTHwKbUPOPrFEvHAvK/iM6RivNzpA9BO0N0LoQFiRSH++cuUTHN+FYpu4gHV+H4zSujjbZq5ePPyMvEVc4e5nI74RED0FrvVaaISdHqZ5xa40jCB+KV+DNM0NekY75EWSlGXJlR9D9asFdzSOIeCxgxxB1lMp2mPTfCToZpHrVmiF7wA1HpCqxWgF6jQOARw+NdkWiVwKMbytzkXx34PgTR5sarhPkSSNQmjFrRxDvvNqrRxsBSxe0cnzwoHYTDOehZE9NE1pwjVSv3wq6qZIyfoNoAAAAAElFTkSuQmCC"
+        const imgBlue = "data:image/png;base64,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"
+        const tilemap = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAgCAYAAABgrToAAAAAAXNSR0IArs4c6QAAA4xJREFUWEfNl01IVFEUx/8vSpoZGqxmjBRTx8BxEX2sKgjChbZq6SIIWlibQCFokeWq1IUQtGhjmyBo0bJVuoggqF2fCy10VCIrZwqbGAWDbpzrnNe5b957cx8Ir7eZ++75+p1z7j0z4wwMDCgEPGtra8hkMlpKa+9De21tbb7WxWJR2ySTSWSzWV+dSqVi+PXqkdwZHBxUQcHJKwGQoheSbbq7u2vgGY5sKEHS9QvO1DI+63FMDRgUnAHpU0JKhwQo7SUcA9JnKpVyq8i+ZFnZJwFKuQsonSwtLbm2soXULnIk5VQhzprkpVKpRs7OSI90yJ70ZAIcn/xJ/1sCyABcJW8CUk6AMzMzbgH4jDMgyakL/BiA0jEH4wpS2f3kMsBWy8m3Cyidy4z5kgTJGZDllBifIVpHlctzSfYa0C84KxIgybmi3gPOcnmGpY6U++l45V4dRxLHtZ7vOKJuf182wl/Z24zOhTeOC6iUUo6z+S7X0ipo30YnyD/BhRXGBSrkjiJXeK11ec3ADC11pIzltrbS/+V0k6Jq0cNVlO9GBWdPnUDTjiz2PH0MP4BXh07iwP5dKM+t6GRkxSnoRsvOUPsfPWexWCzh2PsXri0DEtzd8ormkXsG4HJvH75++WU4kNVrbG/Fyu8i8s9f+iZAAJ8rP5Eqlo0E2AcVIJ1Io3l6KhognQ+bFge1sN4RCPMfqcX1LknYBYoikxfG6pLENV44rtWYiRWyf1wlnkwZCOtn+oBH1+Kfg+gft5uDztAk1J1LOgtee+egoVMd6pw2nStr22os8p9In1a6WgC4ivLd/Ca58Rb48w1qrNd3jDg354D1AlBZ1MkYl2poEsj0aHmg/fA0sG0f1K3Dri0DEtx6+ZnmkXsmIDlI5KBGDhqA+tYRQKqdrKFGjvsnoO3TQOmdkYB7w6sJygSsABmgXouDWugCyGMijkCY/2gtrvNjIcqs806FwB8jNpck1hFDwW3GTKyQo12q8YH5v3v1fBK4/uE/mIOjXZZzcMKBurqp61TXNXNQ6gTNQRtbodOYb1W6WgC4ivLdHDMPHWCjA+pCwX+M3OsEdheABehkjDk44QAtCLe/nwMaFqDO/bNlQIJbnf2keeSeCUgOlhughmdr5yADVHJQF+eDE1jdDuCjkYB7+8fyQPOGUQArQD0CLFoc1H4XIOAIhPmP1uI45qDNJYl1xFDwkDHzFxq+rEXIA/riAAAAAElFTkSuQmCC"
+        const ui = "data:image/png;base64,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"
+        const unknownImg = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAE0lEQVR42mP8z8BQz4AHMI4MBQDa5gv5R4n88QAAAABJRU5ErkJggg==";
+        const levels = [
+            { "levelName": "", "creatorName": "", "levelIndex": 0, "tiles": [{ "position": { "x": -7, "y": -3 }, "tile": 0 }, { "position": { "x": -6, "y": -3 }, "tile": 0 }, { "position": { "x": -5, "y": -3 }, "tile": 0 }, { "position": { "x": -4, "y": -3 }, "tile": 0 }, { "position": { "x": -3, "y": -3 }, "tile": 0 }, { "position": { "x": -2, "y": -3 }, "tile": 0 }, { "position": { "x": -1, "y": -3 }, "tile": 101 }, { "position": { "x": 4, "y": -3 }, "tile": 201 }, { "position": { "x": 5, "y": -3 }, "tile": 0 }, { "position": { "x": 6, "y": -3 }, "tile": 0 }, { "position": { "x": -7, "y": -2 }, "tile": 0 }, { "position": { "x": -6, "y": -2 }, "tile": 0 }, { "position": { "x": -5, "y": -2 }, "tile": 0 }, { "position": { "x": -4, "y": -2 }, "tile": 0 }, { "position": { "x": -3, "y": -2 }, "tile": 0 }, { "position": { "x": -2, "y": -2 }, "tile": 0 }, { "position": { "x": -1, "y": -2 }, "tile": 0 }, { "position": { "x": 0, "y": -2 }, "tile": 0 }, { "position": { "x": 1, "y": -2 }, "tile": 0 }, { "position": { "x": 2, "y": -2 }, "tile": 0 }, { "position": { "x": 3, "y": -2 }, "tile": 0 }, { "position": { "x": 4, "y": -2 }, "tile": 0 }, { "position": { "x": 5, "y": -2 }, "tile": 0 }, { "position": { "x": 6, "y": -2 }, "tile": 0 }, { "position": { "x": -7, "y": -1 }, "tile": 0 }, { "position": { "x": -6, "y": -1 }, "tile": 0 }, { "position": { "x": -5, "y": -1 }, "tile": 0 }, { "position": { "x": -4, "y": -1 }, "tile": 0 }, { "position": { "x": -3, "y": -1 }, "tile": 102 }, { "position": { "x": 4, "y": -1 }, "tile": 202 }, { "position": { "x": 5, "y": -1 }, "tile": 0 }, { "position": { "x": 6, "y": -1 }, "tile": 0 }, { "position": { "x": -7, "y": 0 }, "tile": 0 }, { "position": { "x": -6, "y": 0 }, "tile": 0 }, { "position": { "x": -5, "y": 0 }, "tile": 0 }, { "position": { "x": -4, "y": 0 }, "tile": 0 }, { "position": { "x": -3, "y": 0 }, "tile": 0 }, { "position": { "x": -2, "y": 0 }, "tile": 0 }, { "position": { "x": -1, "y": 0 }, "tile": 0 }, { "position": { "x": 0, "y": 0 }, "tile": 0 }, { "position": { "x": 1, "y": 0 }, "tile": 0 }, { "position": { "x": 2, "y": 0 }, "tile": 0 }, { "position": { "x": 3, "y": 0 }, "tile": 0 }, { "position": { "x": 4, "y": 0 }, "tile": 0 }, { "position": { "x": 5, "y": 0 }, "tile": 0 }, { "position": { "x": 6, "y": 0 }, "tile": 0 }, { "position": { "x": -7, "y": 1 }, "tile": 0 }, { "position": { "x": -6, "y": 1 }, "tile": 0 }, { "position": { "x": -5, "y": 1 }, "tile": 100 }, { "position": { "x": 4, "y": 1 }, "tile": 200 }, { "position": { "x": 5, "y": 1 }, "tile": 0 }, { "position": { "x": 6, "y": 1 }, "tile": 0 }, { "position": { "x": -7, "y": 2 }, "tile": 0 }, { "position": { "x": -6, "y": 2 }, "tile": 0 }, { "position": { "x": -5, "y": 2 }, "tile": 0 }, { "position": { "x": -4, "y": 2 }, "tile": 0 }, { "position": { "x": -3, "y": 2 }, "tile": 0 }, { "position": { "x": -2, "y": 2 }, "tile": 0 }, { "position": { "x": -1, "y": 2 }, "tile": 0 }, { "position": { "x": 0, "y": 2 }, "tile": 0 }, { "position": { "x": 1, "y": 2 }, "tile": 0 }, { "position": { "x": 2, "y": 2 }, "tile": 0 }, { "position": { "x": 3, "y": 2 }, "tile": 0 }, { "position": { "x": 4, "y": 2 }, "tile": 0 }, { "position": { "x": 5, "y": 2 }, "tile": 0 }, { "position": { "x": 6, "y": 2 }, "tile": 0 }], "score": { "startingMoves": 17, "goldMoves": 8, "silverMoves": 6, "bronzeMoves": 4 }, "levelSize": 10, "levelId": "" },
+            { "levelName": "", "creatorName": "", "levelIndex": 0, "tiles": [{ "position": { "x": -7, "y": -3 }, "tile": 0 }, { "position": { "x": -6, "y": -3 }, "tile": 0 }, { "position": { "x": -5, "y": -3 }, "tile": 0 }, { "position": { "x": -4, "y": -3 }, "tile": 0 }, { "position": { "x": -3, "y": -3 }, "tile": 0 }, { "position": { "x": -2, "y": -3 }, "tile": 101 }, { "position": { "x": 4, "y": -3 }, "tile": 201 }, { "position": { "x": 5, "y": -3 }, "tile": 0 }, { "position": { "x": 6, "y": -3 }, "tile": 0 }, { "position": { "x": -7, "y": -2 }, "tile": 0 }, { "position": { "x": -6, "y": -2 }, "tile": 0 }, { "position": { "x": -5, "y": -2 }, "tile": 101 }, { "position": { "x": -4, "y": -2 }, "tile": 0 }, { "position": { "x": -3, "y": -2 }, "tile": 0 }, { "position": { "x": -2, "y": -2 }, "tile": 0 }, { "position": { "x": -1, "y": -2 }, "tile": 0 }, { "position": { "x": 0, "y": -2 }, "tile": 0 }, { "position": { "x": 1, "y": -2 }, "tile": 0 }, { "position": { "x": 2, "y": -2 }, "tile": 0 }, { "position": { "x": 3, "y": -2 }, "tile": 0 }, { "position": { "x": 4, "y": -2 }, "tile": 0 }, { "position": { "x": 5, "y": -2 }, "tile": 0 }, { "position": { "x": 6, "y": -2 }, "tile": 0 }, { "position": { "x": -7, "y": -1 }, "tile": 0 }, { "position": { "x": -6, "y": -1 }, "tile": 0 }, { "position": { "x": 0, "y": -1 }, "tile": 201 }, { "position": { "x": 1, "y": -1 }, "tile": 0 }, { "position": { "x": 2, "y": -1 }, "tile": 0 }, { "position": { "x": 3, "y": -1 }, "tile": 0 }, { "position": { "x": 4, "y": -1 }, "tile": 0 }, { "position": { "x": 5, "y": -1 }, "tile": 0 }, { "position": { "x": 6, "y": -1 }, "tile": 0 }, { "position": { "x": -7, "y": 0 }, "tile": 0 }, { "position": { "x": -6, "y": 0 }, "tile": 0 }, { "position": { "x": -5, "y": 0 }, "tile": 0 }, { "position": { "x": -4, "y": 0 }, "tile": 0 }, { "position": { "x": -3, "y": 0 }, "tile": 0 }, { "position": { "x": -2, "y": 0 }, "tile": 0 }, { "position": { "x": -1, "y": 0 }, "tile": 0 }, { "position": { "x": 0, "y": 0 }, "tile": 0 }, { "position": { "x": 1, "y": 0 }, "tile": 0 }, { "position": { "x": 2, "y": 0 }, "tile": 0 }, { "position": { "x": 3, "y": 0 }, "tile": 0 }, { "position": { "x": 4, "y": 0 }, "tile": 0 }, { "position": { "x": 5, "y": 0 }, "tile": 0 }, { "position": { "x": 6, "y": 0 }, "tile": 0 }, { "position": { "x": -7, "y": 1 }, "tile": 0 }, { "position": { "x": -6, "y": 1 }, "tile": 0 }, { "position": { "x": -5, "y": 1 }, "tile": 0 }, { "position": { "x": 2, "y": 1 }, "tile": 201 }, { "position": { "x": 3, "y": 1 }, "tile": 0 }, { "position": { "x": 4, "y": 1 }, "tile": 0 }, { "position": { "x": 5, "y": 1 }, "tile": 0 }, { "position": { "x": 6, "y": 1 }, "tile": 0 }, { "position": { "x": -7, "y": 2 }, "tile": 0 }, { "position": { "x": -6, "y": 2 }, "tile": 0 }, { "position": { "x": -5, "y": 2 }, "tile": 0 }, { "position": { "x": -4, "y": 2 }, "tile": 101 }, { "position": { "x": -3, "y": 2 }, "tile": 0 }, { "position": { "x": -2, "y": 2 }, "tile": 0 }, { "position": { "x": -1, "y": 2 }, "tile": 0 }, { "position": { "x": 0, "y": 2 }, "tile": 0 }, { "position": { "x": 1, "y": 2 }, "tile": 0 }, { "position": { "x": 2, "y": 2 }, "tile": 0 }, { "position": { "x": 3, "y": 2 }, "tile": 0 }, { "position": { "x": 4, "y": 2 }, "tile": 0 }, { "position": { "x": 5, "y": 2 }, "tile": 0 }, { "position": { "x": 6, "y": 2 }, "tile": 0 }], "score": { "startingMoves": 13, "goldMoves": 5, "silverMoves": 4, "bronzeMoves": 2 }, "levelSize": 10, "levelId": "" },
+            { "levelName": "", "creatorName": "", "levelIndex": 0, "tiles": [{ "position": { "x": -7, "y": -3 }, "tile": 0 }, { "position": { "x": -6, "y": -3 }, "tile": 0 }, { "position": { "x": -5, "y": -3 }, "tile": 0 }, { "position": { "x": -4, "y": -3 }, "tile": 0 }, { "position": { "x": -3, "y": -3 }, "tile": 0 }, { "position": { "x": -2, "y": -3 }, "tile": 0 }, { "position": { "x": -1, "y": -3 }, "tile": 0 }, { "position": { "x": 0, "y": -3 }, "tile": 0 }, { "position": { "x": 1, "y": -3 }, "tile": 0 }, { "position": { "x": 2, "y": -3 }, "tile": 0 }, { "position": { "x": 3, "y": -3 }, "tile": 0 }, { "position": { "x": 4, "y": -3 }, "tile": 0 }, { "position": { "x": 5, "y": -3 }, "tile": 0 }, { "position": { "x": 6, "y": -3 }, "tile": 0 }, { "position": { "x": -7, "y": -2 }, "tile": 0 }, { "position": { "x": -6, "y": -2 }, "tile": 0 }, { "position": { "x": -5, "y": -2 }, "tile": 0 }, { "position": { "x": -4, "y": -2 }, "tile": 0 }, { "position": { "x": -3, "y": -2 }, "tile": 0 }, { "position": { "x": -2, "y": -2 }, "tile": 0 }, { "position": { "x": -1, "y": -2 }, "tile": 0 }, { "position": { "x": 0, "y": -2 }, "tile": 0 }, { "position": { "x": 1, "y": -2 }, "tile": 0 }, { "position": { "x": 2, "y": -2 }, "tile": 0 }, { "position": { "x": 3, "y": -2 }, "tile": 0 }, { "position": { "x": 4, "y": -2 }, "tile": 0 }, { "position": { "x": 5, "y": -2 }, "tile": 0 }, { "position": { "x": 6, "y": -2 }, "tile": 0 }, { "position": { "x": -7, "y": -1 }, "tile": 0 }, { "position": { "x": -6, "y": -1 }, "tile": 0 }, { "position": { "x": -5, "y": -1 }, "tile": 0 }, { "position": { "x": -4, "y": -1 }, "tile": 0 }, { "position": { "x": -3, "y": -1 }, "tile": 0 }, { "position": { "x": 2, "y": -1 }, "tile": 0 }, { "position": { "x": 3, "y": -1 }, "tile": 0 }, { "position": { "x": 4, "y": -1 }, "tile": 0 }, { "position": { "x": 5, "y": -1 }, "tile": 0 }, { "position": { "x": 6, "y": -1 }, "tile": 0 }, { "position": { "x": -7, "y": 0 }, "tile": 0 }, { "position": { "x": -6, "y": 0 }, "tile": 202 }, { "position": { "x": -4, "y": 0 }, "tile": 101 }, { "position": { "x": 3, "y": 0 }, "tile": 102 }, { "position": { "x": 5, "y": 0 }, "tile": 201 }, { "position": { "x": 6, "y": 0 }, "tile": 0 }, { "position": { "x": -7, "y": 1 }, "tile": 0 }, { "position": { "x": -6, "y": 1 }, "tile": 0 }, { "position": { "x": -5, "y": 1 }, "tile": 0 }, { "position": { "x": -4, "y": 1 }, "tile": 0 }, { "position": { "x": -3, "y": 1 }, "tile": 0 }, { "position": { "x": 2, "y": 1 }, "tile": 0 }, { "position": { "x": 3, "y": 1 }, "tile": 0 }, { "position": { "x": 4, "y": 1 }, "tile": 0 }, { "position": { "x": 5, "y": 1 }, "tile": 0 }, { "position": { "x": 6, "y": 1 }, "tile": 0 }, { "position": { "x": -7, "y": 2 }, "tile": 0 }, { "position": { "x": -6, "y": 2 }, "tile": 0 }, { "position": { "x": -5, "y": 2 }, "tile": 0 }, { "position": { "x": -4, "y": 2 }, "tile": 0 }, { "position": { "x": -3, "y": 2 }, "tile": 0 }, { "position": { "x": -2, "y": 2 }, "tile": 0 }, { "position": { "x": -1, "y": 2 }, "tile": 0 }, { "position": { "x": 0, "y": 2 }, "tile": 0 }, { "position": { "x": 1, "y": 2 }, "tile": 0 }, { "position": { "x": 2, "y": 2 }, "tile": 0 }, { "position": { "x": 3, "y": 2 }, "tile": 0 }, { "position": { "x": 4, "y": 2 }, "tile": 0 }, { "position": { "x": 5, "y": 2 }, "tile": 0 }, { "position": { "x": 6, "y": 2 }, "tile": 0 }], "score": { "startingMoves": 32, "goldMoves": 10, "silverMoves": 8, "bronzeMoves": 5 }, "levelSize": 10, "levelId": "" },
+            { "levelName": "", "creatorName": "", "levelIndex": 0, "tiles": [{ "position": { "x": -7, "y": -3 }, "tile": 0 }, { "position": { "x": -6, "y": -3 }, "tile": 0 }, { "position": { "x": -2, "y": -3 }, "tile": 101 }, { "position": { "x": 2, "y": -3 }, "tile": 102 }, { "position": { "x": 3, "y": -3 }, "tile": 0 }, { "position": { "x": 5, "y": -3 }, "tile": 100 }, { "position": { "x": 6, "y": -3 }, "tile": 0 }, { "position": { "x": -7, "y": -2 }, "tile": 0 }, { "position": { "x": -6, "y": -2 }, "tile": 0 }, { "position": { "x": 3, "y": -2 }, "tile": 0 }, { "position": { "x": 6, "y": -2 }, "tile": 0 }, { "position": { "x": -7, "y": -1 }, "tile": 0 }, { "position": { "x": -6, "y": -1 }, "tile": 0 }, { "position": { "x": -4, "y": -1 }, "tile": 0 }, { "position": { "x": -3, "y": -1 }, "tile": 0 }, { "position": { "x": -1, "y": -1 }, "tile": 0 }, { "position": { "x": 0, "y": -1 }, "tile": 0 }, { "position": { "x": 1, "y": -1 }, "tile": 0 }, { "position": { "x": 2, "y": -1 }, "tile": 0 }, { "position": { "x": 3, "y": -1 }, "tile": 0 }, { "position": { "x": 5, "y": -1 }, "tile": 0 }, { "position": { "x": 6, "y": -1 }, "tile": 0 }, { "position": { "x": -7, "y": 0 }, "tile": 0 }, { "position": { "x": -6, "y": 0 }, "tile": 0 }, { "position": { "x": -3, "y": 0 }, "tile": 0 }, { "position": { "x": 5, "y": 0 }, "tile": 0 }, { "position": { "x": 6, "y": 0 }, "tile": 0 }, { "position": { "x": -7, "y": 1 }, "tile": 0 }, { "position": { "x": -6, "y": 1 }, "tile": 0 }, { "position": { "x": -5, "y": 1 }, "tile": 201 }, { "position": { "x": -3, "y": 1 }, "tile": 0 }, { "position": { "x": -1, "y": 1 }, "tile": 202 }, { "position": { "x": 1, "y": 1 }, "tile": 0 }, { "position": { "x": 2, "y": 1 }, "tile": 0 }, { "position": { "x": 3, "y": 1 }, "tile": 0 }, { "position": { "x": 4, "y": 1 }, "tile": 0 }, { "position": { "x": 5, "y": 1 }, "tile": 0 }, { "position": { "x": 6, "y": 1 }, "tile": 0 }, { "position": { "x": -7, "y": 2 }, "tile": 0 }, { "position": { "x": -6, "y": 2 }, "tile": 0 }, { "position": { "x": 4, "y": 2 }, "tile": 200 }, { "position": { "x": 5, "y": 2 }, "tile": 0 }, { "position": { "x": 6, "y": 2 }, "tile": 0 }], "score": { "startingMoves": 20, "goldMoves": 5, "silverMoves": 4, "bronzeMoves": 2 }, "levelSize": 10, "levelId": "" }
+        ]
+        var mapSize = { x: 14, y: 6 }
+        var mapOffset = { x: 1, y: 5 }
+        var currentLevelNum = 0;
+
+        var textComponents = [];
+
+        /// START
+        /// PLAY
+        /// WIN
+        /// LOSE
+        var gameState = "START"
+
+        var mapBroderObjects = [];
+        var gameObjects = [];
+
+        var gameMap = [];
+        var uiMoves;
+
+
+        var myGameArea = {
+            canvas: document.getElementById("light-it-up"),
+            start: function () {
+
+                var s = getComputedStyle(myGameArea.canvas);
+                var w = s.width.split('px')[0];
+                var h = s.height.split('px')[0];
+                var aspectRatio = w / h;
+
+                //aspectRatio = 1.5
+
+                this.canvas.width = 128;
+
+                this.canvas.height = this.canvas.width / aspectRatio;
+                mapOffset.y = ((this.canvas.height / 8) - mapSize.y) / 2 + 0.3
+
+
+                textComponents.push(new textComponent("light it up", this.canvas.width / 2, this.canvas.height / 2, true, true))
+                textComponents.push(new textComponent("press", this.canvas.width / 2, this.canvas.height - this.canvas.height / 8, true, true))
+
+                // console.log(w)
+                // console.log(h)
+
+                // key controls
+                window.addEventListener('keydown', function (e) {
+                    if (!myGameArea.isRunning)
+                        return;
+                    e.preventDefault()
+                    handleKeyDown(e.keyCode, e.repeat)
+                })
+
+                // mouse controll
+                window.addEventListener('mousedown', function (e) {
+                    handleTouch(e.pageX, e.pageY)
+                    //console.log(myGameArea.x, myGameArea.y)
+                })
+                window.addEventListener('mouseup', function (e) {
+                    handleTouchEnd(e.pageX, e.pageY)
+                })
+
+                // touch controll
+                window.addEventListener('touchstart', function (e) {
+                    handleTouch(e.touches[0].pageX, e.touches[0].pageY)
+                    //console.log(myGameArea.x, myGameArea.y)
+                })
+                window.addEventListener('touchend', function (e) {
+                    handleTouchEnd(e.changedTouches[e.changedTouches.length-1].pageX, e.changedTouches[e.changedTouches.length-1].pageY)
+                })
+
+                function handleTouch(x, y) {
+                    if ((myGameArea.canvas.offsetHeight < y) || (myGameArea.canvas.offsetTop > y) || (myGameArea.canvas.offsetWidth < x) || (myGameArea.canvas.offsetLeft > x)) {
+                        //console.log("STOP")
+                        myGameArea.stop();
+                        return;
+                    } else {
+                        //console.log("CONTINUE")
+                        myGameArea.continue();
+                    }
+
+                    myGameArea.x = (x - myGameArea.canvas.offsetLeft) / (w / myGameArea.canvas.width);
+                    myGameArea.y = (y - myGameArea.canvas.offsetTop) / (h / myGameArea.canvas.height);
+
+                    handleKeyDown(0, false);
+                }
+                function handleTouchEnd(x, y) {
+                    if (!myGameArea.isRunning)
+                        return;
+
+                    x = (x - myGameArea.canvas.offsetLeft) / (w / myGameArea.canvas.width);
+                    y = (y - myGameArea.canvas.offsetTop) / (h / myGameArea.canvas.height);
+                    if (!myGameArea.x)
+                        return;
+
+                    var touchDif = { x: x - myGameArea.x, y: y - myGameArea.y }
+                    //console.log(x, myGameArea.x, Math.sign(touchDif.x))
+                    myGameArea.x = false;
+                    myGameArea.y = false;
+                    if (Math.abs(touchDif.x) > Math.abs(touchDif.y))
+                        moveObjects(Math.sign(touchDif.x), 0)
+                    if (Math.abs(touchDif.x) < Math.abs(touchDif.y))
+                        moveObjects(0, Math.sign(touchDif.y))
+                }
+
+                this.context = this.canvas.getContext("2d",);
+                this.context.imageSmoothingEnabled = false;
+                this.context.textSmoothingEnabled = false;
+                this.context.font = "30px  ";
+                this.context.fillStyle = "white";
+                this.context.textRendering = "geometricPrecision"
+
+                //document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+
+                myGameArea.continue();
+            },
+            clear: function () {
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            },
+            continue: function () {
+                if (this.isRunning)
+                    return;
+                this.isRunning = true;
+                this.interval = setInterval(updateGameArea, 20);
+            },
+            stop: function () {
+                if (!this.isRunning)
+                    return;
+                this.isRunning = false;
+                clearInterval(this.interval);
+            }
+        }
+
+        myGameArea.start();
+
+        function clearMap() {
+            //console.log("CLEAR")
+            mapBroderObjects = []
+            gameObjects = []
+            gameMap = []
+            textComponents = []
+            textComponents.push(new textComponent("light it up", myGameArea.canvas.width / 2, myGameArea.canvas.height / 8, true, true))
+            var mmayoComp = new textComponent("mmayo", myGameArea.canvas.width - 5, myGameArea.canvas.height - 5, false, false);
+            mmayoComp.position.x -= mmayoComp.spriteSize.x
+            mmayoComp.position.y -= mmayoComp.spriteSize.y
+            textComponents.push(mmayoComp)
+            var playStoreComp = new textComponent("play store", 5, 0, false, true);
+            playStoreComp.position.y += mmayoComp.position.y + 4
+            playStoreComp.onClickAction = () => {
+                window.open('https://play.google.com/store/apps/details?id=com.mmayo.LightItUp', '_blank');
+            }
+            textComponents.push(playStoreComp)
+        }
+
+        function playLevel(levelNum) {
+            if (levelNum >= levels.length) {
+                console.log("ERROR: LEVEL " + levelNum + " DOES NOT EXIST")
+                return
+            }
+            gameState = "PLAY"
+            currentLevelNum = levelNum
+            populateMap(levelNum)
+        }
+        function populateMap(levelNum) {
+            clearMap();
+
+            // map borders
+            for (let i = 0; i < mapSize.x + mapOffset.x * 2; i++) {
+                for (let j = mapOffset.y - Math.floor(mapOffset.y) - 1; j < mapOffset.y; j++) {
+                    mapBroderObjects.push(new component(0, i - mapOffset.x, j - mapOffset.y));
+                }
+                for (let j = mapOffset.y + mapSize.y; j < mapSize.y + mapOffset.y * 2; j++) {
+                    mapBroderObjects.push(new component(0, i - mapOffset.x, j - mapOffset.y));
+                }
+            }
+            for (let j = mapOffset.y; j < mapSize.y + mapOffset.y; j++) {
+                for (let i = 0; i < mapOffset.x; i++) {
+                    mapBroderObjects.push(new component(0, i - mapOffset.x, j - mapOffset.y));
+                }
+                for (let i = mapOffset.x + mapSize.x; i < mapSize.x + mapOffset.x * 2; i++) {
+                    mapBroderObjects.push(new component(0, i - mapOffset.x, j - mapOffset.y));
+                }
+            }
+
+
+            for (var i = 0; i < mapSize.x; i++) {
+                gameMap[i] = new Array(mapSize.y);
+            }
+
+            levels[levelNum].tiles.forEach(element => {
+                let comp = new component(element.tile, element.position.x + mapSize.x / 2, element.position.y + mapSize.y / 2)
+                gameMap[element.position.x + mapSize.x / 2][element.position.y + mapSize.y / 2] = comp
+                if (element.tile == 100 || element.tile == 101 || element.tile == 102)
+                    gameObjects.push(comp);
+
+            });
+            uiMoves = new numberComponent(levels[levelNum].score.startingMoves - levels[levelNum].score.goldMoves, myGameArea.canvas.width - 10, myGameArea.canvas.height / 8, true)
+            textComponents.push(uiMoves)
+        }
+
+        function numberComponent(number, x, y, rightToLeft) {
+            this.image = new Image();
+            this.image.src = ui;
+
+            this.rightToLeft = rightToLeft;
+
+            if (typeof number != "number") {
+                console.log("ERROR: number type not recognzed:", text)
+                return;
+            }
+            this.position = { x: x, y: y }
+            this.number = number
+            this.realDigits = []
+
+            this.updateNum = function () {
+                var digits = this.number.toString().split('');
+                this.realDigits = digits.map(Number)
+                //console.log("changing num: " + this.number, this.realDigits);
+            }
+
+            this.updateNum()
+
+
+            this.update = function () {
+                ctx = myGameArea.context;
+                let xPos = 0
+                let digit = 0
+                for (let i = 0; i < this.realDigits.length; i++) {
+                    xPos = this.rightToLeft ? this.position.x - i * 6 : this.position.x + i * 6
+                    digit = this.rightToLeft ? this.realDigits[this.realDigits.length - i - 1] : this.realDigits[i]
+
+                    ctx.drawImage(this.image, digit * 6, -1, 6, 6, xPos, this.position.y, 6, 6);
+                    //ctx.drawImage(this.image, 12, -1, 6, 6, xPos, this.position.y, 6, 6);
+
+                }
+            }
+
+            this.clicked = function () { }
+        }
+
+        function textComponent(text, x, y, xCentered, yCentered) {
+            this.image = new Image();
+            this.image.src = ui;
+
+            this.spriteStart = { x: 0, y: 0 }
+            this.spriteSize = { x: 5, y: 5 }
+            this.position = { x: x, y: y }
+
+            if (typeof text != "string") {
+                console.log("ERROR: text type not recognzed:", text)
+                return;
+            }
+
+            switch (text) {
+                case "you won":
+                    this.spriteSize.x = 44
+                    this.spriteStart.y = 5
+                    break;
+                case "you lost":
+                    this.spriteSize.x = 46
+                    this.spriteStart.y = 5
+                    this.spriteStart.x = 44
+                    break;
+                case "next level":
+                    this.spriteSize.x = 62
+                    this.spriteStart.y = 10
+                    break;
+                case "restart":
+                    this.spriteSize.x = 37
+                    this.spriteStart.y = 10
+                    this.spriteStart.x = 62
+                    break;
+                case "play again":
+                    this.spriteSize.x = 55
+                    this.spriteStart.x = 60
+                    break;
+
+                case "light it up":
+                    this.spriteSize.x = 72
+                    this.spriteSize.y = 12
+                    this.spriteStart.y = 20
+                    break;
+                case "play store":
+                    this.spriteSize.x = 13
+                    this.spriteSize.y = 19
+                    this.spriteStart.y = 32
+                    this.spriteStart.x = 77
+                    break;
+                case "mmayo":
+                    this.spriteSize.x = 47
+                    this.spriteSize.y = 10
+                    this.spriteStart.x = 72
+                    this.spriteStart.y = 20
+                    break;
+                case "click here":
+                    this.spriteSize.x = 90
+                    this.spriteSize.y = 19
+                    this.spriteStart.y = 32
+                    break;
+                case "press":
+                    this.spriteSize.x = 106
+                    this.spriteStart.y = 15
+                    break;
+
+                default:
+                    console.log("ERROR: text not recognzed:", text)
+                    return;
+                    break;
+            }
+
+            if (xCentered) {
+                this.position.x = this.position.x - (this.spriteSize.x / 2)
+            }
+            if (yCentered) {
+                this.position.y = this.position.y - (this.spriteSize.y / 2)
+            }
+
+            this.update = function () {
+                ctx = myGameArea.context;
+                ctx.drawImage(this.image, this.spriteStart.x, this.spriteStart.y, this.spriteSize.x, this.spriteSize.y, this.position.x, this.position.y, this.spriteSize.x, this.spriteSize.y);
+            }
+
+            this.onClickAction = false;
+            this.clicked = function () {
+                if (!this.onClickAction)
+                    return;
+                if (!myGameArea.y)
+                    return;
+
+                var myleft = this.position.x;
+                var myright = this.position.x + this.spriteSize.x;
+                var mytop = this.position.y;
+                var mybottom = this.position.y + this.spriteSize.y;
+                var clicked = true;
+                if ((mybottom < myGameArea.y) || (mytop > myGameArea.y) || (myright < myGameArea.x) || (myleft > myGameArea.x)) {
+                    clicked = false;
+                }
+                //console.log("CLICKED?", myGameArea.x, myGameArea.y, myleft, myright, mytop, mybottom)
+                if (clicked) {
+                    this.onClickAction()
+                }
+            }
+        }
+
+        function component(type, x, y) {
+            this.image = new Image();
+
+            this.spriteStart = { x: 0, y: 0 }
+            this.spriteEnd = { x: 8, y: 8 }
+            this.spriteOffset = { x: 0, y: 0 }
+
+            this.type = type;
+            switch (type) {
+                case 0:
+                    this.image.src = tilemap;
+
+                    // animation
+                    const distance = 25;
+                    const initialFunction = (x - y) + distance
+                    this.animationTick = (initialFunction % distance)
+                    this.spriteStart.x = 0
+
+
+                    this.animation = setInterval(() => {
+                        this.animationTick++;
+                        this.animationTick %= distance;
+
+                        if (this.animationTick < 5)
+                            this.spriteStart.x = (this.spriteStart.x + 8) % (5 * 8)
+                        else
+                            this.spriteStart.x = 0
+
+                    }, 200)
+                    break;
+                case 100:
+                case 101:
+                case 102:
+                    switch (type) {
+                        case 100:
+                            this.image.src = imgRed;
+                            break;
+                        case 101:
+                            this.image.src = imgBlue;
+                            break;
+                        case 102:
+                            this.image.src = imgGreen;
+                            break;
+                        default:
+                            this.image.src = unknownImg;
+                            break;
+                    }
+                    this.isOn = false;
+
+                    this.animationTick = 0;
+                    this.animation = setInterval(() => {
+                        this.animationTick = (this.animationTick + 1) % 12
+                        if (this.animationTick >= 3 && this.animationTick <= 5)
+                            this.spriteStart.x = (this.spriteStart.x + 9)
+                        else if (this.animationTick >= 9)
+                            this.spriteStart.x = (this.spriteStart.x - 9)
+                    }, 250)
+
+                    this.spriteEnd.y = 9;
+                    this.spriteOffset.y -= 1;
+                    break;
+                case 200:
+                case 201:
+                case 202:
+                    this.spriteStart.y = 8 + ((type - 200) * 8)
+                    this.image.src = tilemap;
+                    this.animation = setInterval(() => {
+                        this.spriteStart.x = (this.spriteStart.x + 8) % (8 * 3)
+                    }, 250)
+                    break;
+                default:
+                    this.image.src = unknownImg;
+                    break;
+            }
+
+            this.spritePos = { x, y };
+            this.pos = { x, y };
+
+            this.width = 8;
+            this.height = 8;
+
+            this.pos.x = x;
+            this.pos.y = y;
+            this.spritePos.x = x * 8 + this.spriteOffset.x;
+            this.spritePos.y = y * 8 + this.spriteOffset.y;
+
+
+            this.updateSpritePos = function () {
+                this.spritePos.x += ((this.pos.x * 8) - this.spritePos.x + this.spriteOffset.x) * 0.1;
+                this.spritePos.y += ((this.pos.y * 8) - this.spritePos.y + this.spriteOffset.y) * 0.1;
+            }
+
+            this.update = function () {
+                ctx = myGameArea.context;
+
+                this.updateSpritePos();
+                ctx.drawImage(this.image, this.spriteStart.x, this.spriteStart.y, this.spriteEnd.x, this.spriteEnd.y, this.spritePos.x + Math.floor(mapOffset.x * 8), this.spritePos.y + Math.floor(mapOffset.y * 8), this.spriteEnd.x, this.spriteEnd.y);
+            }
+
+
+            this.move = function (x, y) {
+                if (this.moved)
+                    return;
+
+                const newPos = { x: this.pos.x + x, y: this.pos.y + y }
+
+
+                // out of map
+                if (newPos.x < 0 || newPos.y < 0 || newPos.x >= mapSize.x || newPos.y >= mapSize.y)
+                    return;
+
+
+                // collides
+                var nextBlock = gameMap[newPos.x][newPos.y]
+                if (nextBlock != undefined) {
+                    //console.log(nextBlock.type)
+
+                    // collides to a wall
+                    if (nextBlock.type == 0)
+                        return;
+
+                    // collides to another light bulb
+                    if (nextBlock.type == 100 || nextBlock.type == 101 || nextBlock.type == 102)
+                        return;
+
+                    // grab energy
+                    if (!this.isOn && nextBlock.type == this.type + 100) {
+                        delete (nextBlock)
+                        nextBlock = undefined
+                        this.turnOn();
+                    }
+                }
+
+                gameMap[this.pos.x][this.pos.y] = this.previousBlock;
+                this.previousBlock = nextBlock;
+
+                // move legs effect 
+                if (x != 0) {
+                    if (x > 0)
+                        this.spriteStart.y = 10
+                    else
+                        this.spriteStart.y = 10 * 2
+
+                    window.clearTimeout(this.resetSpriteTimeout)
+                    this.resetSpriteTimeout = setTimeout(() => { this.spriteStart.y = 0 }, 500);
+                }
+
+
+                this.pos.x += x;
+                this.pos.y += y;
+
+                gameMap[this.pos.x][this.pos.y] = this
+
+                this.moved = true;
+
+                //console.log(gameMap)
+
+            }
+
+            this.turnOn = function () {
+                this.spriteStart.x += 4 * 9
+                this.isOn = true
+                checkIfWin()
+            }
+        }
+
+        function handleKeyDown(keyCode, isRepeat) {
+            //console.log(keyCode, isRepeat)
+
+            switch (gameState) {
+                case "START":
+                    if (isRepeat)
+                        return;
+                    //console.log("START -> PLAY");
+                    playLevel(0)
+                    break;
+                case "PLAY":
+                    switch (keyCode) {
+                        case 37: // left
+                        case 65:
+                            moveObjects(-1, 0);
+                            break;
+                        case 38: // up
+                        case 87:
+                            moveObjects(0, -1)
+                            break;
+                        case 39: // right
+                        case 68:
+                            moveObjects(1, 0);
+                            break;
+                        case 40: // down
+                        case 83:
+                            moveObjects(0, 1);
+                            break;
+                        case 82: // r
+                            playLevel(currentLevelNum)
+                        default:
+                            break;
+                    }
+                    break;
+                case "WIN":
+                    if (isRepeat)
+                        return;
+                    if (keyCode == 82)
+                        playLevel(currentLevelNum)
+                    else
+                        playLevel(currentLevelNum + 1)
+                    break;
+                case "WIN_END":
+                    if (isRepeat)
+                        return;
+                    switch (keyCode) {
+                        case 0:
+                            break;
+                        case 82: // r
+                            playLevel(currentLevelNum)
+                            break;
+                        default:
+                            playLevel(0)
+                            break;
+                    }
+                    break;
+                case "LOSE":
+                    if (isRepeat)
+                        return;
+                    playLevel(currentLevelNum)
+                    break;
+                default:
+                    return;
+            }
+
+        }
+
+        function updateGameArea() {
+            if (!document.hasFocus()) {
+                myGameArea.stop()
+            }
+
+            myGameArea.clear();
+
+            gameMap.forEach(array => {
+                array.forEach(element => {
+                    if (element != null)
+                        if (element.type != 100 && element.type != 101 && element.type != 102)
+                            element.update();
+                });
+            })
+
+            mapBroderObjects.forEach(element => {
+                element.update();
+            });
+
+            gameObjects.forEach(element => {
+                element.update();
+            });
+
+
+            textComponents.forEach(element => {
+                element.update();
+                element.clicked();
+            });
+
+        }
+
+        function moveObjects(x, y) {
+
+            gameObjects.forEach(element => {
+                element.moved = false;
+            });
+            for (let i = 0; i < gameObjects.length * 3; i++) {
+                gameObjects.forEach(element => {
+                    element.move(x, y);
+                });
+            }
+
+            let someoneMoved = false
+            gameObjects.forEach(element => {
+                if (element.moved) {
+                    someoneMoved = true
+                }
+            });
+
+            if (someoneMoved) {
+                uiMoves.number--;
+                uiMoves.updateNum()
+
+                checkIfLost()
+            }
+        }
+
+
+        function checkIfWin() {
+            let win = true;
+            gameObjects.forEach(element => {
+                if (!element.isOn)
+                    win = false;
+            })
+            if (win) {
+                //console.log("WIN");
+                if (currentLevelNum + 1 < levels.length) {
+                    gameState = "WIN"
+                    textComponents.push(new textComponent("you won", myGameArea.canvas.width / 2, myGameArea.canvas.height / 2 - 5, true, true))
+                    textComponents.push(new textComponent("next level", myGameArea.canvas.width / 2, myGameArea.canvas.height / 2 + 5, true, true))
+                    textComponents.push(new textComponent("press", myGameArea.canvas.width / 2, myGameArea.canvas.height - myGameArea.canvas.height / 8, true, true))
+                } else {
+                    gameState = "WIN_END"
+                    var clickComponent = new textComponent("click here", myGameArea.canvas.width / 2, myGameArea.canvas.height / 2 - 5, true, true);
+                    clickComponent.onClickAction = () => {
+                        window.open('https://play.google.com/store/apps/details?id=com.mmayo.LightItUp', '_blank');
+                    }
+                    textComponents.push(clickComponent)
+                    var restart = new textComponent("play again", myGameArea.canvas.width / 2, myGameArea.canvas.height - myGameArea.canvas.height / 2 + 15, true, true)
+                    restart.onClickAction = () => {
+                        playLevel(0)
+                    }
+                    textComponents.push(restart)
+
+                }
+            }
+        }
+
+        function checkIfLost() {
+            if (uiMoves.number > 0)
+                return;
+
+            gameObjects.forEach(element => {
+                if (!element.isOn) {
+                    gameState = "LOSE"
+
+                    //console.log("LOSE");
+
+                    textComponents.push(new textComponent("you lost", myGameArea.canvas.width / 2, myGameArea.canvas.height / 2 - 5, true, true))
+                    textComponents.push(new textComponent("restart", myGameArea.canvas.width / 2, myGameArea.canvas.height / 2 + 5, true, true))
+                    textComponents.push(new textComponent("press", myGameArea.canvas.width / 2, myGameArea.canvas.height - myGameArea.canvas.height / 8, true, true))
+                }
+            })
+        }
+
+    </script>
+
+
+</body>
+
+</html>

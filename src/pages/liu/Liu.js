@@ -27,7 +27,8 @@ function Liu() {
                         <div className="wrapper">
                             <div className="video-responsive">
                                 <iframe
-                                    src="https://www.youtube.com/embed/U6mxT3KfP4w?controls=0" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                                    title="liu"
+                                    src="/lightItUpJs.html"></iframe>
                             </div>
                         </div>
                     </Container>

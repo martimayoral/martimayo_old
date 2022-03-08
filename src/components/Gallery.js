@@ -25,6 +25,7 @@ function Gallery({ items, itemName }) {
                 <Item
                     key={i}
                     headImg={item.headImg}
+                    customHead={item.customHead}
                     headVideoId={item.headVideoId}
                     title={item.title}
                     subtitle={item.subtitle}
@@ -40,7 +41,7 @@ function Gallery({ items, itemName }) {
         </div>)
 }
 
-function Item({ headImg, headVideoId, title, subtitle, description, seeMoreContent, selected, selectedQuery, webPage, gitHub, customButton }) {
+function Item({ headImg, headVideoId, customHead, title, subtitle, description, seeMoreContent, selected, selectedQuery, webPage, gitHub, customButton }) {
 
     const [show, setShow] = useState(selected);
 
@@ -82,6 +83,13 @@ function Item({ headImg, headVideoId, title, subtitle, description, seeMoreConte
                         <img className="img-fluid" src={headImg} alt="..." />
                     </div>
                 )}
+                {
+                    customHead && (
+                        <div className="mt-3 mx-3 d-flex justify-content-center">
+                            {customHead}
+                        </div>
+                    )
+                }
 
                 {/* Card Body */}
                 <div className="card-body d-flex flex-column" onMouseLeave={() => setCopyText("Copy direct link")}>
@@ -133,34 +141,52 @@ function Item({ headImg, headVideoId, title, subtitle, description, seeMoreConte
 
             {/* Modal content */}
             {
-                seeMoreContent &&
-                <Modal show={show} onHide={handleClose} size="xl" fullscreen="lg-down" centered className="pt-5" >
+                seeMoreContent && (
+                    <Modal show={show} onHide={handleClose} size="xl" fullscreen="lg-down" centered className="pt-5" >
 
-                    <Modal.Header closeButton closeVariant="white" className="bg-dark text-light">
-                        <Modal.Title className="fw-light h3">
-                            {title}
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body className="bg-dark text-light">
-                        {seeMoreContent}
-                    </Modal.Body>
+                        <Modal.Header closeButton closeVariant="white" className="bg-dark text-light">
+                            <Modal.Title className="fw-light h3">
+                                {title}
+                                <span className="fw-light h5 ms-2 text-muted">{subtitle}</span>
+                            </Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body className="bg-dark text-light">
+                            {selected && (
+                                <div className="container bg-secondary rounded pb-1 mb-3">
+                                    {/* Head video */}
+                                    {headVideoId && (
 
-                    {
-             /* <div className={"modal fade " + (showMoreContent && " show")} id={modalId} tabIndex="-1" aria-labelledby="ModalLabel" aria-hidden={showMoreContent ? "false" : "true"} style={{display: (showMoreContent ? "block" : "none")}} role="dialog">
-                    <div className="modal-dialog modal-dialog-centered modal-xl mt-5">
-                        <div className="modal-content bg-dark">
-                            <div className="modal-header">
-                                <div className="modal-title col fw-light h3" id="ModalLabel">{title}</div>
-                                <button type="button" className="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body">
-                                {seeMoreContent}
-                            </div>
-                        </div>
-                    </div>
-                </div> */}
-                </Modal>
-            }
+                                        <div className="row">
+                                            <div className="col"></div>
+                                            <div className="col-md-8">
+                                                <div className="wrapper">
+                                                    <div className="video-responsive">
+                                                        <iframe
+                                                            src={"https://www.youtube.com/embed/" + headVideoId + "?controls=0"} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="col"></div>
+                                        </div>
+                                    )}
+                                    {customHead &&
+                                        <div className="row pt-3">
+                                            <div className="col"></div>
+                                            <div className="col-md-8 col-lg-6">
+                                                {customHead}
+                                            </div>
+                                            <div className="col"></div>
+                                        </div>
+                                    }
+                                    <div className="mt-3">
+                                        {description}
+                                    </div>
+                                </div>
+                            )}
+                            {seeMoreContent}
+                        </Modal.Body>
+                    </Modal>
+                )}
         </div >
     )
 }
