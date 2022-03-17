@@ -15,6 +15,7 @@ import RutineGenerator from "./pages/trampoline/RutineGenerator";
 import useGaTracker from "./components/UseGaTracker";
 import Liu from "./pages/liu/Liu";
 import LiuPrivacyPolicy from "./pages/liu/LiuPrivacyPolicy";
+import Games from "./pages/Games/Games";
 
 
 function App() {
@@ -63,7 +64,7 @@ function App() {
     }
   ]
 
-  
+
   const lightItUpPages = [
     {
       name: "Light It Up",
@@ -74,6 +75,26 @@ function App() {
       name: "Privacy policy",
       component: (() => { return <LiuPrivacyPolicy /> }),
       route: "/liu/privacy"
+    },
+    {
+      name: "Pixi",
+      component: (() => {
+        return (
+          <div style={{ margin: 0, padding: 0, height: "100vh", width: "100wh" }}>
+            <iframe className="bg-white" title="mmayo2048" src="/mmayo2048.html" width="100%" height="100%"></iframe>
+          </div>
+        )
+
+      }),
+      route: "/pixi"
+    }
+  ]
+
+  const otherPages = [
+    {
+      name: "Games",
+      component: (() => { return <Games /> }),
+      route: "/games"
     }
   ]
 
@@ -113,8 +134,22 @@ function App() {
 
         </Route>
 
-        
         {/* Another Route for the pages of the trampoline */}
+        <Route path={otherPages.map(page => (page.route))}>
+
+          <Switch>
+            {/* Classic react-router route design using switch */}
+            {otherPages.map((page, i) => (
+              <Route key={i} path={page.route}>
+                {page.component}
+              </Route>
+            ))}
+          </Switch>
+
+        </Route>
+
+
+        {/* Another Route for the pages of games */}
         <Route exact path={lightItUpPages.map(page => (page.route))}>
 
           <Switch>

@@ -1,0 +1,794 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>PixiJs Test</title>
+
+    <!-- development
+    <script src="https://pixijs.download/release/pixi.js"></script>
+ -->
+    <!-- release
+ -->
+    <script src="https://pixijs.download/release/pixi.min.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+
+</head>
+
+<body>
+    <script>
+        const app = new PIXI.Application({
+            resizeTo: window
+        });
+        app.renderer.view.style.position = 'absolute'
+
+        window.onresize = (e) => {
+            //console.log("resize")
+            app.renderer.resize(window.innerWidth, window.innerHeight);
+            //scenes.ChangeScene("menu")
+            resizeGame()
+            resizeMenu()
+        };
+
+        document.body.appendChild(app.view);
+
+        const START_NUMBERS = 4;
+
+        let touch = { x: 0, y: 0 };
+
+        var scenes = {
+            menuScene: new PIXI.Container(),
+            gameScene: new PIXI.Container(),
+            currentScene: undefined,
+            ChangeScene: (sceneName) => {
+                var scene;
+                const prevScene = scenes.currentScene;
+                switch (prevScene.sceneName) {
+                    case "menu":
+                        break;
+                    case "game":
+                        app.ticker.remove(gameTick);
+                        break;
+                    default: break;
+                }
+
+                app.stage.removeChild(prevScene)
+
+                switch (sceneName) {
+                    case "menu":
+                        scene = scenes.menuScene
+                        break;
+                    case "game":
+                        scene = scenes.gameScene
+                        app.ticker.add(gameTick);
+                        break;
+                    default:
+                        console.error("ERROR: Unknown scene: " + sceneName);
+                }
+                scenes.currentScene = scene
+                app.stage.addChild(scene)
+            }
+        }
+        scenes.currentScene = scenes.menuScene
+
+        scenes.menuScene.sceneName = "menu"
+        scenes.gameScene.sceneName = "game"
+
+
+        app.stage.addChild(scenes.currentScene)
+
+
+        // GAME
+        let nSize = { x: 4, y: 4 };
+        let tileSize = {}
+        let fontSize = 24
+        let tilemargin = 10
+        let numbers = [];
+
+        const UpdateTileSize = () => {
+
+            tileSize = { x: app.screen.width / nSize.x, y: app.screen.height / nSize.y }
+            fontSize = Math.floor(Math.min(tileSize.x, tileSize.y) / 2.5)
+
+        }
+        UpdateTileSize()
+
+
+
+        // Create the background sprite with a basic white texture
+        const bg = new PIXI.Sprite(PIXI.Texture.WHITE);
+        // Set it to fill the screen
+        bg.width = app.screen.width;
+        bg.height = app.screen.height;
+        // Tint it to whatever color you want, here red
+        bg.tint = 0xBBBBBB;
+        // Add a click handler
+        bg.interactive = true;
+
+        const onDragStart = (e) => {
+            touch.active = true;
+            touch.x = e.data.global.x
+            touch.y = e.data.global.y
+        }
+        const onDragEnd = (e) => {
+            if (!touch.active)
+                return;
+            else
+                touch.active = false;
+
+            const touchDif = { x: e.data.global.x - touch.x, y: e.data.global.y - touch.y }
+
+            if (Math.abs(touchDif.x) > Math.abs(touchDif.y)) {
+                if (Math.sign(touchDif.x) < 0)
+                    moveLEFT()
+                else
+                    moveRIGHT()
+            }
+            if (Math.abs(touchDif.x) < Math.abs(touchDif.y)) {
+                if (Math.sign(touchDif.y) < 0)
+                    moveUP()
+                else
+                    moveDOWN()
+            }
+
+        }
+
+        bg.on('pointerup', onDragEnd);
+        bg.on('pointerdown', onDragStart);
+
+        // Add the background
+        scenes.gameScene.addChild(bg);
+
+        // Add the game
+        scenes.gameScene.gameCanvas = new PIXI.Container()
+        scenes.gameScene.addChild(scenes.gameScene.gameCanvas)
+
+        // Add Scores and UI
+        let scoreText = new PIXI.Text("0", {
+            fontSize: app.renderer.height / 15
+        });
+        scoreText.anchor.set(0.5, 0.5);
+        scoreText.x = app.renderer.width / 2
+        scoreText.y = app.renderer.height / 15
+        scenes.gameScene.addChild(scoreText)
+
+        const UpdateScoreText = (score) => {
+            scoreText.text = score
+        }
+
+        const resizeGame = () => {
+            UpdateTileSize()
+            scoreText.x = app.renderer.width / 2
+            scoreText.y = app.renderer.height / 15
+            bg.width = app.screen.width;
+            bg.height = app.screen.height;
+
+            for (let i = 0; i < nSize.x; i++)
+                for (let j = 0; j < nSize.y; j++) {
+                    if (!numbers[i])
+                        continue;
+
+                    if (numbers[i][j] == "none")
+                        continue
+
+                    if (numbers[i][j]) {
+                        numbers[i][j].square.width = tileSize.x - tilemargin * 2
+                        numbers[i][j].square.height = tileSize.y - tilemargin * 2
+                        numbers[i][j].text.style.fontSize = fontSize
+                    }
+                }
+            scoreText.style.fontSize = app.renderer.height / 15
+        }
+
+
+        const getPosition = (deep) => {
+            if (deep > 100) {
+               // console.log("CANT ADD MORE")
+                return undefined;
+            }
+
+            const position = {
+                x: (Math.floor(Math.random() * nSize.x)),
+                y: (Math.floor(Math.random() * nSize.y))
+            }
+            if (numbers[position.x][position.y] != "none") {
+                return getPosition(deep + 1 || 0)
+            } else
+                return position
+        }
+
+        const createNum = () => {
+            const position = getPosition()
+            if (!position)
+                return undefined;
+
+            const num = new PIXI.Container();
+            num.number = (Math.floor(Math.random() * 2) + 1) * 2 
+            num.x = tileSize.x * position.x + tileSize.x / 2;
+            num.y = tileSize.y * position.y + tileSize.y / 2;
+
+            num.square = new PIXI.Graphics();
+            num.square.lineStyle(5, 0x777777);
+            num.square.beginFill(0xFFFFFF);
+            num.square.drawRect(tilemargin, tilemargin, tileSize.x - tilemargin * 2, tileSize.y - tilemargin * 2);
+            num.square.endFill();
+            num.square.pivot.x = tileSize.x / 2;
+            num.square.pivot.y = tileSize.y / 2;
+            num.addChild(num.square)
+
+            num.text = new PIXI.Text(num.number, {
+                fontSize: fontSize
+            });
+            num.text.x = tileSize.x / 2
+            num.text.y = tileSize.y / 2
+            num.text.pivot.x = tileSize.x / 2;
+            num.text.pivot.y = tileSize.y / 2;
+            num.text.anchor.set(0.5, 0.5);
+            num.addChild(num.text)
+
+            num.size = 0
+            num.scale.set(num.size)
+
+            const scalerFunc = (deltaTime) => {
+                num.size += deltaTime * 0.05
+                num.scale.set(num.size)
+
+                if (num.size > 1) {
+                    num.scale.set(1)
+                    app.ticker.remove(scalerFunc)
+                }
+            }
+            app.ticker.add(scalerFunc)
+
+            num.delete = () => {
+                app.ticker.remove(scalerFunc)
+                scenes.gameScene.gameCanvas.removeChild(num);
+                num.destroy({ children: true, texture: true, baseTexture: true });
+            }
+
+            numbers[position.x][position.y] = num;
+            scenes.gameScene.gameCanvas.addChild(num);
+        }
+
+
+        // CLEAR
+        const clear = () => {
+            for (let i = 0; i < nSize.x; i++)
+                for (let j = 0; j < nSize.y; j++) {
+                    if (!numbers[i])
+                        continue;
+
+                    if (numbers[i][j] == "none")
+                        continue
+
+                    if (numbers[i][j])
+                        numbers[i][j].delete()
+                }
+
+        }
+
+        // TINT
+        const tintAll = () => {
+            for (let i = 0; i < nSize.x; i++)
+                for (let j = 0; j < nSize.y; j++)
+                    if (numbers[i][j] != "none")
+                        numbers[i][j].square.tint = 0x000000 - (numbers[i][j].number + 12) * 1000
+        }
+
+        /* 
+                for (let k = 0; k < 15; k++) {
+                    let mynumber = 2
+                    for (let i = 0; i < 17; i++) {
+                        let mysquare = new PIXI.Graphics();
+                        mysquare.beginFill(0xFFFFFF);
+                        mysquare.drawRect(0, 0, 100, 100);
+                        mysquare.y = 105 * k
+                        mysquare.x = 105 * i
+                        mysquare.endFill();
+                        scenes.menuScene.addChild(mysquare)
+        
+                        mysquare.tint = 0x000000 - (Math.log(mynumber)) * 100000 - 200
+        
+                        let mytext = new PIXI.Text(mynumber, {
+                            fontSize: 30
+                        });
+                        mytext.x = mysquare.x + 50
+                        mytext.y = mysquare.y + 50
+                        mytext.anchor.set(0.5, 0.5);
+                        scenes.menuScene.addChild(mytext)
+        
+                        mynumber = mynumber * 2
+                    }
+                } */
+
+        // START
+        const initGame = () => {
+            scenes.ChangeScene("game")
+            scenes.gameScene.lost = false;
+            scenes.gameScene.score = 0;
+            UpdateScoreText(0)
+            clear()
+
+            for (var i = 0; i < nSize.x; i++) {
+                numbers[i] = new Array(nSize.y);
+            }
+
+            for (let i = 0; i < nSize.x; i++)
+                for (let j = 0; j < nSize.y; j++)
+                    numbers[i][j] = "none"
+
+            for (let i = 0; i < START_NUMBERS; i++) {
+                newNum = createNum();
+            }
+            tintAll();
+        }
+
+
+        const printMatrix = (x, y) => {
+            var toprint = "";
+            for (let j = 0; j < nSize.y; j++) {
+                for (let i = 0; i < nSize.x; i++) {
+                    if (x == i && y == j) toprint += "*"
+                    toprint += numbers[i][j].number || numbers[i][j]
+                    toprint += numbers[i][j].number ? "\t\t" : "\t"
+                }
+                toprint += "\n"
+            }
+            console.log(toprint)
+        }
+
+        const stack = () => {
+            for (let i = 0; i < nSize.x; i++) {
+                var fillPos = 0;
+                for (let j = 0; j < nSize.y; j++) {
+                    const num = numbers[i][j];
+                    if (num != "none") {
+                        numbers[i][j] = "none"
+                        numbers[i][fillPos] = num
+                        fillPos++
+                    }
+                }
+            }
+        }
+
+        const combine = () => {
+            for (let i = 0; i < nSize.x; i++) {
+                for (let j = 0; j < nSize.y - 1; j++) {
+                    if (numbers[i][j] == "none" || numbers[i][j + 1] == "none")
+                        continue;
+
+                    const num = numbers[i][j]
+                    const nextNum = numbers[i][j + 1]
+                    if (num.number == nextNum.number) {
+                        nextNum.number *= 2;
+
+                        scenes.gameScene.score += nextNum.number;
+                        UpdateScoreText(scenes.gameScene.score)
+
+                        nextNum.text.text = nextNum.number
+                        numbers[i][j] = nextNum
+
+                        numbers[i][j + 1] = "none"
+
+                        num.delete();
+
+                    }
+                }
+            }
+        }
+
+        const transpose = () => {
+            if (nSize.x == nSize.y) {
+                for (let i = 0; i < nSize.x; i++) {
+                    for (let j = 0; j < nSize.y; j++) {
+                        if (i > j) {
+                            const aux = numbers[j][i]
+                            numbers[j][i] = numbers[i][j]
+                            numbers[i][j] = aux
+                        }
+                    }
+                }
+
+            } else {
+                const aux = nSize.x
+                nSize.x = nSize.y
+                nSize.y = aux;
+                const newNumbers = []
+
+                for (var i = 0; i < nSize.x; i++) {
+                    newNumbers[i] = new Array(nSize.y);
+                }
+                for (let i = 0; i < nSize.x; i++)
+                    for (let j = 0; j < nSize.y; j++)
+                        newNumbers[i][j] = "none"
+
+                for (let i = 0; i < nSize.x; i++)
+                    for (let j = 0; j < nSize.y; j++) {
+                        newNumbers[i][j] = numbers[j][i]
+                    }
+
+                numbers = newNumbers;
+            }
+        }
+        const reverse = () => {
+            for (let i = 0; i < nSize.x; i++) {
+                for (let j = 0; j < nSize.y / 2; j++) {
+                    const aux = numbers[i][nSize.y - j - 1]
+                    numbers[i][nSize.y - j - 1] = numbers[i][j]
+                    numbers[i][j] = aux
+                }
+            }
+        }
+
+        const move = () => {
+            if (scenes.gameScene.lost)
+                return;
+
+            createNum()
+            tintAll()
+
+            if (isLose())
+                Lose()
+        }
+        const moveUP = () => {
+
+            stack()
+            combine()
+            stack()
+
+            move()
+        }
+        const moveDOWN = () => {
+
+            reverse()
+
+            stack()
+            combine()
+            stack()
+
+            reverse()
+
+            move()
+        }
+        const moveLEFT = () => {
+
+            transpose()
+
+            stack()
+            combine()
+            stack()
+
+            transpose()
+
+            move()
+        }
+        const moveRIGHT = () => {
+
+            transpose()
+            reverse()
+
+            stack()
+            combine()
+            stack()
+
+            reverse()
+            transpose()
+
+            move()
+        }
+
+
+        const gameTick = () => {
+            for (let i = 0; i < nSize.x; i++)
+                for (let j = 0; j < nSize.y; j++) {
+                    const num = numbers[i][j]
+                    if (num == "none")
+                        continue;
+
+                    num.x += ((i * tileSize.x + tileSize.x / 2) - num.x) * 0.25
+                    num.y += ((j * tileSize.y + tileSize.y / 2) - num.y) * 0.25
+
+                }
+        }
+
+        const isLose = () => {
+            /*  console.log("--- IS LOSE? ---") */
+            for (let i = 0; i < nSize.x - 1; i++) {
+                for (let j = 0; j < nSize.y; j++) {
+                    /* printMatrix(i, j) */
+                    const num = numbers[i][j]
+                    const neigX = numbers[i + 1][j]
+                    const neigY = numbers[i][j + 1] || { number: 0 }
+                    if (num == "none" || neigX == "none" || neigY == "none")
+                        return false;
+
+                    if (num.number == neigX.number || num.number == neigY.number)
+                        return false;
+                }
+            }
+            for (let j = 0; j < nSize.y - 1; j++) {
+                /* printMatrix(i, j) */
+                const num = numbers[nSize.x - 1][j]
+                const neigY = numbers[nSize.x - 1][j + 1]
+                if (num == "none" || neigY == "none")
+                    return false;
+
+                if (num.number == neigY.number)
+                    return false;
+            }
+
+            return true;
+        }
+
+
+        // MENU
+
+        var continueButton;
+        const handleChangeSize = () => {
+            UpdateTileSize()
+            continueButton.dissable()
+        }
+
+        const buttons = [
+            {
+                text: "Continue",
+                action: () => {
+                    scenes.ChangeScene("game")
+                },
+                dissabled: true
+            },
+            {
+                text: "New Game",
+                action: () => {
+                    initGame()
+                    continueButton.enable()
+                }
+            },
+            {
+                text: "Height (" + nSize.y + ")",
+                actionMore: (text) => {
+                    clear()
+                    nSize.y++;
+                    text.text = "Height (" + nSize.y + ")"
+                    handleChangeSize()
+                },
+                actionLess: (text) => {
+                    if (nSize.y <= 1)
+                        return;
+                    clear()
+                    nSize.y--;
+                    text.text = "Height (" + nSize.y + ")"
+                    handleChangeSize()
+                }
+            },
+            {
+                text: "Width (" + nSize.x + ")",
+                actionMore: (text) => {
+                    clear()
+                    nSize.x++;
+                    text.text = "Width (" + nSize.x + ")"
+                    handleChangeSize()
+                },
+                actionLess: (text) => {
+                    if (nSize.x <= 1)
+                        return;
+                    clear()
+                    nSize.x--;
+                    text.text = "Width (" + nSize.x + ")"
+                    handleChangeSize()
+                }
+            }
+        ]
+
+        const createButton = (text, buttonSize) => {
+            const button = new PIXI.Container();
+            button.x = app.screen.width / 2;
+            button.y = app.screen.height / 2;
+
+            button.square = new PIXI.Graphics();
+            button.square.beginFill(0xFFFFFF);
+            button.square.drawRect(0, 0, buttonSize.x, buttonSize.y);
+            button.square.endFill();
+            button.square.interactive = true;
+            button.square.buttonMode = true;
+            button.square.pivot.x = buttonSize.x / 2;
+            button.square.pivot.y = buttonSize.y / 2;
+            button.addChild(button.square)
+
+            button.text = new PIXI.Text(text, {
+                fontSize: Math.floor(Math.min(buttonSize.x, buttonSize.y) / 3)
+            });
+            button.text.anchor.set(0.5, 0.5);
+            button.addChild(button.text)
+
+            button.dissable = () => {
+                button.square.tint = 0x666666
+                button.square.buttonMode = false;
+                button.square.interactive = false;
+            }
+            button.enable = () => {
+                button.square.tint = 0xFFFFFF
+                button.square.buttonMode = true;
+                button.square.interactive = true;
+            }
+            return button;
+        }
+
+
+        const resizeMenu = () => {
+            scenes.menuScene.removeChild(buttons.buttonContainer)
+            initMenu()
+        }
+
+        var buttonSize;
+        const initMenu = () => {
+
+
+            buttons.buttonContainer = new PIXI.Container()
+            const separation = Math.min(app.screen.height / (buttons.length * 3), 40)
+            buttonSize = { x: Math.min(app.screen.width * 3 / 4, 700), y: Math.min(app.screen.height / buttons.length - separation, 100) }
+            const offsetY = (separation + buttonSize.y) * (buttons.length - 1) / 2
+
+            for (let i = 0; i < buttons.length; i++) {
+
+                const button = createButton(buttons[i].text, buttonSize)
+                button.y += (buttonSize.y + separation) * i - offsetY
+                if (buttons[i].actionMore) {
+                    //button.square.x = separation + button.square.height;
+                    button.square.width -= (separation + button.square.height) * 2;
+                    button.square.buttonMode = false;
+
+
+                    const buttonLess = createButton("-", buttonSize)
+                    buttonLess.square.width = button.square.height;
+                    buttonLess.x -= button.square.width / 2 + separation + button.square.height / 2
+                    buttonLess.y = button.y
+                    buttonLess.square.on('pointerdown', () => buttons[i].actionLess(button.text))
+                    buttons.buttonContainer.addChild(buttonLess)
+
+                    const buttonMore = createButton("+", buttonSize)
+                    buttonMore.square.width = button.square.height;
+                    buttonMore.x += button.square.width / 2 + separation + button.square.height / 2
+                    buttonMore.y = button.y
+                    buttonMore.square.on('pointerdown', () => buttons[i].actionMore(button.text))
+                    buttons.buttonContainer.addChild(buttonMore)
+                } else {
+                    button.square.on('pointerdown', buttons[i].action)
+                }
+
+
+                if (buttons[i].dissabled)
+                    button.dissable()
+
+                if (buttons[i].text == "Continue")
+                    continueButton = button
+
+                buttons.buttonContainer.addChild(button)
+
+            }
+
+            scenes.menuScene.addChild(buttons.buttonContainer)
+        }
+        initMenu()
+
+        // LOSE SCREEN 
+        const Lose = () => {
+           // console.log("LOSE")
+            scenes.gameScene.lost = true;
+            continueButton.dissable()
+
+            const loseContainer = new PIXI.Container()
+
+
+            const bk = new PIXI.Sprite(PIXI.Texture.WHITE);
+            // Set it to fill the screen
+            bk.width = app.screen.width;
+            bk.height = app.screen.height;
+            // Tint it to whatever color you want, here red
+            bk.tint = 0x000000;
+            bk.alpha = 0.5
+            loseContainer.addChild(bk)
+
+
+            const text = new PIXI.Text("You lost", {
+                fontSize: fontSize,
+                fill: 0xDDDDDD
+            });
+            text.anchor.set(0.5, 0.5);
+            text.x = app.screen.width / 2;
+            text.y = app.screen.height / 3;
+            loseContainer.addChild(text)
+
+            const scoreLose = new PIXI.Text("score: " + scoreText.text, {
+                fontSize: fontSize * 0.8,
+                fill: 0xFFFFFF
+            });
+            scoreLose.anchor.set(0.5, 0.5);
+            scoreLose.x = app.screen.width / 2;
+            scoreLose.y = app.screen.height / 2;
+            loseContainer.addChild(scoreLose)
+
+
+            const button = createButton("Main menu", buttonSize)
+            button.y = 2 * app.screen.height / 3;
+            button.square.on('pointerdown', () => {
+                scenes.ChangeScene("menu")
+                scenes.gameScene.removeChild(loseContainer)
+            })
+            loseContainer.addChild(button)
+
+            scenes.gameScene.addChild(loseContainer)
+        }
+
+
+        document.addEventListener("keydown", (e) => {
+            //console.log(scenes.currentScene.sceneName)
+            /* if (e.repeat)
+                return; */
+
+            switch (scenes.currentScene.sceneName) {
+                case "menu":
+
+                    switch (e.keyCode) {
+                        case 32: // scpace
+                            initGame()
+                            break;
+                        default: break;
+
+                    }
+
+
+                    break;
+                case "game":
+
+                    switch (e.keyCode) {
+                        case 27: // esc
+                            scenes.ChangeScene("menu")
+                            break;
+
+                        case 38: // up
+                        case 87:
+                            e.preventDefault()
+                            moveUP()
+                            break;
+                        case 40: // down
+                        case 83:
+                            e.preventDefault()
+                            moveDOWN()
+                            break;
+                        case 37: // left
+                        case 65:
+                            e.preventDefault()
+                            moveLEFT();
+                            break;
+                        case 39: // right
+                        case 68:
+                            e.preventDefault()
+                            moveRIGHT(1, 0);
+                            break;
+                        case 82: // r
+                            initGame()
+                            //reverse()
+                            break;
+                        case 84: // t
+                            //transpose()
+                            break;
+                        default:
+                            break;
+                    }
+
+                    break;
+                default: break;
+
+            }
+        })
+
+
+    </script>
+</body>
+
+</html>
