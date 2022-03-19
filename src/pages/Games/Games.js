@@ -58,7 +58,7 @@ function Games() {
         }
 
         return (
-            <div className="bg-dark h-100" style={isFullScreen ? { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, marign: 0, /* overflow: "hidden" */ } : {}}>
+            <div className="bg-dark h-100" style={isFullScreen ? { zIndex: 2, position: "absolute", top: 0, left: 0, right: 0, bottom: 0, marign: 0, /* overflow: "hidden" */ } : {}}>
 
                 <div className="d-flex h-100 flex-column">
                     <Row className="m-2  ">
@@ -82,6 +82,7 @@ function Games() {
                             </Button>
                         </Col>
                     </Row>
+                    <hr className="m-0" />
                     <Row
                         className="align-items-center justify-content-center"
                         style={isFullScreen ? fullScreenStyle : defaultStyle}
@@ -95,7 +96,19 @@ function Games() {
     }
 
     return (
-        <div className="bg-primary">
+        <div style={{
+            position: "absolute",
+            height: "100%",
+            width: "100%",
+            backgroundImage: `linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(${mmayoGamesLogo})`,
+            backgroundColor: "black",
+            backgroundSize: "500px",
+            imageRendering: "pixelated",
+            zIndex: -1,/* 
+            transform: "rotate(25deg)", *//* 
+            overflow: "hidden" */
+        }}>
+
 
             <Container>
                 {/* Header */}
@@ -116,6 +129,7 @@ function Games() {
                                 <Container>
                                     <Row>
                                         <h3>All Games</h3>
+                                        <hr />
                                         {
                                             Object.keys(games).map(key => {
                                                 // console.log(key)
@@ -123,7 +137,7 @@ function Games() {
                                                     <Col key={key} xs={6} sm={4} md={3} xl={2}>
                                                         <Link className="text-center text-light" to={"/games/" + key} style={{ textDecoration: "none" }}>
                                                             <Card className="mb-3 bg-secondary card-animation" >
-                                                                <img className="img-fluid m-2" style={{ imageRendering: "pixelated" }} src={games[key].icon} alt="..." />
+                                                                <img className="img-fluid m-2 rounded" style={{ imageRendering: "pixelated" }} src={games[key].icon} alt="..." />
                                                                 <h5 >{games[key].name}</h5>
 
                                                             </Card>
@@ -144,24 +158,36 @@ function Games() {
                     </Col>
                     <Col className="py-4 bg-secondary" md={3}>
                         <h3>Most played</h3>
-                        <ol>
-                            {
-                                Object.keys(games).map(key => {
-                                    // console.log(key)
-                                    return (
-                                        <li key={key}>
-                                            <Link to={"/games/" + key}>{games[key].name}</Link><br />
-                                        </li>
-                                    );
-                                })
-                            }
-                        </ol>
+                        {
+                            Object.keys(games).map((key, i) => {
+                                // console.log(key)
+                                return (
+                                    <Row key={key} >
+                                        <Link className="text-light" to={"/games/" + key} style={{ textDecoration: "none" }}>
+                                            <Card className="mb-3 bg-dark card-animation" >
+                                                <Row className="m-2 align-items-center">
+                                                    <Col className="px-1" xs={"auto"} style={{ fontSize: "20px" }}>{i + 1} </Col>
+                                                    <Col className="px-1" xs={"auto"} >
+                                                        <img className="rounded " style={{ height: "30px", width: "30px", imageRendering: "pixelated" }} src={games[key].icon} alt="..." />
+                                                    </Col >
+                                                    <Col xs={"auto"} className="px-1" > {games[key].name}</Col>
+
+                                                </Row>
+                                            </Card>
+                                        </Link>
+                                    </Row>
+                                );
+                            })
+                        }
 
                     </Col>
                 </Row>
             </Container>
             <Container>
-                bottom
+                <hr />
+                <footer >
+                    Thank you for playing at mmayo games!
+                </footer>
             </Container>
         </div >
     )
