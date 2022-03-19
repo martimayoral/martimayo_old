@@ -58,7 +58,7 @@ function Games() {
         }
 
         return (
-            <div className="bg-dark h-100" style={isFullScreen ? { zIndex: 2, position: "absolute", top: 0, left: 0, right: 0, bottom: 0, marign: 0, /* overflow: "hidden" */ } : {}}>
+            <div className={"h-100 " + (isFullScreen && "bg-dark")} style={isFullScreen ? { zIndex: 2, position: "absolute", top: 0, left: 0, right: 0, bottom: 0, marign: 0, /* overflow: "hidden" */ } : {}}>
 
                 <div className="d-flex h-100 flex-column">
                     <Row className="m-2  ">
@@ -96,24 +96,18 @@ function Games() {
     }
 
     return (
-        <div style={{
-            position: "absolute",
-            height: "100%",
-            width: "100%",
-            backgroundImage: `linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(${mmayoGamesLogo})`,
-            backgroundColor: "black",
-            backgroundSize: "500px",
-            imageRendering: "pixelated",
-            zIndex: -1,/* 
-            transform: "rotate(25deg)", *//* 
-            overflow: "hidden" */
-        }}>
+        <div /* className="bg-primary" */
+            style={{
+                backgroundColor: "black",
+                backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="400"><image width="400" height="400" style="transform: rotate(25deg) translate(100px,0px) ; image-rendering: pixelated" xlink:href="${mmayoGamesLogo}" /></svg>')`
+            }}
+        >
 
 
             <Container>
                 {/* Header */}
                 <Row>
-                    <Col className="py-4 bg-secondary">
+                    <Col className="py-4 bg-secondary bg-opacity-75">
                         <Link to="/games">
                             <img style={{ height: "100%", imageRendering: "pixelated" }} src={mmayoGamesLogo} alt="..." />
                         </Link>
@@ -122,7 +116,7 @@ function Games() {
 
                 {/* Body */}
                 <Row>
-                    <Col className="py-4 bg-dark" md={9}>
+                    <Col className="py-4 bg-dark bg-opacity-75" md={9}>
 
                         <Switch>
                             <Route exact path={match.path}>
@@ -156,7 +150,7 @@ function Games() {
                         </Switch>
 
                     </Col>
-                    <Col className="py-4 bg-secondary" md={3}>
+                    <Col className="py-4 bg-secondary bg-opacity-50" md={3}>
                         <h3>Most played</h3>
                         {
                             Object.keys(games).map((key, i) => {
