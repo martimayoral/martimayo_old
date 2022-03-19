@@ -98,8 +98,9 @@ function Games() {
     return (
         <div /* className="bg-primary" */
             style={{
+                minHeight: "100vh",
                 backgroundColor: "black",
-                backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="400"><image width="400" height="400" style="transform: rotate(25deg) translate(100px,0px) ; image-rendering: pixelated" xlink:href="${mmayoGamesLogo}" /></svg>')`
+                backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="500"><image width="400" height="400" style="transform: translate(100px,-70px) rotate(25deg)  ; image-rendering: pixelated" xlink:href="${mmayoGamesLogo}" /></svg>')`
             }}
         >
 
