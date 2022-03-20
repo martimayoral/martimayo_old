@@ -12,26 +12,35 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCompressArrowsAlt, faExpandArrowsAlt, faHeart } from "@fortawesome/free-solid-svg-icons";
 import mmayoGamesLogo from "./mmayogames.png"
 
-import icon2048 from "./icons/2048.png"
+import icon2048 from "./icons/logo2048_128.png"
 import iconLiu from "./icons/lightItUpLogo.png"
+import testLogo from "./icons/tests.png"
 
 
 function Games() {
-    document.title = "Games"
     let match = useRouteMatch();
+    document.title = "Games"
+
+    const bgImg = `linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3) ), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="500"><image width="400" height="400" style="transform: translate(100px,-70px) rotate(25deg)  ; image-rendering: pixelated" xlink:href="${mmayoGamesLogo}" /></svg>')`
 
     const defaultAspectRatio = 9 / 6
     const games = {
         lightItUp: {
             name: "Light it up",
             icon: iconLiu,
-            gameLink: "/lightItUpJs.html",
+            gameLink: "/games/lightItUpJs.html",
         },
         mmayo2048: {
             name: "Mmayo 2048",
             icon: icon2048,
-            gameLink: "/mmayo2048.html",
+            gameLink: "/games/mmayo2048.html",
             aspectRatio: 1
+        },
+        testGame: {
+            name: "test game",
+            icon: testLogo,
+            gameLink: "/games/test.html",
+            aspectRatio: 4 / 5
         }
     }
 
@@ -40,6 +49,7 @@ function Games() {
         const game = games[gameId];
         const [isFullScreen, setIsFullScreen] = useState(false)
         const [liked, setLiked] = useState(false)
+        document.title = game.name
 
 
         const aspectRatio = (game.aspectRatio || defaultAspectRatio) + ""
@@ -52,13 +62,25 @@ function Games() {
         }
         const defaultStyle = {
             width: "100%",
-            maxHeight: "100vh",
+            maxHeight: "90vh",
             aspectRatio: aspectRatio,
             margin: "auto",
         }
 
         return (
-            <div className={"h-100 " + (isFullScreen && "bg-dark")} style={isFullScreen ? { zIndex: 2, position: "absolute", top: 0, left: 0, right: 0, bottom: 0, marign: 0, /* overflow: "hidden" */ } : {}}>
+            <div
+                className={isFullScreen ? "bg-dark" : ""}
+                style={isFullScreen ? {
+                    zIndex: 2,
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    marign: 0,
+                    backgroundImage: bgImg,
+                    /* overflow: "hidden" */
+                } : {}}>
 
                 <div className="d-flex h-100 flex-column">
                     <Row className="m-2  ">
@@ -96,11 +118,11 @@ function Games() {
     }
 
     return (
-        <div /* className="bg-primary" */
+        <div
             style={{
-                minHeight: "100vh",
-                backgroundColor: "black",
-                backgroundImage: `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="500"><image width="400" height="400" style="transform: translate(100px,-70px) rotate(25deg)  ; image-rendering: pixelated" xlink:href="${mmayoGamesLogo}" /></svg>')`
+                minHeight: "100vh",/* 
+                backgroundColor: "black", */
+                backgroundImage: bgImg
             }}
         >
 
@@ -132,7 +154,7 @@ function Games() {
                                                     <Col key={key} xs={6} sm={4} md={3} xl={2}>
                                                         <Link className="text-center text-light" to={"/games/" + key} style={{ textDecoration: "none" }}>
                                                             <Card className="mb-3 bg-secondary card-animation" >
-                                                                <img className="img-fluid m-2 rounded" style={{ imageRendering: "pixelated" }} src={games[key].icon} alt="..." />
+                                                                <img className="img-fluid m-2 rounded" src={games[key].icon} alt="..." />
                                                                 <h5 >{games[key].name}</h5>
 
                                                             </Card>
@@ -163,7 +185,7 @@ function Games() {
                                                 <Row className="m-2 align-items-center">
                                                     <Col className="px-1" xs={"auto"} style={{ fontSize: "20px" }}>{i + 1} </Col>
                                                     <Col className="px-1" xs={"auto"} >
-                                                        <img className="rounded " style={{ height: "30px", width: "30px", imageRendering: "pixelated" }} src={games[key].icon} alt="..." />
+                                                        <img className="rounded " style={{ height: "30px", width: "30px" }} src={games[key].icon} alt="..." />
                                                     </Col >
                                                     <Col xs={"auto"} className="px-1" > {games[key].name}</Col>
 
@@ -181,7 +203,7 @@ function Games() {
             <Container>
                 <hr />
                 <footer >
-                    Thank you for playing at mmayo games!
+                    <p className="py-3 m-0">Thank you for playing at mmayo games!</p>
                 </footer>
             </Container>
         </div >

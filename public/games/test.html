@@ -1,0 +1,341 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>PixiJs Test</title>
+
+    <!-- development
+    <script src="https://pixijs.download/release/pixi.js"></script>
+ -->
+    <!-- release
+ -->
+    <script src="https://pixijs.download/release/pixi.min.js"></script>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+
+</head>
+
+<body>
+    <script>
+        // this game is rendered at 2:3
+        const app = new PIXI.Application({
+            backgroundColor: 0x2980b9
+        });
+        app.renderer.view.style.position = 'absolute'
+
+        const aspectRatio = 4 / 5;
+        const resize = () => {
+            app.renderer.resize(window.innerHeight * aspectRatio, window.innerHeight);
+        }
+        window.onresize = () => {
+            //console.log("resize")
+            resize()
+        };
+        resize()
+
+        document.body.appendChild(app.view);
+
+
+        var scenes = {
+            menuScene: new PIXI.Container(),
+            gameScene: new PIXI.Container(),
+            currentScene: undefined,
+            ChangeScene: (sceneName) => {
+                var scene;
+                const prevScene = scenes.currentScene;
+                switch (prevScene.sceneName) {
+                    case "menu":
+                        app.ticker.add(gameTick);
+                        break;
+                    case "game":
+                        app.ticker.remove(gameTick);
+                        break;
+                    default: break;
+                }
+
+                app.stage.removeChild(prevScene)
+
+                switch (sceneName) {
+                    case "menu":
+                        scene = scenes.menuScene
+                        break;
+                    case "game":
+                        scene = scenes.gameScene
+                        break;
+                    default:
+                        console.error("ERROR: Unknown scene: " + sceneName);
+                }
+                scenes.currentScene = scene
+                app.stage.addChild(scene)
+            }
+        }
+        scenes.currentScene = scenes.menuScene
+
+        scenes.menuScene.sceneName = "menu"
+        scenes.gameScene.sceneName = "game"
+
+        app.stage.addChild(scenes.currentScene)
+
+        // GAME
+        scenes.gameScene.gameCanvas = new PIXI.Container()
+        scenes.gameScene.addChild(scenes.gameScene.gameCanvas)
+
+        const bubbleColors = [0x0000FF, 0x00FF00, 0xFF0000, 0x00FFFF, 0xFFFFFF, 0x0390FF]
+        const difficulty = 6
+        let bubbles = []
+        const nSize = { x: 10, y: 15 }
+
+        const clearBubbles = () => {
+            if (bubbles.length !== 0)
+                for (let i = 0; i < nSize.x; i++)
+                    for (let j = 0; j < nSize.y; j++) {
+                        if (bubbles[i][j])
+                            bubbles[i][j].delete()
+                    }
+
+            bubbles = []
+
+            for (var i = 0; i < nSize.x; i++) {
+                bubbles[i] = new Array(nSize.y);
+            }
+
+        }
+
+        const bubbleSize = 50
+        const separation = 4
+        const initGame = () => {
+            if (scenes.currentScene !== scenes.gameScene)
+                scenes.ChangeScene("game")
+            clearBubbles()
+
+            for (let i = 0; i < nSize.x; i++)
+                for (let j = 0; j < nSize.y; j++) {
+                    const bubble = createBubble(
+                        { x: i, y: j },
+                        bubbleSize,
+                        Math.floor(Math.random() * difficulty)
+                    )
+                    bubbles[i][j] = bubble
+                    scenes.gameScene.gameCanvas.addChild(bubble);
+                }
+
+        }
+
+        const gameTick = (deltaTime) => {
+
+            for (let i = 0; i < nSize.x; i++)
+                for (let j = 0; j < nSize.y; j++) {
+                    const bubble = bubbles[i][j]
+                    if (bubble) {
+                        bubble.x += ((bubble.pos.x * (bubbleSize + separation) + (bubble.pos.y % 2) * (bubbleSize + separation) / 2) - bubble.x) * 0.1 * deltaTime
+                        bubble.y += ((bubble.pos.y * (bubbleSize + separation)) - bubble.y) * 0.1 * deltaTime
+                    }
+
+                    if (!bubbles[i][j + 1]) {
+                        if (j + 2 > nSize.y) {
+                            continue
+                        }
+
+                        if (bubbles[i][j]) {
+                            bubbles[i][j].pos.y = j + 1
+                            bubbles[i][j + 1] = bubbles[i][j]
+                            bubbles[i][j] = undefined
+                        }
+                    }
+                }
+        }
+
+
+        const createBubble = (position, radius, type) => {
+
+            const bubble = new PIXI.Container();
+            bubble.pos = position
+            bubble.type = type
+
+            bubble.circle = new PIXI.Graphics();
+            bubble.circle.beginFill(0xFFFFFF);
+            bubble.circle.drawCircle(0, 0, radius / 2);
+            bubble.circle.endFill();
+            bubble.circle.tint = bubbleColors[type]
+            bubble.addChild(bubble.circle)
+
+            bubble.sprite = PIXI.Sprite.from('bubbleTest.png');
+            bubble.sprite.anchor.set(0.5);
+            bubble.sprite.width = radius
+            bubble.sprite.height = radius
+            bubble.addChild(bubble.sprite)
+/* 
+
+            bubble.text = new PIXI.Text(
+                position.x + "," + position.y, 
+                {
+                    fontSize: 20
+                });
+            bubble.text.x = radius / 2
+            bubble.text.y = radius / 2
+            bubble.text.pivot.x = radius / 2;
+            bubble.text.pivot.y = radius / 2;
+            bubble.text.anchor.set(0.5, 0.5);
+            bubble.addChild(bubble.text)
+ */
+
+            bubble.size = 0
+            bubble.scale.set(bubble.size)
+
+            const scalerFunc = (deltaTime) => {
+                bubble.size += deltaTime * 0.05
+                bubble.scale.set(bubble.size)
+
+                if (bubble.size > 1) {
+                    bubble.scale.set(1)
+                    app.ticker.remove(scalerFunc)
+                }
+            }
+            app.ticker.add(scalerFunc)
+
+            bubble.delete = () => {
+                app.ticker.remove(scalerFunc)
+                bubbles[bubble.pos.x][bubble.pos.y] = undefined
+                scenes.gameScene.gameCanvas.removeChild(bubble);
+                bubble.destroy({ children: true, texture: false, baseTexture: true });
+            }
+
+            const popAnimation = (deltaTime) => {
+                bubble.size += deltaTime * 0.05
+                bubble.scale.set(bubble.size)
+
+                if (bubble.size > 1.3) {
+                    app.ticker.remove(popAnimation)
+                    bubble.delete()
+                }
+            }
+            bubble.pop = () => {
+                bubble.popped = true
+                bubble.scale.set(0.75)
+                app.ticker.add(popAnimation)
+            }
+
+            bubble.circle.interactive = true
+            bubble.circle.on('pointerdown', () => handlePopBubble(position))
+
+            return bubble;
+        }
+
+        const bubbleNeighbours = (i, j) => {
+            var neighbours = []
+
+
+            // left
+            if (bubbles[i - 1 + j % 2]) {
+                neighbours.push(bubbles[i - 1 + j % 2][j + 1])
+                neighbours.push(bubbles[i - 1 + j % 2][j - 1])
+            }
+
+            // center
+            if (bubbles[i - 1])
+                neighbours.push(bubbles[i - 1][j])
+            if (bubbles[i + 1])
+                neighbours.push(bubbles[i + 1][j])
+
+            // right
+            if (bubbles[i + j % 2]) {
+                neighbours.push(bubbles[i + j % 2][j - 1])
+                neighbours.push(bubbles[i + j % 2][j + 1])
+            }
+
+            return neighbours.filter((val) => val !== undefined)
+        }
+
+        const handlePopBubble = (pos) => {
+            const currentBubble = bubbles[pos.x][pos.y]
+            currentBubble.pop()
+
+            bubbleNeighbours(pos.x, pos.y).forEach(bubble => {
+                if (currentBubble.type == bubble.type && !bubble.popped) {
+                    handlePopBubble(bubble.pos)
+                    //console.log(currentBubble.pos, bubble.pos)
+                }
+            })
+
+        }
+
+        //
+
+        // MENU
+        initGame()
+
+        // 
+
+
+        document.addEventListener("keydown", (e) => {
+            //console.log(scenes.currentScene.sceneName)
+            /* if (e.repeat)
+                return; */
+
+            switch (scenes.currentScene.sceneName) {
+                case "menu":
+
+                    switch (e.keyCode) {
+                        case 32: // scpace
+                            initGame()
+                            break;
+                        default: break;
+
+                    }
+
+
+                    break;
+                case "game":
+
+                    switch (e.keyCode) {
+                        case 27: // esc
+                            scenes.ChangeScene("menu")
+                            break;
+
+                        case 38: // up
+                        case 87:
+                            e.preventDefault()
+                            //moveUP()
+                            break;
+                        case 40: // down
+                        case 83:
+                            e.preventDefault()
+                            moveDOWN()
+                            break;
+                        case 37: // left
+                        case 65:
+                            e.preventDefault()
+                            moveLEFT();
+                            break;
+                        case 39: // right
+                        case 68:
+                            e.preventDefault()
+                            moveRIGHT(1, 0);
+                            break;
+                        case 82: // r
+                            initGame()
+                            //reverse()
+                            break;
+                        case 84: // t
+                            //transpose()
+                            break;
+                        default:
+                            break;
+                    }
+
+                    break;
+                default: break;
+
+            }
+        })
+
+
+    </script>
+</body>
+
+</html>

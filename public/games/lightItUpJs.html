@@ -95,7 +95,16 @@
                 window.addEventListener('keydown', function (e) {
                     if (!myGameArea.isRunning)
                         return;
-                    e.preventDefault()
+
+                        // arrow keys
+                    if (
+                        e.keyCode == 37 ||
+                        e.keyCode == 38 ||
+                        e.keyCode == 39 ||
+                        e.keyCode == 40
+                    )
+                        e.preventDefault()
+
                     handleKeyDown(e.keyCode, e.repeat)
                 })
 

@@ -92,7 +92,7 @@
 
         const UpdateTileSize = () => {
 
-            tileSize = { x: app.screen.width / nSize.x, y: app.screen.height / nSize.y }
+            tileSize = { x: app.view.width / nSize.x, y: app.view.height / nSize.y }
             fontSize = Math.floor(Math.min(tileSize.x, tileSize.y) / 2.5)
 
         }
@@ -103,8 +103,8 @@
         // Create the background sprite with a basic white texture
         const bg = new PIXI.Sprite(PIXI.Texture.WHITE);
         // Set it to fill the screen
-        bg.width = app.screen.width;
-        bg.height = app.screen.height;
+        bg.width = app.view.width;
+        bg.height = app.view.height;
         // Tint it to whatever color you want, here red
         bg.tint = 0xBBBBBB;
         // Add a click handler
@@ -152,6 +152,7 @@
         let scoreText = new PIXI.Text("0", {
             fontSize: app.renderer.height / 15
         });
+        scoreText.resolution = devicePixelRatio;
         scoreText.anchor.set(0.5, 0.5);
         scoreText.x = app.renderer.width / 2
         scoreText.y = app.renderer.height / 15
@@ -165,8 +166,8 @@
             UpdateTileSize()
             scoreText.x = app.renderer.width / 2
             scoreText.y = app.renderer.height / 15
-            bg.width = app.screen.width;
-            bg.height = app.screen.height;
+            bg.width = app.view.width;
+            bg.height = app.view.height;
 
             for (let i = 0; i < nSize.x; i++)
                 for (let j = 0; j < nSize.y; j++) {
@@ -224,6 +225,7 @@
             num.text = new PIXI.Text(num.number, {
                 fontSize: fontSize
             });
+            num.text.resolution = devicePixelRatio
             num.text.x = tileSize.x / 2
             num.text.y = tileSize.y / 2
             num.text.pivot.x = tileSize.x / 2;
@@ -587,8 +589,8 @@
 
         const createButton = (text, buttonSize) => {
             const button = new PIXI.Container();
-            button.x = app.screen.width / 2;
-            button.y = app.screen.height / 2;
+            button.x = app.view.width / 2;
+            button.y = app.view.height / 2;
 
             button.square = new PIXI.Graphics();
             button.square.beginFill(0xFFFFFF);
@@ -604,6 +606,7 @@
                 fontSize: Math.floor(Math.min(buttonSize.x, buttonSize.y) / 3)
             });
             button.text.anchor.set(0.5, 0.5);
+            button.text.resolution = devicePixelRatio;
             button.addChild(button.text)
 
             button.dissable = () => {
@@ -630,8 +633,8 @@
 
 
             buttons.buttonContainer = new PIXI.Container()
-            const separation = Math.min(app.screen.height / (buttons.length * 3), 40)
-            buttonSize = { x: Math.min(app.screen.width * 3 / 4, 700), y: Math.min(app.screen.height / buttons.length - separation, 100) }
+            const separation = Math.min(app.view.height / (buttons.length * 3), 40)
+            buttonSize = { x: Math.min(app.view.width * 3 / 4, 700), y: Math.min(app.view.height / buttons.length - separation, 100) }
             const offsetY = (separation + buttonSize.y) * (buttons.length - 1) / 2
 
             for (let i = 0; i < buttons.length; i++) {
@@ -640,11 +643,13 @@
                 button.y += (buttonSize.y + separation) * i - offsetY
                 if (buttons[i].actionMore) {
                     //button.square.x = separation + button.square.height;
+                    button.square.height *= 0.75
                     button.square.width -= (separation + button.square.height) * 2;
                     button.square.buttonMode = false;
 
 
                     const buttonLess = createButton("-", buttonSize)
+                    buttonLess.square.height = button.square.height
                     buttonLess.square.width = button.square.height;
                     buttonLess.x -= button.square.width / 2 + separation + button.square.height / 2
                     buttonLess.y = button.y
@@ -652,6 +657,7 @@
                     buttons.buttonContainer.addChild(buttonLess)
 
                     const buttonMore = createButton("+", buttonSize)
+                    buttonMore.square.height = button.square.height
                     buttonMore.square.width = button.square.height;
                     buttonMore.x += button.square.width / 2 + separation + button.square.height / 2
                     buttonMore.y = button.y
@@ -687,8 +693,8 @@
 
             const bk = new PIXI.Sprite(PIXI.Texture.WHITE);
             // Set it to fill the screen
-            bk.width = app.screen.width;
-            bk.height = app.screen.height;
+            bk.width = app.view.width;
+            bk.height = app.view.height;
             // Tint it to whatever color you want, here red
             bk.tint = 0x000000;
             bk.alpha = 0.5
@@ -700,8 +706,9 @@
                 fill: 0xDDDDDD
             });
             text.anchor.set(0.5, 0.5);
-            text.x = app.screen.width / 2;
-            text.y = app.screen.height / 3;
+            text.resolution = devicePixelRatio;
+            text.x = app.view.width / 2;
+            text.y = app.view.height / 3;
             loseContainer.addChild(text)
 
             const scoreLose = new PIXI.Text("score: " + scoreText.text, {
@@ -709,13 +716,13 @@
                 fill: 0xFFFFFF
             });
             scoreLose.anchor.set(0.5, 0.5);
-            scoreLose.x = app.screen.width / 2;
-            scoreLose.y = app.screen.height / 2;
+            scoreLose.x = app.view.width / 2;
+            scoreLose.y = app.view.height / 2;
             loseContainer.addChild(scoreLose)
 
 
             const button = createButton("Main menu", buttonSize)
-            button.y = 2 * app.screen.height / 3;
+            button.y = 2 * app.view.height / 3;
             button.square.on('pointerdown', () => {
                 scenes.ChangeScene("menu")
                 scenes.gameScene.removeChild(loseContainer)
