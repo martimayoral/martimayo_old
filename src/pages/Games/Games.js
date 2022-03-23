@@ -36,11 +36,23 @@ function Games() {
             gameLink: "/games/mmayo2048.html",
             aspectRatio: 1
         },
+        bubbleMatch: {
+            name: "Bubble Match",
+            icon: testLogo,
+            gameLink: "/games/bubbleMatch.html",
+            aspectRatio: 5 / 6
+        },
         testGame: {
             name: "test game",
             icon: testLogo,
             gameLink: "/games/test.html",
-            aspectRatio: 4 / 5
+            aspectRatio: 5 / 6
+        },
+        testGame2: {
+            name: "test game 2",
+            icon: testLogo,
+            gameLink: "/games/test2.html",
+            aspectRatio: 8 / 6
         }
     }
 
@@ -49,6 +61,10 @@ function Games() {
         const game = games[gameId];
         const [isFullScreen, setIsFullScreen] = useState(false)
         const [liked, setLiked] = useState(false)
+
+        if (!game)
+            return <h3>Unknown game</h3>
+
         document.title = game.name
 
 
@@ -110,6 +126,76 @@ function Games() {
                         style={isFullScreen ? fullScreenStyle : defaultStyle}
                     >
                         <iframe title={game.name} src={game.gameLink} style={{ height: "100%", widht: "100%", position: "relative" }} ></iframe>
+                    </Row>
+                </div>
+            </div >
+        )
+
+    }
+
+
+    function GameLayout2() {
+        let { gameId } = useParams();
+        const game = games[gameId];
+        const [isFullScreen, setIsFullScreen] = useState(false)
+        const [liked, setLiked] = useState(false)
+
+        if (!game)
+            return <h3>Unknown game</h3>
+
+        document.title = game.name
+
+
+        const aspectRatio = (game.aspectRatio || defaultAspectRatio) * 100 + "%"
+        console.log(aspectRatio)
+
+        return (
+            <div
+                className={isFullScreen ? "bg-dark" : ""}
+                style={isFullScreen ? {
+                    zIndex: 2,
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    marign: 0,
+                    backgroundImage: bgImg,
+                    maxHeight: "100%",
+                    /* overflow: "hidden" */
+                } : {}}>
+
+                <div style={{ maxHeight: "100%" }}>
+                    <Row className="m-2  ">
+                        <Col>
+                            <h3>GAME: {game.name}</h3>
+                        </Col>
+                        <Col className="col-auto">
+                            <Button
+                                variant="light"
+                                onClick={() => setLiked((liked) => !liked)}
+                            >
+                                <FontAwesomeIcon icon={faHeart} color={liked ? "red" : "black"} />
+                            </Button>
+                        </Col>
+                        <Col className="col-auto">
+                            <Button
+                                variant="light"
+                                onClick={() => setIsFullScreen((fs) => !fs)}
+                            >
+                                <FontAwesomeIcon icon={isFullScreen ? faCompressArrowsAlt : faExpandArrowsAlt} />
+                            </Button>
+                        </Col>
+                    </Row>
+                    <hr className="m-0" />
+                    <Row className="m-0 align-items-center justify-content-center" style={{ maxHeight: "100%" }}>
+                        <div style={{ width: "100%", maxWidth: "800px", position: "relative" }}>
+                            <div style={{ position: "relative", width: "100%", paddingTop: aspectRatio }}>
+                                <iframe title={game.name} src={game.gameLink}
+                                    style={{ left: 0, top: 0, width: "100%", aspectRatio: aspectRatio, height: "100%", position: "absolute", border: 0 }} ></iframe>
+                            </div>
+
+                        </div>
                     </Row>
                 </div>
             </div >

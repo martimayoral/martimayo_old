@@ -1,0 +1,734 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>PixiJs Test</title>
+
+    <!-- development
+    <script src="https://pixijs.download/release/pixi.js"></script>
+ -->
+    <!-- release
+ -->
+    <script src="https://pixijs.download/release/pixi.min.js"></script>
+    <style>
+        body,
+        html {
+            margin: 0px;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+
+</head>
+
+<body>
+    <script>
+        const app = new PIXI.Application({
+            width: 1000, height: 1200, backgroundColor: 0x1099bb, resolution: window.devicePixelRatio || 1,
+        });
+
+        document.body.appendChild(app.view);
+
+        const levels = [
+            {
+                nMoves: 2,
+                bubblesToAdd: 0,
+                colors: 3,
+                canPlay: 1
+            },
+            {
+                nMoves: 30,
+                bubblesToAdd: 30,
+                colors: 3
+            },
+            {
+                nMoves: 30,
+                bubblesToAdd: 40,
+                colors: 4
+            },
+            {
+                nMoves: 35,
+                bubblesToAdd: 50,
+                colors: 3
+            },
+        ]
+        var currentLevelNum = 0
+        var lastLevelBeat = 0;
+
+        var scenes = {
+            menuScene: new PIXI.Container(),
+            gameScene: new PIXI.Container(),
+            currentScene: undefined,
+            ChangeScene: (sceneName) => {
+                var scene;
+                const prevScene = scenes.currentScene;
+                switch (prevScene.sceneName) {
+                    case "menu":
+                        app.ticker.add(gameTick);
+                        break;
+                    case "game":
+                        app.ticker.remove(gameTick);
+                        app.ticker.remove(loseTick);
+                        break;
+                    default: break;
+                }
+
+                app.stage.removeChild(prevScene)
+
+                switch (sceneName) {
+                    case "menu":
+                        createMenu()
+                        scene = scenes.menuScene
+                        break;
+                    case "game":
+                        scene = scenes.gameScene
+                        break;
+                    default:
+                        console.error("ERROR: Unknown scene: " + sceneName);
+                }
+                scenes.currentScene = scene
+                app.stage.addChild(scene)
+            }
+        }
+        scenes.currentScene = scenes.menuScene
+
+        scenes.menuScene.sceneName = "menu"
+        scenes.gameScene.sceneName = "game"
+
+        app.stage.addChild(scenes.currentScene)
+
+        // UTILS 
+        var m_w = 123456789;
+        var m_z = 987654321;
+        var mask = 0xffffffff;
+
+        // Takes any integer
+        function seed(i) {
+            m_w = (123456789 + i) & mask;
+            m_z = (987654321 - i) & mask;
+        }
+
+        // Returns number between 0 (inclusive) and 1.0 (exclusive),
+        // just like Math.random().
+        function random() {
+            m_z = (36969 * (m_z & 65535) + (m_z >> 16)) & mask;
+            m_w = (18000 * (m_w & 65535) + (m_w >> 16)) & mask;
+            var result = ((m_z << 16) + (m_w & 65535)) >>> 0;
+            result /= 4294967296;
+            return result;
+        }
+
+        // GAME
+        scenes.gameScene.bg = new PIXI.Container()
+        scenes.gameScene.addChild(scenes.gameScene.bg)
+
+        scenes.gameScene.gameCanvas = new PIXI.Container()
+        scenes.gameScene.addChild(scenes.gameScene.gameCanvas)
+
+        scenes.gameScene.ui = new PIXI.Container()
+        scenes.gameScene.addChild(scenes.gameScene.ui)
+
+        const bubbleColors = [0x0000FF, 0x00FF00, 0xFF0000, 0x00FFFF, 0xFFFFFF, 0x0390FF]
+        let bubbles = []
+        const nBalls = 10
+        const nSize = { x: nBalls, y: Math.floor(nBalls * 5 / 4) }
+
+        const clearBubbles = () => {
+            if (bubbles.length !== 0)
+                for (let i = 0; i < nSize.x; i++)
+                    for (let j = 0; j < nSize.y; j++) {
+                        if (bubbles[i][j])
+                            bubbles[i][j].delete()
+                    }
+
+            bubbles = []
+
+            for (var i = 0; i < nSize.x; i++) {
+                bubbles[i] = new Array(nSize.y);
+            }
+        }
+
+
+
+        const separation = 4
+
+        const bubbleSize = ((app.screen.width * 0.8) / nSize.x) - separation
+        const tileSize = bubbleSize + separation
+        const offset = {
+            x: (app.screen.width - (tileSize * nSize.x)) / 2,
+            y: (app.screen.height - (tileSize * nSize.y)) / 2
+        }
+
+        const bezier = new PIXI.Graphics();
+
+
+        const createBg = () => {
+            for (let j = 0; j < 2; j++) {
+                for (let i = 0; i < nSize.y; i++) {
+                    const bezier = new PIXI.Graphics();
+                    const sign = i % 2 == 1 ? 1 : -1
+
+                    bezier.lineStyle(5, 0xDDDDDD, 1);
+                    bezier.bezierCurveTo(sign * tileSize / 4, tileSize / 2, sign * tileSize / 4, tileSize / 2, 0, tileSize);
+                    bezier.filters = [new PIXI.filters.BlurFilter()]
+
+                    bezier.position.x = offset.x - tileSize / 1.5 + bubbleSize / 4
+                    if (j == 1)
+                        bezier.position.x = (app.screen.width * j) - bezier.position.x
+
+                    bezier.position.y = offset.y + i * tileSize
+
+                    scenes.gameScene.bg.addChild(bezier)
+                }
+            }
+
+
+            const levelTittle = new PIXI.Text("", {
+                fontSize: Math.floor(bubbleSize * 2),
+                fill: 0xDDDDDD,
+                align: "center"
+            })
+            levelTittle.anchor.set(0.5, 0.5);
+            levelTittle.x = app.screen.width / 2
+            levelTittle.y = app.screen.height / 2.5
+            levelTittle.filters = [new PIXI.filters.BlurFilter(2)]
+
+
+            scenes.gameScene.bg.updateLevelnumText = () => {
+                levelTittle.text = "Level\n" + (currentLevelNum + 1)
+            }
+
+            scenes.gameScene.bg.addChild(levelTittle)
+
+            /* 
+                        const square = new PIXI.Graphics();
+                        square.beginFill(0xFFFFFF);
+                        square.drawRect(0, 0, offset.x, offset.y);
+                        square.endFill();
+                        scenes.gameScene.bg.addChild(square) */
+        }
+        createBg()
+
+
+        const updateMovesText = () => {
+            scenes.gameScene.ui.moves.text = scenes.gameScene.moves + ""
+        }
+        const updateScoreText = () => {
+            scenes.gameScene.ui.score.text = "Score: " + scenes.gameScene.score
+        }
+        const updateBubblesToAddText = () => {
+            scenes.gameScene.ui.bubblesToAdd.text = Math.max(0, levels[currentLevelNum].bubblesToAdd - scenes.gameScene.bubblesAdded)
+        }
+
+        const createUI = () => {
+            scenes.gameScene.ui.removeChildren()
+
+            scenes.gameScene.ui.score = new PIXI.Text("Score: 0", {
+                fontSize: Math.floor(bubbleSize),
+                fill: 0xDDDDDD
+            })
+            scenes.gameScene.ui.score.anchor.set(0.5, 0.5);
+            scenes.gameScene.ui.score.resolution = devicePixelRatio;
+            scenes.gameScene.ui.score.x = app.screen.width / 2
+            scenes.gameScene.ui.score.y = bubbleSize / 1.5
+
+            scenes.gameScene.ui.addChild(scenes.gameScene.ui.score)
+
+
+            scenes.gameScene.ui.moves = new PIXI.Text("", {
+                fontSize: Math.floor(bubbleSize),
+                fill: 0xEFEFEF
+            })
+            scenes.gameScene.ui.moves.anchor.set(0.5, 0.5);
+            scenes.gameScene.ui.moves.resolution = devicePixelRatio;
+            scenes.gameScene.ui.moves.x = app.screen.width / 2
+            scenes.gameScene.ui.moves.y = app.screen.height - bubbleSize / 1.5
+
+            scenes.gameScene.ui.addChild(scenes.gameScene.ui.moves)
+
+
+            scenes.gameScene.ui.bubblesToAdd = new PIXI.Text("", {
+                fontSize: Math.floor(bubbleSize / 1.5),
+                fill: 0xCCCCCC
+            })
+            scenes.gameScene.ui.bubblesToAdd.anchor.set(1, 0.5);
+            scenes.gameScene.ui.bubblesToAdd.resolution = devicePixelRatio;
+            scenes.gameScene.ui.bubblesToAdd.x = app.screen.width - bubbleSize
+            scenes.gameScene.ui.bubblesToAdd.y = bubbleSize / 1.5
+
+            scenes.gameScene.ui.addChild(scenes.gameScene.ui.bubblesToAdd)
+
+
+            scenes.gameScene.ui.bubbleToAdd = createBubble({ x: 0, y: 0 }, bubbleSize / 2, 1)
+            scenes.gameScene.ui.bubbleToAdd.resolution = devicePixelRatio;
+            scenes.gameScene.ui.bubbleToAdd.x = app.screen.width - bubbleSize / 1.5
+            scenes.gameScene.ui.bubbleToAdd.y = bubbleSize / 1.5
+
+            scenes.gameScene.ui.addChild(scenes.gameScene.ui.bubbleToAdd)
+
+
+            scenes.gameScene.ui.loseInfoContainer = new PIXI.Container();
+            scenes.gameScene.ui.loseInfoContainer.alpha = 0
+            scenes.gameScene.ui.loseInfoContainer.x = app.screen.width / 2
+            scenes.gameScene.ui.loseInfoContainer.y = app.screen.height / 2
+
+            const loseBg = new PIXI.Sprite(PIXI.Texture.WHITE);
+            // Set it to fill the screen
+            loseBg.width = app.screen.width;
+            loseBg.height = app.screen.height;
+            loseBg.x = - app.screen.width / 2
+            loseBg.y = - app.screen.height / 2
+            loseBg.tint = 0x000000
+            loseBg.alpha = 0.75
+            scenes.gameScene.ui.loseInfoContainer.addChild(loseBg)
+
+            const text = new PIXI.Text(
+                "You lost",
+                {
+                    fontSize: bubbleSize,
+                    fill: 0xffffff
+                });
+            text.y = - bubbleSize * 2
+            text.anchor.set(0.5, 0.5);
+            scenes.gameScene.ui.loseInfoContainer.addChild(text)
+
+            const restartButton = createButtonBubble(200, 1, "Try\nagain", 40, () => { app.ticker.remove(loseTick); initGame() })
+            restartButton.y = bubbleSize
+            restartButton.x = 120
+            scenes.gameScene.ui.loseInfoContainer.addChild(restartButton)
+
+            const menuButton = createButtonBubble(200, 3, "Level\nselect", 40, () => { scenes.ChangeScene("menu") })
+            menuButton.y = bubbleSize
+            menuButton.x = - 120
+            scenes.gameScene.ui.loseInfoContainer.addChild(menuButton)
+
+
+        }
+
+        const initGame = (num) => {
+            if (scenes.currentScene !== scenes.gameScene)
+                scenes.ChangeScene("game")
+
+            if (num != undefined) {
+                currentLevelNum = num
+            }
+            if (currentLevelNum >= levels.length) {
+                console.log("ERROR: Level " + currentLevelNum + " does not exist")
+                currentLevelNum = levels.length - 1
+            }
+            console.log("Init game " + currentLevelNum)
+            scenes.gameScene.bg.updateLevelnumText()
+
+            createUI()
+            clearBubbles()
+            scenes.gameScene.bubblesAdded = 0
+            scenes.gameScene.score = 0
+            scenes.gameScene.moves = levels[currentLevelNum].nMoves
+            updateMovesText()
+            updateScoreText()
+            updateBubblesToAddText()
+
+            seed(currentLevelNum)
+            for (let i = 0; i < nSize.x; i++)
+                for (let j = 0; j < nSize.y; j++) {
+                    const bubble = createLevelBubble(
+                        { x: i, y: j },
+                        bubbleSize,
+                        Math.floor(random() * levels[currentLevelNum].colors)
+                    )
+                    bubbles[i][j] = bubble
+                    scenes.gameScene.gameCanvas.addChild(bubble);
+                }
+        }
+
+        const gameTick = (deltaTime) => {
+
+            for (let i = 0; i < nSize.x; i++)
+                for (let j = 0; j < nSize.y; j++) {
+                    const bubble = bubbles[i][j]
+
+                    // move bubbles to their positions
+                    if (bubble) {
+                        bubble.x +=
+                            (
+                                (
+                                    bubble.pos.x * tileSize +
+                                    (bubble.pos.y % 2) * tileSize / 2
+                                    + offset.x + bubbleSize / 4
+                                ) - bubble.x
+                            ) * 0.1 * deltaTime
+                        bubble.y +=
+                            (
+                                (
+                                    bubble.pos.y * tileSize
+                                    + offset.y + bubbleSize / 2
+                                ) - bubble.y
+                            ) * 0.1 * deltaTime
+                    }
+
+                    // if the one down is empty, move there
+                    if (!bubbles[i][j + 1]) {
+                        if (j + 2 > nSize.y) {
+                            continue
+                        }
+
+                        if (bubbles[i][j]) {
+                            bubbles[i][j].pos.y = j + 1
+                            bubbles[i][j + 1] = bubbles[i][j]
+                            bubbles[i][j] = undefined
+                        }
+                    }
+                }
+
+            if (scenes.gameScene.bubblesAdded < levels[currentLevelNum].bubblesToAdd)
+                // add new bubbles
+                for (let i = 0; i < nSize.x; i++) {
+                    if (!bubbles[i][0]) {
+                        const bubble = createLevelBubble(
+                            { x: i, y: 0 },
+                            bubbleSize,
+                            Math.floor(random() * levels[currentLevelNum].colors)
+                        )
+                        bubbles[i][0] = bubble
+                        scenes.gameScene.gameCanvas.addChild(bubble);
+                    }
+
+                }
+        }
+
+
+        const createBubble = (position, diameter, type) => {
+
+            const bubble = new PIXI.Container();
+            bubble.x = position.x * (diameter + separation) + offset.x
+            bubble.y = 0
+            bubble.pos = position
+            bubble.type = type
+
+            bubble.circle = new PIXI.Graphics();
+            bubble.circle.beginFill(0xFFFFFF);
+            bubble.circle.drawCircle(0, 0, diameter / 2);
+            bubble.circle.endFill();
+            bubble.circle.filters = [new PIXI.filters.BlurFilter(2)]
+            bubble.circle.tint = bubbleColors[type]
+            bubble.circle.alpha = .85
+            bubble.addChild(bubble.circle)
+
+            bubble.sprite = PIXI.Sprite.from('bubbleTest.png');
+            bubble.sprite.anchor.set(0.5);
+            bubble.sprite.width = diameter
+            bubble.sprite.height = diameter
+            bubble.addChild(bubble.sprite)
+
+
+            bubble.size = 0
+            bubble.scale.set(bubble.size)
+
+            const scalerFunc = (deltaTime) => {
+
+                /* if (bubble.pos.y == 0 && bubble.size > 0.5) {
+                    return
+                } */
+
+                bubble.size += deltaTime * 0.05
+                bubble.scale.set(bubble.size)
+
+                if (bubble.size > 1) {
+                    bubble.scale.set(1)
+                    app.ticker.remove(scalerFunc)
+                }
+            }
+            app.ticker.add(scalerFunc)
+
+            bubble.delete = () => {
+                app.ticker.remove(scalerFunc)
+                app.ticker.remove(popAnimation)
+
+                bubbles[bubble.pos.x][bubble.pos.y] = undefined
+                scenes.gameScene.gameCanvas.removeChild(bubble);
+                bubble.destroy({ children: true, texture: false, baseTexture: true });
+            }
+
+            const popAnimation = (deltaTime) => {
+                bubble.size += deltaTime * 0.05
+                bubble.scale.set(bubble.size)
+                bubble.rotation += deltaTime * 0.01
+
+                if (bubble.size > 1.25) {
+                    app.ticker.remove(popAnimation)
+                    bubble.delete()
+                }
+            }
+            bubble.pop = () => {
+                if (bubble.popped)
+                    return;
+
+                scenes.gameScene.bubblesAdded++;
+                updateBubblesToAddText()
+                bubble.popped = true
+                bubble.size = 0.9
+                app.ticker.add(popAnimation)
+            }
+
+            return bubble;
+        }
+
+        const createLevelBubble = (position, diameter, type) => {
+            const bubble = createBubble(position, diameter, type)
+
+            bubble.circle.interactive = true
+            bubble.circle.buttonMode = true;
+            bubble.circle.on('pointerdown', () => handlePopBubble(bubble.pos))
+
+            return bubble
+        }
+
+        const bubbleNeighbours = (i, j) => {
+            var neighbours = []
+
+
+            // left
+            if (bubbles[i - 1 + j % 2]) {
+                neighbours.push(bubbles[i - 1 + j % 2][j + 1])
+                neighbours.push(bubbles[i - 1 + j % 2][j - 1])
+            }
+
+            // center
+            if (bubbles[i - 1])
+                neighbours.push(bubbles[i - 1][j])
+            if (bubbles[i + 1])
+                neighbours.push(bubbles[i + 1][j])
+
+            // right
+            if (bubbles[i + j % 2]) {
+                neighbours.push(bubbles[i + j % 2][j - 1])
+                neighbours.push(bubbles[i + j % 2][j + 1])
+            }
+
+            return neighbours.filter((val) => val !== undefined)
+        }
+
+        const countLinesRemaining = () => {
+
+            for (let j = 0; j < nSize.y; j++)
+                for (let i = 0; i < nSize.x; i++)
+                    if (bubbles[i][j])
+                        if (!bubbles[i][j].popped)
+                            return nSize.y - j
+
+            return 0
+        }
+        const gameIsWon = () => {
+            return countLinesRemaining() == 0
+        }
+
+        var toAdd;
+        const handlePopBubble = (pos) => {
+            scenes.gameScene.moves--;
+            updateMovesText()
+            //console.log("-")
+            toAdd = 1
+            handlePopBubbleChain(pos, 0)
+            if (gameIsWon()) {
+                console.log("win")
+                handleWin()
+            } else if (scenes.gameScene.moves == 0) {
+                console.log("lose")
+                handleLose()
+            }
+        }
+
+        const handleWin = () => {
+
+            levels[currentLevelNum].canPlay = 3
+            currentLevelNum++;
+            if (currentLevelNum < levels.length) {
+                levels[currentLevelNum].canPlay = 1
+                initGame()
+            }
+        }
+
+        const loseTick = (deltaTime) => {
+            for (let i = 0; i < nSize.x; i++) {
+                if (bubbles[i][nSize.y - 1]) {
+                    bubbles[i][nSize.y - 1].pop()
+                }
+            }
+            
+            scenes.gameScene.ui.loseInfoContainer.alpha += ((1 - (countLinesRemaining() + 1) / nSize.y) - scenes.gameScene.ui.loseInfoContainer.alpha) * .1 * deltaTime
+            if (scenes.gameScene.ui.loseInfoContainer.alpha > 1) {
+                scenes.gameScene.ui.loseInfoContainer.alpha = 1
+                app.ticker.remove(loseTick)
+            }
+        }
+
+        const handleLose = () => {
+            scenes.gameScene.ui.addChild(scenes.gameScene.ui.loseInfoContainer)
+            app.ticker.add(loseTick)
+        }
+
+        const handlePopBubbleChain = (pos, deep) => {
+            const currentBubble = bubbles[pos.x][pos.y]
+            currentBubble.pop()
+            scenes.gameScene.score += toAdd;
+            // console.log("adding +" + toAdd + " - " + scenes.gameScene.score)
+            toAdd++;
+            updateScoreText()
+
+            bubbleNeighbours(pos.x, pos.y).forEach(bubble => {
+                if (currentBubble.type == bubble.type && !bubble.popped) {
+                    handlePopBubbleChain(bubble.pos, deep + 1)
+                    //console.log(currentBubble.pos, bubble.pos)
+                }
+            })
+
+        }
+
+        //
+
+        // MENU
+        const createButtonBubble = (diameter, type, text, textSize, action) => {
+            const bubble = createBubble({ x: 0, y: 0 }, diameter, type)
+            bubble.x = 0
+            bubble.text = new PIXI.Text(
+                text,
+                {
+                    align: "center",
+                    fontSize: textSize
+                });
+            bubble.text.x = diameter / 2
+            bubble.text.y = diameter / 2
+            bubble.text.pivot.x = diameter / 2;
+            bubble.text.pivot.y = diameter / 2;
+            bubble.text.anchor.set(0.5, 0.5);
+            bubble.addChild(bubble.text)
+
+
+            bubble.circle.interactive = true
+            bubble.circle.buttonMode = true
+            bubble.circle.on('pointerdown', action)
+
+            return bubble;
+        }
+
+        const createMenu = () => {
+            scenes.menuScene.removeChildren()
+
+            const container = new PIXI.Container();
+            scenes.menuScene.addChild(container)
+
+            // Create a 5x5 grid of bunnies
+            for (let i = 0; i < 25; i++) {
+                const canPlay = levels[i] && levels[i].canPlay;
+
+                const bubble = createButtonBubble(100, canPlay ? canPlay : -1, i + 1, 50, () => initGame(i))
+                if (!canPlay) {
+                    bubble.alpha = 0.5
+                    bubble.circle.interactive = false
+                    bubble.circle.buttonMode = false
+                }
+                bubble.x = (i % 5) * 120;
+                bubble.y = Math.floor(i / 5) * 120;
+                bubble.text.style.fill = 0xffffff
+                container.addChild(bubble);
+            }
+
+            // Move container to the center
+            container.x = app.screen.width / 2;
+            container.y = app.screen.height / 2;
+
+            // Center group
+            container.pivot.x = container.width / 2;
+            container.pivot.y = container.height / 2;
+
+            const testtext = new PIXI.Text("Level Select", {
+                fontSize: Math.floor(bubbleSize),
+                fill: 0xEFEFEF
+            })
+            testtext.anchor.set(0.5, 0.5);
+            testtext.resolution = devicePixelRatio;
+            testtext.x = app.screen.width / 2
+            testtext.y = bubbleSize * 3
+
+
+            scenes.menuScene.addChild(testtext)
+        }
+
+        createMenu()
+
+        // 
+
+
+        document.addEventListener("keydown", (e) => {
+            //console.log(scenes.currentScene.sceneName)
+            /* if (e.repeat)
+                return; */
+
+            switch (scenes.currentScene.sceneName) {
+                case "menu":
+
+                    switch (e.keyCode) {
+                        case 32: // scpace
+                            initGame()
+                            break;
+                        default: break;
+
+                    }
+
+
+                    break;
+                case "game":
+
+                    switch (e.keyCode) {
+                        case 27: // esc
+                            scenes.ChangeScene("menu")
+                            break;
+
+                        case 38: // up
+                        case 87:
+                            e.preventDefault()
+                            //moveUP()
+                            break;
+                        case 40: // down
+                        case 83:
+                            e.preventDefault()
+                            moveDOWN()
+                            break;
+                        case 37: // left
+                        case 65:
+                            e.preventDefault()
+                            moveLEFT();
+                            break;
+                        case 39: // right
+                        case 68:
+                            e.preventDefault()
+                            moveRIGHT(1, 0);
+                            break;
+                        case 82: // r
+                            app.ticker.remove(loseTick)
+                            initGame()
+                            //reverse()
+                            break;
+                        case 84: // t
+                            //transpose()
+                            break;
+                        default:
+                            break;
+                    }
+
+                    break;
+                default: break;
+
+            }
+        })
+
+
+    </script>
+</body>
+
+</html>
