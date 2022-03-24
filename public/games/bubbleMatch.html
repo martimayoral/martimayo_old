@@ -123,6 +123,7 @@
             return result;
         }
 
+
         // GAME
         scenes.gameScene.bg = new PIXI.Container()
         scenes.gameScene.addChild(scenes.gameScene.bg)
@@ -163,6 +164,12 @@
             x: (app.screen.width - (tileSize * nSize.x)) / 2,
             y: (app.screen.height - (tileSize * nSize.y)) / 2
         }
+        const textStyle = {
+            "fontSize": bubbleSize,
+            "align": "center",
+            "fontFamily": "Verdana",
+            "fontVariant": "small-caps"
+        }
 
         const bezier = new PIXI.Graphics();
 
@@ -189,9 +196,9 @@
 
 
             const levelTittle = new PIXI.Text("", {
+                ...textStyle,
                 fontSize: Math.floor(bubbleSize * 2),
                 fill: 0xDDDDDD,
-                align: "center"
             })
             levelTittle.anchor.set(0.5, 0.5);
             levelTittle.x = app.screen.width / 2
@@ -229,7 +236,7 @@
             scenes.gameScene.ui.removeChildren()
 
             scenes.gameScene.ui.score = new PIXI.Text("Score: 0", {
-                fontSize: Math.floor(bubbleSize),
+                ...textStyle,
                 fill: 0xDDDDDD
             })
             scenes.gameScene.ui.score.anchor.set(0.5, 0.5);
@@ -241,7 +248,7 @@
 
 
             scenes.gameScene.ui.moves = new PIXI.Text("", {
-                fontSize: Math.floor(bubbleSize),
+                ...textStyle,
                 fill: 0xEFEFEF
             })
             scenes.gameScene.ui.moves.anchor.set(0.5, 0.5);
@@ -253,6 +260,7 @@
 
 
             scenes.gameScene.ui.bubblesToAdd = new PIXI.Text("", {
+                ...textStyle,
                 fontSize: Math.floor(bubbleSize / 1.5),
                 fill: 0xCCCCCC
             })
@@ -288,24 +296,27 @@
             scenes.gameScene.ui.loseInfoContainer.addChild(loseBg)
 
             const text = new PIXI.Text(
-                "You lost",
+                "You Lost",
                 {
-                    fontSize: bubbleSize,
+                    ...textStyle,
                     fill: 0xffffff
                 });
-            text.y = - bubbleSize * 2
+            text.y = - 200
             text.anchor.set(0.5, 0.5);
             scenes.gameScene.ui.loseInfoContainer.addChild(text)
 
-            const restartButton = createButtonBubble(200, 1, "Try\nagain", 40, () => { app.ticker.remove(loseTick); initGame() })
-            restartButton.y = bubbleSize
+            const restartButton = createButtonBubble(200, 1, "Try\nAgain", 40, () => { app.ticker.remove(loseTick); initGame() })
             restartButton.x = 120
             scenes.gameScene.ui.loseInfoContainer.addChild(restartButton)
 
-            const menuButton = createButtonBubble(200, 3, "Level\nselect", 40, () => { scenes.ChangeScene("menu") })
-            menuButton.y = bubbleSize
+            const menuButton = createButtonBubble(200, 3, "Level\nSelect", 40, () => { scenes.ChangeScene("menu") })
             menuButton.x = - 120
             scenes.gameScene.ui.loseInfoContainer.addChild(menuButton)
+
+            const nextLevelButton = createButtonBubble(200, 4, "Next\nLevel", 40, () => { scenes.ChangeScene("menu") })
+            nextLevelButton.y = 200
+            nextLevelButton.x = 0
+            scenes.gameScene.ui.loseInfoContainer.addChild(nextLevelButton)
 
 
         }
@@ -559,7 +570,7 @@
                     bubbles[i][nSize.y - 1].pop()
                 }
             }
-            
+
             scenes.gameScene.ui.loseInfoContainer.alpha += ((1 - (countLinesRemaining() + 1) / nSize.y) - scenes.gameScene.ui.loseInfoContainer.alpha) * .1 * deltaTime
             if (scenes.gameScene.ui.loseInfoContainer.alpha > 1) {
                 scenes.gameScene.ui.loseInfoContainer.alpha = 1
@@ -598,7 +609,7 @@
             bubble.text = new PIXI.Text(
                 text,
                 {
-                    align: "center",
+                    ...textStyle,
                     fontSize: textSize
                 });
             bubble.text.x = diameter / 2
@@ -647,7 +658,7 @@
             container.pivot.y = container.height / 2;
 
             const testtext = new PIXI.Text("Level Select", {
-                fontSize: Math.floor(bubbleSize),
+                ...textStyle,
                 fill: 0xEFEFEF
             })
             testtext.anchor.set(0.5, 0.5);
