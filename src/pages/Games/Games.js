@@ -14,7 +14,8 @@ import mmayoGamesLogo from "./mmayogames.png"
 
 import icon2048 from "./icons/logo2048_128.png"
 import iconLiu from "./icons/lightItUpLogo.png"
-import testLogo from "./icons/tests.png"
+import iconBubbleMatch from "./icons/bubbleMatch.png"
+//import testLogo from "./icons/tests.png"
 
 
 function Games() {
@@ -28,32 +29,32 @@ function Games() {
         lightItUp: {
             name: "Light it up",
             icon: iconLiu,
-            gameLink: "/games/lightItUpJs.html",
+            gameLink: "/myGames/lightItUpJs.html",
         },
         mmayo2048: {
             name: "Mmayo 2048",
             icon: icon2048,
-            gameLink: "/games/mmayo2048.html",
+            gameLink: "/myGames/mmayo2048.html",
             aspectRatio: 1
         },
         bubbleMatch: {
             name: "Bubble Match",
-            icon: testLogo,
-            gameLink: "/games/bubbleMatch.html",
+            icon: iconBubbleMatch,
+            gameLink: "/myGames/bubbleMatch.html",
             aspectRatio: 5 / 6
-        },
+        }/* ,
         testGame: {
             name: "test game",
             icon: testLogo,
-            gameLink: "/games/test.html",
+            gameLink: "/myGames/test.html",
             aspectRatio: 5 / 6
         },
         testGame2: {
             name: "test game 2",
             icon: testLogo,
-            gameLink: "/games/test2.html",
+            gameLink: "/myGames/test2.html",
             aspectRatio: 8 / 6
-        }
+        } */
     }
 
     function GameLayout() {
@@ -133,7 +134,7 @@ function Games() {
 
     }
 
-
+/* 
     function GameLayout2() {
         let { gameId } = useParams();
         const game = games[gameId];
@@ -161,8 +162,7 @@ function Games() {
                     bottom: 0,
                     marign: 0,
                     backgroundImage: bgImg,
-                    maxHeight: "100%",
-                    /* overflow: "hidden" */
+                    maxHeight: "100%"
                 } : {}}>
 
                 <div style={{ maxHeight: "100%" }}>
@@ -201,7 +201,7 @@ function Games() {
             </div >
         )
 
-    }
+    } */
 
     return (
         <div

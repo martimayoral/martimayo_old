@@ -45,6 +45,10 @@ function App() {
       route: "/projects"
     },
     {
+      name: (<span>Games < FontAwesomeIcon icon={faExternalLinkAlt} size="sm" /></span>),
+      route: "/games"
+    },
+    {
       name: "Contact",
       component: (() => { return <Contact /> }),
       route: "/contact"
@@ -105,7 +109,7 @@ function App() {
       <Switch>
 
         {/* A Route for the pages of the portoflio */}
-        <Route exact path={portfolioPages.map(page => (page.route))}>
+        <Route exact path={portfolioPages.filter((page) => page.component).map(page => (page.route))}>
           <PortfolioLayout location={location} pages={portfolioPages}>
 
             <Switch>

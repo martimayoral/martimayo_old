@@ -36,25 +36,155 @@
 
         const levels = [
             {
-                nMoves: 2,
+                canPlay: 1,
+                nMoves: 20,
                 bubblesToAdd: 0,
                 colors: 3,
-                canPlay: 1
+                starScore: 500,
             },
             {
-                nMoves: 30,
+                nMoves: 20,
                 bubblesToAdd: 30,
-                colors: 3
+                colors: 3,
+                starScore: 700,
             },
             {
                 nMoves: 30,
                 bubblesToAdd: 40,
-                colors: 4
+                colors: 3,
+                starScore: 1000,
             },
             {
-                nMoves: 35,
+                nMoves: 40,
                 bubblesToAdd: 50,
-                colors: 3
+                colors: 4,
+                starScore: 1000,
+            },
+            {
+                nMoves: 40,
+                bubblesToAdd: 100,
+                colors: 3,
+                starScore: 1000,
+            },
+            {
+                nMoves: 45,
+                bubblesToAdd: 200,
+                colors: 3,
+                starScore: 1500,
+            },
+            {
+                nMoves: 60,
+                bubblesToAdd: 50,
+                colors: 5,
+                starScore: 500,
+            },
+            {
+                nMoves: 40,
+                bubblesToAdd: 50,
+                colors: 4,
+                starScore: 1000,
+            },
+            {
+                nMoves: 40,
+                bubblesToAdd: 150,
+                colors: 3,
+                starScore: 1200,
+            },
+            {
+                nMoves: 40,
+                bubblesToAdd: 250,
+                colors: 3,
+                starScore: 1000,
+            },
+            {
+                nMoves: 40,
+                bubblesToAdd: 350,
+                colors: 3,
+                starScore: 1200,
+            },
+            {
+                nMoves: 70,
+                bubblesToAdd: 999,
+                colors: 3,
+                starScore: 15000
+            },
+            {
+                nMoves: 70,
+                bubblesToAdd: 999,
+                colors: 3,
+                starScore: 15000
+            },
+            {
+                nMoves: 70,
+                bubblesToAdd: 999,
+                colors: 3,
+                starScore: 15000
+            },
+            {
+                nMoves: 70,
+                bubblesToAdd: 999,
+                colors: 3,
+                starScore: 15000
+            },
+            {
+                nMoves: 70,
+                bubblesToAdd: 999,
+                colors: 3,
+                starScore: 15000
+            },
+            {
+                nMoves: 70,
+                bubblesToAdd: 999,
+                colors: 3,
+                starScore: 15000
+            },
+            {
+                nMoves: 70,
+                bubblesToAdd: 999,
+                colors: 3,
+                starScore: 15000
+            },
+            {
+                nMoves: 70,
+                bubblesToAdd: 999,
+                colors: 3,
+                starScore: 15000
+            },
+            {
+                nMoves: 70,
+                bubblesToAdd: 999,
+                colors: 3,
+                starScore: 15000
+            },
+            {
+                nMoves: 70,
+                bubblesToAdd: 999,
+                colors: 3,
+                starScore: 15000
+            },
+            {
+                nMoves: 70,
+                bubblesToAdd: 999,
+                colors: 3,
+                starScore: 15000
+            },
+            {
+                nMoves: 70,
+                bubblesToAdd: 999,
+                colors: 3,
+                starScore: 15000
+            },
+            {
+                nMoves: 70,
+                bubblesToAdd: 999,
+                colors: 3,
+                starScore: 15000
+            },
+            {
+                nMoves: 70,
+                bubblesToAdd: 999,
+                colors: 3,
+                starScore: 15000
             },
         ]
         var currentLevelNum = 0
@@ -73,7 +203,7 @@
                         break;
                     case "game":
                         app.ticker.remove(gameTick);
-                        app.ticker.remove(loseTick);
+                        app.ticker.remove(endTick);
                         break;
                     default: break;
                 }
@@ -134,7 +264,23 @@
         scenes.gameScene.ui = new PIXI.Container()
         scenes.gameScene.addChild(scenes.gameScene.ui)
 
-        const bubbleColors = [0x0000FF, 0x00FF00, 0xFF0000, 0x00FFFF, 0xFFFFFF, 0x0390FF]
+        const bubbleColors = [
+            // normal
+            0x0000FF, // 0
+            0x00FF00, // 1
+            0xFF0000, // 2
+            0x00FFFF, // 3
+            0xFFFFFF, // 4
+            0x0390FF, // 5
+            0x000000, // 6
+            0x000000, // 7
+            0x000000, // 8
+            0x000000, // 9
+            // spetials
+            0xFFD700, // 10
+            0x000000, // 11
+            0x000000, // 12
+        ]
         let bubbles = []
         const nBalls = 10
         const nSize = { x: nBalls, y: Math.floor(nBalls * 5 / 4) }
@@ -171,10 +317,11 @@
             "fontVariant": "small-caps"
         }
 
-        const bezier = new PIXI.Graphics();
-
 
         const createBg = () => {
+            //console.log("creating bg")
+            scenes.gameScene.bg.bezierContainer = new PIXI.Container()
+            scenes.gameScene.bg.addChild(scenes.gameScene.bg.bezierContainer)
             for (let j = 0; j < 2; j++) {
                 for (let i = 0; i < nSize.y; i++) {
                     const bezier = new PIXI.Graphics();
@@ -182,7 +329,8 @@
 
                     bezier.lineStyle(5, 0xDDDDDD, 1);
                     bezier.bezierCurveTo(sign * tileSize / 4, tileSize / 2, sign * tileSize / 4, tileSize / 2, 0, tileSize);
-                    bezier.filters = [new PIXI.filters.BlurFilter()]
+                    if (!PIXI.isMobile)
+                        bezier.filters = [new PIXI.filters.BlurFilter()]
 
                     bezier.position.x = offset.x - tileSize / 1.5 + bubbleSize / 4
                     if (j == 1)
@@ -190,10 +338,50 @@
 
                     bezier.position.y = offset.y + i * tileSize
 
-                    scenes.gameScene.bg.addChild(bezier)
+                    scenes.gameScene.bg.bezierContainer.addChild(bezier)
                 }
             }
 
+            scenes.gameScene.bg.winContainer = new PIXI.Container()
+            scenes.gameScene.bg.addChild(scenes.gameScene.bg.winContainer)
+
+            for (let j = 0; j < 2; j++) {
+                for (let i = 0; i < nSize.y; i++) {
+                    const bezier = new PIXI.Graphics();
+                    const sign = i % 2 == 1 ? 1 : -1
+
+                    bezier.lineStyle(5, 0xFFD700, 1);
+                    bezier.bezierCurveTo(sign * tileSize / 4, tileSize / 2, sign * tileSize / 4, tileSize / 2, 0, tileSize);
+
+                    if (!PIXI.isMobile)
+                        bezier.filters = [new PIXI.filters.BlurFilter()]
+
+                    bezier.position.x = offset.x - tileSize / 1.5 + bubbleSize / 4
+                    if (j == 1)
+                        bezier.position.x = (app.screen.width * j) - bezier.position.x
+
+                    bezier.position.y = offset.y + i * tileSize
+
+                    scenes.gameScene.bg.winContainer.addChild(bezier)
+                }
+            }
+            const square = new PIXI.Graphics();
+            square.beginFill(0xFFFFFF);
+            square.drawRect(0, 0, app.screen.width, app.screen.height);
+            square.endFill();
+            square.y = 0
+
+            const offsetY = (app.view.height - scenes.gameScene.bg.bezierContainer.height) / 2
+
+            app.ticker.add((deltaTime) => {
+                const score = scenes.gameScene.score || 1
+                const progress = levels[currentLevelNum] ? Math.min(1, (score / levels[currentLevelNum].starScore)) : 0
+                const newHeight = scenes.gameScene.bg.bezierContainer.height - (scenes.gameScene.bg.bezierContainer.height * progress)
+                square.y = square.y + (newHeight - square.y + offsetY) * 0.1 * deltaTime
+            })
+
+            // scenes.gameScene.bg.addChild(square)
+            scenes.gameScene.bg.winContainer.mask = square
 
             const levelTittle = new PIXI.Text("", {
                 ...textStyle,
@@ -203,7 +391,8 @@
             levelTittle.anchor.set(0.5, 0.5);
             levelTittle.x = app.screen.width / 2
             levelTittle.y = app.screen.height / 2.5
-            levelTittle.filters = [new PIXI.filters.BlurFilter(2)]
+            if (!PIXI.isMobile)
+                levelTittle.filters = [new PIXI.filters.BlurFilter(2)]
 
 
             scenes.gameScene.bg.updateLevelnumText = () => {
@@ -280,10 +469,10 @@
             scenes.gameScene.ui.addChild(scenes.gameScene.ui.bubbleToAdd)
 
 
-            scenes.gameScene.ui.loseInfoContainer = new PIXI.Container();
-            scenes.gameScene.ui.loseInfoContainer.alpha = 0
-            scenes.gameScene.ui.loseInfoContainer.x = app.screen.width / 2
-            scenes.gameScene.ui.loseInfoContainer.y = app.screen.height / 2
+            scenes.gameScene.ui.endGameContainer = new PIXI.Container();
+            scenes.gameScene.ui.endGameContainer.alpha = 0
+            scenes.gameScene.ui.endGameContainer.x = app.screen.width / 2
+            scenes.gameScene.ui.endGameContainer.y = app.screen.height / 2
 
             const loseBg = new PIXI.Sprite(PIXI.Texture.WHITE);
             // Set it to fill the screen
@@ -293,32 +482,60 @@
             loseBg.y = - app.screen.height / 2
             loseBg.tint = 0x000000
             loseBg.alpha = 0.75
-            scenes.gameScene.ui.loseInfoContainer.addChild(loseBg)
+            scenes.gameScene.ui.endGameContainer.addChild(loseBg)
 
             const text = new PIXI.Text(
-                "You Lost",
+                "",
                 {
                     ...textStyle,
                     fill: 0xffffff
                 });
             text.y = - 200
             text.anchor.set(0.5, 0.5);
-            scenes.gameScene.ui.loseInfoContainer.addChild(text)
+            scenes.gameScene.ui.endGameContainer.addChild(text)
 
-            const restartButton = createButtonBubble(200, 1, "Try\nAgain", 40, () => { app.ticker.remove(loseTick); initGame() })
+            const restartButton = createButtonBubble(200, 1, "Try\nAgain", 40, () => { app.ticker.remove(endTick); initGame() })
             restartButton.x = 120
-            scenes.gameScene.ui.loseInfoContainer.addChild(restartButton)
+            scenes.gameScene.ui.endGameContainer.addChild(restartButton)
 
             const menuButton = createButtonBubble(200, 3, "Level\nSelect", 40, () => { scenes.ChangeScene("menu") })
             menuButton.x = - 120
-            scenes.gameScene.ui.loseInfoContainer.addChild(menuButton)
+            scenes.gameScene.ui.endGameContainer.addChild(menuButton)
 
-            const nextLevelButton = createButtonBubble(200, 4, "Next\nLevel", 40, () => { scenes.ChangeScene("menu") })
+            const nextLevelButton = createButtonBubble(200, 4, "Next\nLevel", 40, () => {
+                currentLevelNum++;
+                if (currentLevelNum < levels.length) {
+                    app.ticker.remove(endTick)
+                    initGame()
+                }
+            })
             nextLevelButton.y = 200
             nextLevelButton.x = 0
-            scenes.gameScene.ui.loseInfoContainer.addChild(nextLevelButton)
+            scenes.gameScene.ui.endGameContainer.addChild(nextLevelButton)
 
-
+            scenes.gameScene.ui.endGameContainer.show = (type) => {
+                app.ticker.add(endTick)
+                scenes.gameScene.ui.addChild(scenes.gameScene.ui.endGameContainer)
+                switch (type) {
+                    case "lose":
+                        nextLevelButton.alpha = 0.25
+                        nextLevelButton.circle.interactive = false
+                        nextLevelButton.circle.buttonMode = false
+                        text.text = "You Lost!"
+                        break
+                    case "win":
+                        if (levels[currentLevelNum]) {
+                            nextLevelButton.alpha = 1
+                            nextLevelButton.circle.interactive = true
+                            nextLevelButton.circle.buttonMode = true
+                        } else {
+                            nextLevelButton.alpha = 0.25
+                            nextLevelButton.circle.interactive = false
+                            nextLevelButton.circle.buttonMode = false
+                        }
+                        text.text = "You Won!"
+                }
+            }
         }
 
         const initGame = (num) => {
@@ -332,7 +549,7 @@
                 console.log("ERROR: Level " + currentLevelNum + " does not exist")
                 currentLevelNum = levels.length - 1
             }
-            console.log("Init game " + currentLevelNum)
+            //console.log("Init game " + currentLevelNum)
             scenes.gameScene.bg.updateLevelnumText()
 
             createUI()
@@ -396,20 +613,21 @@
                     }
                 }
 
-            if (scenes.gameScene.bubblesAdded < levels[currentLevelNum].bubblesToAdd)
-                // add new bubbles
-                for (let i = 0; i < nSize.x; i++) {
-                    if (!bubbles[i][0]) {
-                        const bubble = createLevelBubble(
-                            { x: i, y: 0 },
-                            bubbleSize,
-                            Math.floor(random() * levels[currentLevelNum].colors)
-                        )
-                        bubbles[i][0] = bubble
-                        scenes.gameScene.gameCanvas.addChild(bubble);
-                    }
+            if (levels[currentLevelNum])
+                if (scenes.gameScene.bubblesAdded < levels[currentLevelNum].bubblesToAdd)
+                    // add new bubbles
+                    for (let i = 0; i < nSize.x; i++) {
+                        if (!bubbles[i][0]) {
+                            const bubble = createLevelBubble(
+                                { x: i, y: 0 },
+                                bubbleSize,
+                                Math.floor(random() * levels[currentLevelNum].colors)
+                            )
+                            bubbles[i][0] = bubble
+                            scenes.gameScene.gameCanvas.addChild(bubble);
+                        }
 
-                }
+                    }
         }
 
 
@@ -425,7 +643,8 @@
             bubble.circle.beginFill(0xFFFFFF);
             bubble.circle.drawCircle(0, 0, diameter / 2);
             bubble.circle.endFill();
-            bubble.circle.filters = [new PIXI.filters.BlurFilter(2)]
+            if (!PIXI.isMobile)
+                bubble.circle.filters = [new PIXI.filters.BlurFilter(2)]
             bubble.circle.tint = bubbleColors[type]
             bubble.circle.alpha = .85
             bubble.addChild(bubble.circle)
@@ -546,41 +765,44 @@
             toAdd = 1
             handlePopBubbleChain(pos, 0)
             if (gameIsWon()) {
-                console.log("win")
+                //console.log("win")
                 handleWin()
             } else if (scenes.gameScene.moves == 0) {
-                console.log("lose")
+                //console.log("lose")
                 handleLose()
             }
         }
 
         const handleWin = () => {
+            // color current level
+            if (levels[currentLevelNum].canPlay != 10)
+                if (levels[currentLevelNum].starScore < scenes.gameScene.score)
+                    levels[currentLevelNum].canPlay = 10 // gold
+                else
+                    levels[currentLevelNum].canPlay = 3 // light blue
 
-            levels[currentLevelNum].canPlay = 3
-            currentLevelNum++;
-            if (currentLevelNum < levels.length) {
-                levels[currentLevelNum].canPlay = 1
-                initGame()
-            }
+            if (levels[currentLevelNum + 1])
+                levels[currentLevelNum + 1].canPlay = 1
+
+            scenes.gameScene.ui.endGameContainer.show("win")
         }
 
-        const loseTick = (deltaTime) => {
+        const endTick = (deltaTime) => {
             for (let i = 0; i < nSize.x; i++) {
                 if (bubbles[i][nSize.y - 1]) {
                     bubbles[i][nSize.y - 1].pop()
                 }
             }
 
-            scenes.gameScene.ui.loseInfoContainer.alpha += ((1 - (countLinesRemaining() + 1) / nSize.y) - scenes.gameScene.ui.loseInfoContainer.alpha) * .1 * deltaTime
-            if (scenes.gameScene.ui.loseInfoContainer.alpha > 1) {
-                scenes.gameScene.ui.loseInfoContainer.alpha = 1
-                app.ticker.remove(loseTick)
+            scenes.gameScene.ui.endGameContainer.alpha += ((1 - (countLinesRemaining() + 1) / nSize.y) - scenes.gameScene.ui.endGameContainer.alpha) * .05 * deltaTime
+            if (scenes.gameScene.ui.endGameContainer.alpha > 1) {
+                scenes.gameScene.ui.endGameContainer.alpha = 1
+                app.ticker.remove(endTick)
             }
         }
 
         const handleLose = () => {
-            scenes.gameScene.ui.addChild(scenes.gameScene.ui.loseInfoContainer)
-            app.ticker.add(loseTick)
+            scenes.gameScene.ui.endGameContainer.show("lose")
         }
 
         const handlePopBubbleChain = (pos, deep) => {
@@ -633,18 +855,20 @@
             const container = new PIXI.Container();
             scenes.menuScene.addChild(container)
 
-            // Create a 5x5 grid of bunnies
-            for (let i = 0; i < 25; i++) {
+            const nLevels = levels.length
+            const sqrSize = Math.floor(Math.sqrt(nLevels))
+            for (let i = 0; i < nLevels; i++) {
                 const canPlay = levels[i] && levels[i].canPlay;
 
-                const bubble = createButtonBubble(100, canPlay ? canPlay : -1, i + 1, 50, () => initGame(i))
+                const type = canPlay ? canPlay : -1
+                const bubble = createButtonBubble(100, type, i + 1, 50, () => initGame(i))
                 if (!canPlay) {
                     bubble.alpha = 0.5
                     bubble.circle.interactive = false
                     bubble.circle.buttonMode = false
                 }
-                bubble.x = (i % 5) * 120;
-                bubble.y = Math.floor(i / 5) * 120;
+                bubble.x = (i % sqrSize) * 120;
+                bubble.y = Math.floor(i / sqrSize) * 120;
                 bubble.text.style.fill = 0xffffff
                 container.addChild(bubble);
             }
@@ -657,17 +881,17 @@
             container.pivot.x = container.width / 2;
             container.pivot.y = container.height / 2;
 
-            const testtext = new PIXI.Text("Level Select", {
+            const levelselectTest = new PIXI.Text("Level Select", {
                 ...textStyle,
                 fill: 0xEFEFEF
             })
-            testtext.anchor.set(0.5, 0.5);
-            testtext.resolution = devicePixelRatio;
-            testtext.x = app.screen.width / 2
-            testtext.y = bubbleSize * 3
+            levelselectTest.anchor.set(0.5, 0.5);
+            levelselectTest.resolution = devicePixelRatio;
+            levelselectTest.x = app.screen.width / 2
+            levelselectTest.y = app.screen.height / 2 - container.height / 2 - 150
 
 
-            scenes.menuScene.addChild(testtext)
+            scenes.menuScene.addChild(levelselectTest)
         }
 
         createMenu()
@@ -721,7 +945,7 @@
                             moveRIGHT(1, 0);
                             break;
                         case 82: // r
-                            app.ticker.remove(loseTick)
+                            app.ticker.remove(endTick)
                             initGame()
                             //reverse()
                             break;

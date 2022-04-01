@@ -28,7 +28,7 @@ function Liu() {
                             <div className="video-responsive">
                                 <iframe
                                     title="liu"
-                                    src="/games/lightItUpJs.html"></iframe>
+                                    src="/myGames/lightItUpJs.html"></iframe>
                             </div>
                         </div>
                     </Container>

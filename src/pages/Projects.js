@@ -34,7 +34,7 @@ function Projects() {
             title: 'Video Game: "Light It Up" using Unity',
             //headVideoId: "U6mxT3KfP4w",
             customHead: (
-                <iframe width="100%" style={{ minHeight: "400px" }} src="/games/lightItUpJs.html" title="light it up"></iframe>
+                <iframe width="100%" style={{ minHeight: "400px" }} src="/myGames/lightItUpJs.html" title="light it up"></iframe>
             ),
             subtitle: "OCT 2021 - FEB 2022",
             description: (
@@ -127,7 +127,7 @@ function Projects() {
                     <h4 className="fw-light">Javascript demo version</h4>
                     <p>I created a simple version done with pure html, css and javascript.
                         It is the game that you can play on the beggining of this page. You can see the embeded 
-                        element in this webpage: <a href="/games/lightItUpJs.html" target="_blank">lightItUpJs.html</a></p>
+                        element in this webpage: <a href="/myGames/lightItUpJs.html" target="_blank">lightItUpJs.html</a></p>
                 </div >
             ),
             gitHub: "https://github.com/martimayoral/lightItUpUnity",
