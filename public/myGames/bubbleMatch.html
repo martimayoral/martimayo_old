@@ -329,8 +329,9 @@
 
                     bezier.lineStyle(5, 0xDDDDDD, 1);
                     bezier.bezierCurveTo(sign * tileSize / 4, tileSize / 2, sign * tileSize / 4, tileSize / 2, 0, tileSize);
-                    if (!PIXI.isMobile)
+                    if (!PIXI.isMobile.any)
                         bezier.filters = [new PIXI.filters.BlurFilter()]
+
 
                     bezier.position.x = offset.x - tileSize / 1.5 + bubbleSize / 4
                     if (j == 1)
@@ -353,7 +354,7 @@
                     bezier.lineStyle(5, 0xFFD700, 1);
                     bezier.bezierCurveTo(sign * tileSize / 4, tileSize / 2, sign * tileSize / 4, tileSize / 2, 0, tileSize);
 
-                    if (!PIXI.isMobile)
+                    if (!PIXI.isMobile.any)
                         bezier.filters = [new PIXI.filters.BlurFilter()]
 
                     bezier.position.x = offset.x - tileSize / 1.5 + bubbleSize / 4
@@ -391,7 +392,7 @@
             levelTittle.anchor.set(0.5, 0.5);
             levelTittle.x = app.screen.width / 2
             levelTittle.y = app.screen.height / 2.5
-            if (!PIXI.isMobile)
+            if (!PIXI.isMobile.any)
                 levelTittle.filters = [new PIXI.filters.BlurFilter(2)]
 
 
@@ -643,13 +644,14 @@
             bubble.circle.beginFill(0xFFFFFF);
             bubble.circle.drawCircle(0, 0, diameter / 2);
             bubble.circle.endFill();
-            if (!PIXI.isMobile)
+            if (!PIXI.isMobile.any)
                 bubble.circle.filters = [new PIXI.filters.BlurFilter(2)]
             bubble.circle.tint = bubbleColors[type]
             bubble.circle.alpha = .85
             bubble.addChild(bubble.circle)
 
-            bubble.sprite = PIXI.Sprite.from('bubbleTest.png');
+            bubble.sprite = PIXI.Sprite.from('sprites/bubble.png');
+            bubble.sprite.alpha = .85
             bubble.sprite.anchor.set(0.5);
             bubble.sprite.width = diameter
             bubble.sprite.height = diameter
@@ -924,33 +926,9 @@
                             scenes.ChangeScene("menu")
                             break;
 
-                        case 38: // up
-                        case 87:
-                            e.preventDefault()
-                            //moveUP()
-                            break;
-                        case 40: // down
-                        case 83:
-                            e.preventDefault()
-                            moveDOWN()
-                            break;
-                        case 37: // left
-                        case 65:
-                            e.preventDefault()
-                            moveLEFT();
-                            break;
-                        case 39: // right
-                        case 68:
-                            e.preventDefault()
-                            moveRIGHT(1, 0);
-                            break;
                         case 82: // r
                             app.ticker.remove(endTick)
                             initGame()
-                            //reverse()
-                            break;
-                        case 84: // t
-                            //transpose()
                             break;
                         default:
                             break;

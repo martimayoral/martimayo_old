@@ -29,42 +29,763 @@
 <body>
     <script>
         const app = new PIXI.Application({
-            width: 800, height: 600, backgroundColor: 0x1099bb, resolution: window.devicePixelRatio || 1,
+            width: 1600, height: 900, backgroundColor: 0x1099bb, resolution: window.devicePixelRatio || 1,
         });
+
         document.body.appendChild(app.view);
 
-        const container = new PIXI.Container();
+        const defaultLevel = -3
+        const levels = [
+            {
+                canPlay: 1,
+                walls: [
+                    {
+                        start: { x: 200, y: 200 },
+                        end: { x: 500, y: 200 }
+                    },
+                    {
+                        start: { x: 500, y: 200 },
+                        end: { x: 500, y: 500 }
+                    },
+                    {
+                        start: { x: 350, y: 400 },
+                        end: { x: 500, y: 400 }
+                    },
+                    {
+                        start: { x: 500, y: 500 },
+                        end: { x: 700, y: 500 }
+                    },
+                    {
+                        start: { x: 700, y: 200 },
+                        end: { x: 700, y: 500 }
+                    },
+                    {
+                        start: { x: 700, y: 200 },
+                        end: { x: 1000, y: 200 }
+                    },
+                    {
+                        start: { x: 1000, y: 200 },
+                        end: { x: 1150, y: 350 }
+                    },
+                    {
+                        start: { x: 1150, y: 350 },
+                        end: { x: 1150, y: 800 }
+                    },
+                    {
+                        start: { x: 700, y: 800 },
+                        end: { x: 1150, y: 800 }
+                    },
+                    {
+                        start: { x: 500, y: 800 },
+                        end: { x: 200, y: 800 }
+                    },
+                    {
+                        start: { x: 200, y: 200 },
+                        end: { x: 200, y: 800 }
+                    },
+                ]
+            },
+            {
+                canPlay: 3,
+                walls: [
+                    {
+                        start: { x: 100, y: 100 },
+                        end: { x: 500, y: 100 }
+                    },
+                    {
+                        start: { x: 500, y: 100 },
+                        end: { x: 500, y: 200 }
+                    },
+                    {
+                        start: { x: 500, y: 200 },
+                        end: { x: 800, y: 300 }
+                    },
+                    {
+                        start: { x: 100, y: 750 },
+                        end: { x: 100, y: 500 }
+                    },
+                    {
+                        start: { x: 100, y: 100 },
+                        end: { x: 100, y: 250 }
+                    },
+                    {
+                        start: { x: 100, y: 750 },
+                        end: { x: 250, y: 750 }
+                    },
+                    {
+                        start: { x: 250, y: 850 },
+                        end: { x: 250, y: 750 }
+                    },
+                    {
+                        start: { x: 250, y: 850 },
+                        end: { x: 1300, y: 850 }
+                    },
+                    {
+                        start: { x: 550, y: 550 },
+                        end: { x: 300, y: 550 }
+                    },
+                    {
+                        start: { x: 1300, y: 550 },
+                        end: { x: 1300, y: 850 }
+                    },
+                    {
+                        start: { x: 1300, y: 550 },
+                        end: { x: 1200, y: 550 }
+                    },
+                    {
+                        start: { x: 1200, y: 350 },
+                        end: { x: 1200, y: 550 }
+                    },
+                    {
+                        start: { x: 1200, y: 350 },
+                        end: { x: 800, y: 350 }
+                    },
+                    {
+                        start: { x: 800, y: 300 },
+                        end: { x: 800, y: 350 }
+                    },
+                ]
 
-        app.stage.addChild(container);
+            },
+            {
+                canPlay: 2,
+                walls: [
+                    {
+                        start: { x: 100, y: 100 },
+                        end: { x: 700, y: 100 }
+                    },
+                    {
+                        start: { x: 100, y: 700 },
+                        end: { x: 100, y: 100 }
+                    },
+                    {
+                        start: { x: 100, y: 700 },
+                        end: { x: 700, y: 700 }
+                    },
+                    {
+                        start: { x: 200, y: 200 },
+                        end: { x: 200, y: 500 }
+                    },
+                ]
 
-        // Create a new texture
-        const texture = PIXI.Texture.from('bubbleTest.png');
+            },
+            {
+                canPlay: 1,
+                walls: [
+                    {
+                        start: { x: 100, y: 100 },
+                        end: { x: 1000, y: 100 }
+                    },
+                    {
+                        start: { x: 100, y: 700 },
+                        end: { x: 100, y: 100 }
+                    },
+                    {
+                        start: { x: 100, y: 700 },
+                        end: { x: 450, y: 700 }
+                    },
+                    {
+                        start: { x: 1000, y: 700 },
+                        end: { x: 650, y: 700 }
+                    },
+                    {
+                        start: { x: 1000, y: 100 },
+                        end: { x: 1000, y: 700 }
+                    },
+                    {
+                        start: { x: 200, y: 200 },
+                        end: { x: 200, y: 500 }
+                    },
+                    {
+                        start: { x: 200, y: 200 },
+                        end: { x: 800, y: 200 }
+                    },
+                    {
+                        start: { x: 800, y: 500 },
+                        end: { x: 700, y: 400 }
+                    },
+                    {
+                        start: { x: 800, y: 300 },
+                        end: { x: 700, y: 400 }
+                    },
+                    {
+                        start: { x: 900, y: 400 },
+                        end: { x: 800, y: 300 }
+                    },
+                    {
+                        start: { x: 900, y: 400 },
+                        end: { x: 800, y: 500 }
+                    },
+                ]
 
-        // Create a 5x5 grid of bunnies
-        for (let i = 0; i < 25; i++) {
-            const bunny = new PIXI.Sprite(texture);
-            bunny.anchor.set(0.5);
-            bunny.x = (i % 5) * 40;
-            bunny.y = Math.floor(i / 5) * 40;
-            bunny.width = 30
-            bunny.height = 30
-            container.addChild(bunny);
+            },
+        ]
+        var currentLevelNum = 0
+        var lastLevelBeat = 0;
+
+        var scenes = {
+            menuScene: new PIXI.Container(),
+            gameScene: new PIXI.Container(),
+            currentScene: undefined,
+            ChangeScene: (sceneName) => {
+                var scene;
+                const prevScene = scenes.currentScene;
+                switch (prevScene.sceneName) {
+                    case "menu":
+                        app.ticker.add(gameTick);
+                        break;
+                    case "game":
+                        app.ticker.remove(gameTick);
+                        //app.ticker.remove(endTick);
+                        break;
+                    default: break;
+                }
+
+                app.stage.removeChild(prevScene)
+
+                switch (sceneName) {
+                    case "menu":
+                        createMenu()
+                        scene = scenes.menuScene
+                        break;
+                    case "game":
+                        scene = scenes.gameScene
+                        break;
+                    default:
+                        console.error("ERROR: Unknown scene: " + sceneName);
+                }
+                scenes.currentScene = scene
+                app.stage.addChild(scene)
+            }
+        }
+        scenes.currentScene = scenes.menuScene
+
+        scenes.menuScene.sceneName = "menu"
+        scenes.gameScene.sceneName = "game"
+
+        app.stage.addChild(scenes.currentScene)
+
+
+        const baseSize = 100
+
+        // UTILS
+
+        // angle between two lines
+        const getAngle = (a, b, c, d) => {
+            //find vector components
+            const dAx = b.x - a.x;
+            const dAy = b.y - a.y;
+            const dBx = d.x - c.x;
+            const dBy = d.y - c.y;
+            var angle = Math.atan2(dAx * dBy - dAy * dBx, dAx * dBx + dAy * dBy);
+            if (angle < 0) {
+                angle = Math.PI * 2 + angle
+            }
+            return angle /* * (180 / Math.PI) */
         }
 
-        // Move container to the center
-        container.x = app.screen.width / 2;
-        container.y = app.screen.height / 2;
+        // intersection between 2 lines defined by: line1: a,b. line2: c,d
+        const IsIntersecting = (a, b, c, d) => {
+            const denominator = ((b.x - a.x) * (d.y - c.y)) - ((b.y - a.y) * (d.x - c.x));
+            const numerator1 = ((a.y - c.y) * (d.x - c.x)) - ((a.x - c.x) * (d.y - c.y));
+            const numerator2 = ((a.y - c.y) * (b.x - a.x)) - ((a.x - c.x) * (b.y - a.y));
 
-        // Center bunny sprite in local container coordinates
-        container.pivot.x = container.width / 2;
-        container.pivot.y = container.height / 2;
+            // Detect coincident lines
+            if (denominator == 0)
+                return IsIntersecting(a, b, c, { x: d.x + 1, y: d.y + 1 })
 
-        // Listen for animate update
-        app.ticker.add((delta) => {
-            // rotate the container!
-            // use delta to create frame-independent transform
-            container.rotation -= 0.01 * delta;
-        });
+            const r = numerator1 / denominator;
+            const s = numerator2 / denominator;
+
+            return (r >= 0 && r <= 1) && (s >= 0 && s <= 1);
+        }
+
+
+        // GAME
+        scenes.gameScene.bg = new PIXI.Container()
+        scenes.gameScene.addChild(scenes.gameScene.bg)
+
+        scenes.gameScene.gameCanvas = new PIXI.Container()
+        scenes.gameScene.addChild(scenes.gameScene.gameCanvas)
+
+        scenes.gameScene.ui = new PIXI.Container()
+        scenes.gameScene.addChild(scenes.gameScene.ui)
+
+        const textStyle = {
+            "fontSize": baseSize / 1.5,
+            "align": "center",
+            "fontFamily": "Verdana",
+            "fontVariant": "small-caps"
+        }
+
+
+        const createBg = () => {
+
+        }
+        createBg()
+
+
+        const createUI = () => {
+            scenes.gameScene.ui.removeChildren()
+
+        }
+
+
+
+/* 
+        function onDragStart(event) {
+            // store a reference to the data
+            // the reason for this is because of multitouch
+            // we want to track the movement of this particular touch
+            this.data = event.data;
+            this.alpha = 0.5;
+            this.dragging = true;
+        }
+
+        function onDragEnd() {
+            this.alpha = 1;
+            this.dragging = false;
+            // set the interaction data to null
+            this.data = null;
+        }
+
+        function onDragMove() {
+            if (this.dragging) {
+                const newPosition = this.data.getLocalPosition(this.parent);
+                this.x = newPosition.x;
+                this.y = newPosition.y;
+                this.text.text = Math.floor(this.x) + ", " + Math.floor(this.y) + "\n\n"
+            }
+        } */
+
+        const drawPoint = (x, y, d) => {
+            // not repeat points
+            const drawnPoint = points.filter(p => p.x == x && p.y == y)[0]
+            if (drawnPoint) {
+                return drawnPoint
+            }
+
+            const diameter = d || 25
+
+            const point = new PIXI.Container()
+
+            scenes.gameScene.ui.addChild(point);
+            point.x = x
+            point.y = y
+
+            point.graphic = new PIXI.Graphics()
+            point.addChild(point.graphic);
+
+            point.graphic.beginFill(0xFFFFFF);
+            point.graphic.drawCircle(0, 0, diameter);
+            point.graphic.endFill();
+/* 
+            point.buttonMode = true
+            point.interactive = true
+            point.on('pointerdown', onDragStart)
+                .on('pointerup', onDragEnd)
+                .on('pointerupoutside', onDragEnd)
+                .on('pointermove', onDragMove) */
+
+            point.text = new PIXI.Text(
+                x + ", " + y + "\n\n",
+                {
+                    fontSize: 30,
+                    "align": "center"
+                });
+            point.text.x = diameter / 2
+            point.text.y = diameter / 2
+            point.text.pivot.x = diameter / 2;
+            point.text.pivot.y = diameter / 2;
+            point.text.anchor.set(0.5, 0.5);
+            point.addChild(point.text)
+
+            return point
+        }
+
+        const drawLine = (wall, drawCorners) => {
+            const line = new PIXI.Container()
+            scenes.gameScene.gameCanvas.addChild(line)
+
+            line.graphic = new PIXI.Graphics()
+            line.addChild(line.graphic)
+
+            line.graphic.lineStyle(20, 0xFFFFFF, 0.8);
+            line.graphic.moveTo(wall.start.x, wall.start.y);
+            line.graphic.lineTo(wall.end.x, wall.end.y);
+
+            if (drawCorners) {
+                drawPoint(wall.start.x, wall.start.y, 20)
+                drawPoint(wall.end.x, wall.end.y, 20)
+            }
+
+            return line
+        }
+
+        var middlePoint
+
+        var points = []
+        var corners = []
+        
+        const initGame = (num) => {
+            if (scenes.currentScene !== scenes.gameScene)
+                scenes.ChangeScene("game")
+
+            if (num != undefined) {
+                currentLevelNum = num
+            }
+            if (currentLevelNum >= levels.length) {
+                console.log("ERROR: Level " + currentLevelNum + " does not exist")
+                currentLevelNum = levels.length - 1
+            }
+
+            scenes.gameScene.gameCanvas.removeChildren()
+            scenes.gameScene.ui.removeChildren()
+            scenes.gameScene.bg.removeChildren()
+
+            points = []
+            corners = []
+
+            levels[currentLevelNum].walls.forEach(w =>
+                drawLine(w, true)
+            )
+
+            const output = GetCorners(levels[currentLevelNum].walls)
+
+            createGround(output)
+            //CheckPoints()
+        }
+
+
+        CheckPoint = (iPointToCheck, checkState, height, width) => {
+            var pointA
+            var pointB
+
+            switch (checkState) {
+                case "top":
+                    pointA = { x: points[iPointToCheck].x, y: points[iPointToCheck].y - 5 }
+                    pointB = { x: points[iPointToCheck].x, y: points[iPointToCheck].y - height }
+                    break
+                case "right":
+                    pointA = { x: points[iPointToCheck].x + 5, y: points[iPointToCheck].y }
+                    pointB = { x: points[iPointToCheck].x + width, y: points[iPointToCheck].y }
+                    break
+                case "bot":
+                    pointA = { x: points[iPointToCheck].x, y: points[iPointToCheck].y + 5 }
+                    pointB = { x: points[iPointToCheck].x, y: points[iPointToCheck].y + height }
+                    break
+                case "left":
+                    pointA = { x: points[iPointToCheck].x - 5, y: points[iPointToCheck].y }
+                    pointB = { x: points[iPointToCheck].x - width, y: points[iPointToCheck].y }
+                    break
+                default:
+                    return
+            }
+
+            var isIntersecting = false
+            levels[currentLevelNum].walls.forEach(wall => {
+                if (IsIntersecting(wall.start, wall.end, pointA, pointB)) {
+                    isIntersecting = true
+                }
+            })
+
+            if (!isIntersecting)
+                if (!corners.includes(points[iPointToCheck]))
+                    corners.push(points[iPointToCheck])
+
+        }
+
+        createGround = (corners) => {
+            //console.log(corners)
+            const path = []
+
+            const floor = new PIXI.Graphics()
+            scenes.gameScene.bg.floor = floor
+            scenes.gameScene.bg.addChild(floor)
+
+            corners.forEach(corner => {
+                path.push(corner.x)
+                path.push(corner.y)
+            });
+
+            floor.beginFill(0xaaaaaa);
+            floor.drawPolygon(path);
+            floor.endFill();
+            floor.alpha = 0.75
+        }
+
+        function AddPoint(x, y) {
+            // not repeat points
+            const drawnPoint = points.filter(p => p.x == x && p.y == y)[0]
+            if (!drawnPoint) {
+                points.push({ x: x, y: y })
+            }
+        }
+
+        function GetCorners(walls) {
+            var minx = 100000
+            var miny = 100000
+            var maxx = 0
+            var maxy = 0
+
+            walls.forEach(w => {
+                AddPoint(w.start.x, w.start.y)
+                AddPoint(w.end.x, w.end.y)
+
+                minx = Math.min(minx, w.start.x)
+                miny = Math.min(miny, w.start.y)
+                maxx = Math.max(maxx, w.start.x)
+                maxy = Math.max(maxy, w.start.y)
+
+                minx = Math.min(minx, w.end.x)
+                miny = Math.min(miny, w.end.y)
+                maxx = Math.max(maxx, w.end.x)
+                maxy = Math.max(maxy, w.end.y)
+            });
+
+
+            var width = maxx - minx
+            var height = maxy - miny
+            middlePoint = { x: minx + (maxx - minx) / 2, y: miny + (maxy - miny) / 2 }
+
+            var state = "top"
+            var i = 0
+            while (state != "over") {
+                CheckPoint(i, state, height, width)
+
+                i++
+                if (i == points.length) {
+                    //console.log(mycheckState)
+                    switch (state) {
+                        case "top":
+                            state = "right"
+                            break
+                        case "right":
+                            state = "bot"
+                            break
+                        case "bot":
+                            state = "left"
+                            break
+                        case "left":
+                            state = "over"
+                            break
+                        default:
+                            return
+                    }
+                    i = 0
+                }
+            }
+            corners.sort((a, b) => {
+                return getAngle(middlePoint, points[0], middlePoint, a) - getAngle(middlePoint, points[0], middlePoint, b)
+            })
+            return corners
+        }
+
+        const gameTick = () => {
+
+
+
+            /* 
+                        const mousePos = app.renderer.plugins.interaction.mouse.global
+            
+                        const pointA = { x: 100, y: 600 }
+                        const pointB = { x: 500, y: 600 }
+                        const pointC = { x: 600, y: 700 }
+                        const pointD = mousePos
+            
+                        scenes.gameScene.gameCanvas.removeChild(line)
+                        drawLine({
+                            start: pointA,
+                            end: pointB
+                        })
+            
+                        line = drawLine({
+                            start: pointC,
+                            end: pointD
+                        })
+            
+                        if (IsIntersecting(pointA, pointB, pointC, pointD))
+                            line.tint = 0xff4444
+                        console.log(getAngle(pointA, pointB, pointC, pointD))
+             */
+        }
+
+
+
+        //
+
+        // MENU
+        const colors = [
+            // normal
+            0x0000FF, // 0
+            0x00FF00, // 1
+            0xFF0000, // 2
+            0x00FFFF, // 3
+            0xFFFFFF, // 4
+            0x0390FF, // 5
+            0x000000, // 6
+            0x000000, // 7
+            0x000000, // 8
+            0x000000, // 9
+            // spetials
+            0xFFD700, // 10
+            0x000000, // 11
+            0x000000, // 12
+        ]
+
+        const createButton = (size, type, text, textSize, action) => {
+            const button = new PIXI.Container()
+
+            button.circle = new PIXI.Graphics();
+            button.circle.beginFill(0xFFFFFF);
+            button.circle.drawRect(-size / 2, -size / 2, size, size);
+            button.circle.endFill();
+
+            if (!PIXI.isMobile.any)
+                button.circle.filters = [new PIXI.filters.BlurFilter(2)]
+            button.circle.tint = colors[type]
+            button.circle.alpha = .85
+            button.addChild(button.circle)
+
+            button.text = new PIXI.Text(
+                text,
+                {
+                    ...textStyle,
+                    fontSize: textSize
+                });
+            button.text.x = size / 2
+            button.text.y = size / 2
+            button.text.pivot.x = size / 2;
+            button.text.pivot.y = size / 2;
+            button.text.anchor.set(0.5, 0.5);
+            button.addChild(button.text)
+
+            /* 
+                        app.ticker.add(() => {
+                            button.rotation += 0.01
+                        }) */
+
+            button.circle.interactive = true
+            button.circle.buttonMode = true
+            button.circle.on('pointerdown', action)
+
+
+            return button;
+        }
+
+        const createMenu = () => {
+            scenes.menuScene.removeChildren()
+
+            const container = new PIXI.Container();
+            scenes.menuScene.addChild(container)
+
+            const nLevels = levels.length
+            const sqrSize = Math.floor(Math.sqrt(nLevels))
+            for (let i = 0; i < nLevels; i++) {
+                const canPlay = levels[i] && levels[i].canPlay;
+
+                const type = canPlay ? canPlay : -1
+                const bubble = createButton(baseSize, type, i + 1, baseSize / 2, () => initGame(i))
+                if (!canPlay) {
+                    bubble.alpha = 0.5
+                    bubble.circle.interactive = false
+                    bubble.circle.buttonMode = false
+                }
+                bubble.x = (i % sqrSize) * baseSize * 1.2 + baseSize / 2;
+                bubble.y = Math.floor(i / sqrSize) * baseSize * 1.2 + baseSize / 2;
+                bubble.text.style.fill = 0xffffff
+                container.addChild(bubble);
+            }
+
+            // Move container to the center
+            container.x = app.screen.width / 2;
+            container.y = app.screen.height / 2;
+
+            // Center group
+            container.pivot.x = container.width / 2;
+            container.pivot.y = container.height / 2;
+
+            /* const bg = new PIXI.Graphics().beginFill(0x8bc5ff).drawRect(0, 0, container.width, container.height).endFill()
+            bg.alpha = 0.5
+            container.addChild(bg) */
+
+            const levelselectText = new PIXI.Text("Selecciona plano", {
+                ...textStyle,
+                fill: 0xEFEFEF
+            })
+            levelselectText.anchor.set(0.5, 0.5);
+            levelselectText.resolution = devicePixelRatio;
+            levelselectText.x = app.screen.width / 2
+            levelselectText.y = app.screen.height / 2 - container.height / 2 - 150
+
+
+            scenes.menuScene.addChild(levelselectText)
+        }
+
+        createMenu()
+
+        // 
+        if (defaultLevel >= 0)
+            initGame(defaultLevel)
+
+
+        document.addEventListener("keydown", (e) => {
+            //console.log(scenes.currentScene.sceneName)
+            /* if (e.repeat)
+                return; */
+
+            switch (scenes.currentScene.sceneName) {
+                case "menu":
+
+                    switch (e.keyCode) {
+                        case 32: // scpace
+                            initGame()
+                            break;
+                        default: break;
+
+                    }
+
+
+                    break;
+                case "game":
+
+                    switch (e.keyCode) {
+                        case 27: // esc
+                            scenes.ChangeScene("menu")
+                            break;
+
+                        case 38: // up
+                        case 87:
+                            e.preventDefault()
+                            break;
+                        case 40: // down
+                        case 83:
+                            e.preventDefault()
+                            break;
+                        case 37: // left
+                        case 65:
+                            e.preventDefault()
+                            break;
+                        case 39: // right
+                        case 68:
+                            e.preventDefault()
+                            break;
+                        case 82: // r
+                            initGame()
+                            //reverse()
+                            break;
+                        case 84: // t
+                            //transpose()
+                            break;
+                        default:
+                            break;
+                    }
+
+                    break;
+                default: break;
+
+            }
+        })
 
 
 
