@@ -45,7 +45,7 @@
                     x: 250,
                     y: 300,
                 },
-                size: 40,
+                size: 25,
                 map: [
                     {
                         type: "ground",
@@ -127,7 +127,7 @@
                     x: 250,
                     y: 300,
                 },
-                size: 40,
+                size: 25,
                 map: [
                     {
                         type: "ground",
@@ -188,13 +188,13 @@
                     {
                         type: "coin",
                         x: 800,
-                        y: 300,
+                        y: 250,
                     },
                     {
                         type: "enemy",
                         shape: "circle",
                         movement: "linear",
-                        yStart: 250,
+                        yStart: 300,
                         xStart: 600,
                         xEnd: 1000,
                     },
@@ -209,7 +209,7 @@
                     {
                         type: "coin",
                         x: 450,
-                        y: 600,
+                        y: 650,
                     },
                     {
                         type: "enemy",
@@ -224,13 +224,13 @@
                         shape: "circle",
                         movement: "linear",
                         xStart: 250,
-                        yStart: 650,
+                        yStart: 600,
                         xEnd: 650,
                     },
                     {
                         type: "coin",
                         x: 1150,
-                        y: 600,
+                        y: 650,
                     },
                     {
                         type: "enemy",
@@ -244,7 +244,7 @@
                         type: "enemy",
                         shape: "circle",
                         movement: "linear",
-                        yStart: 650,
+                        yStart: 600,
                         xStart: 950,
                         xEnd: 1350,
                     },
@@ -276,7 +276,7 @@
                     x: 250,
                     y: 600,
                 },
-                size: 40,
+                size: 25,
                 map: [
                     {
                         type: "ground",
@@ -291,8 +291,17 @@
                         movement: "linear",
                         yStart: 250,
                         yEnd: 650,
-                        xStart: 450,
-                        xEnd: 850,
+                        xStart: 250,
+                        xEnd: 650,
+                    },
+                    {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        yStart: 250,
+                        yEnd: 650,
+                        xStart: 350,
+                        xEnd: 750,
                     },
                     {
                         type: "enemy",
@@ -309,8 +318,8 @@
                         movement: "linear",
                         yStart: 250,
                         yEnd: 650,
-                        xStart: 750,
-                        xEnd: 1150,
+                        xStart: 650,
+                        xEnd: 1050,
                     },
                     {
                         type: "enemy",
@@ -322,6 +331,15 @@
                         xEnd: 1250,
                     },
                     {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        yStart: 250,
+                        yEnd: 650,
+                        xStart: 950,
+                        xEnd: 1350,
+                    },
+                    {
                         type: "goal",
                         x: 200,
                         y: 550,
@@ -329,34 +347,51 @@
                         h: 150
                     },
                     {
-                        type: "coin",
+                        type: "goal",
                         x: 1250,
-                        y: 400,
+                        y: 200,
+                        w: 150,
+                        h: 150
+                    },
+                    {
+                        type: "coin",
+                        x: 750,
+                        y: 250,
+                    },
+                    {
+                        type: "coin",
+                        x: 850,
+                        y: 650,
                     },
                 ]
             },
             {
                 player: {
-                    x: 250,
+                    x: 200,
                     y: 600,
                 },
-                size: 40,
+                size: 25,
                 map: [
                     {
                         type: "ground",
-                        x: 200,
+                        x: 150,
+                        y: 550,
+                        w: 300,
+                        h: 150
+                    },
+                    {
+                        type: "ground",
+                        x: 300,
                         y: 200,
-                        w: 1200,
+                        w: 1000,
                         h: 500
                     },
                     {
-                        type: "enemy",
-                        shape: "circle",
-                        movement: "linear",
-                        yStart: 250,
-                        yEnd: 650,
-                        xStart: 450,
-                        xEnd: 850,
+                        type: "ground",
+                        x: 1150,
+                        y: 200,
+                        w: 300,
+                        h: 150
                     },
                     {
                         type: "enemy",
@@ -364,8 +399,8 @@
                         movement: "linear",
                         yStart: 250,
                         yEnd: 650,
-                        xStart: 550,
-                        xEnd: 950,
+                        xStart: 400,
+                        xEnd: 800,
                     },
                     {
                         type: "enemy",
@@ -373,8 +408,8 @@
                         movement: "linear",
                         yStart: 250,
                         yEnd: 650,
-                        xStart: 750,
-                        xEnd: 1150,
+                        xStart: 500,
+                        xEnd: 900,
                     },
                     {
                         type: "enemy",
@@ -382,38 +417,36 @@
                         movement: "linear",
                         yStart: 250,
                         yEnd: 650,
-                        xStart: 850,
-                        xEnd: 1250,
+                        xStart: 700,
+                        xEnd: 1100,
                     },
                     {
                         type: "enemy",
                         shape: "circle",
                         movement: "linear",
                         yStart: 250,
-                        xStart: 750,
-                        xEnd: 1150,
-                        x: 1150
-                    },
-                    {
-                        type: "enemy",
-                        shape: "circle",
-                        movement: "linear",
-                        yStart: 650,
-                        xStart: 550,
-                        xEnd: 950,
-                        x: 950
+                        yEnd: 650,
+                        xStart: 800,
+                        xEnd: 1200,
                     },
                     {
                         type: "goal",
-                        x: 200,
+                        x: 150,
                         y: 550,
                         w: 150,
                         h: 150
                     },
                     {
+                        type: "goal",
+                        x: 1300,
+                        y: 200,
+                        w: 150,
+                        h: 150
+                    },
+                    {
                         type: "coin",
-                        x: 1250,
-                        y: 400,
+                        x: 800,
+                        y: 450,
                     },
                 ]
             },
@@ -422,7 +455,7 @@
                     x: 255,
                     y: 555,
                 },
-                size: 40,
+                size: 25,
                 map: [
                     {
                         type: "ground",
@@ -486,7 +519,7 @@
                     x: 230,
                     y: 430,
                 },
-                size: 40,
+                size: 25,
                 map: [
                     {
                         type: "ground",
@@ -651,7 +684,7 @@
                 app.stage.addChild(scene)
             }
         }
-        scenes.gameScene.defaultLevel = false
+        scenes.gameScene.defaultLevel = 3
 
         scenes.currentScene = scenes.menuScene
 
@@ -836,7 +869,7 @@
         grid.texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST
 
         const borderSize = 20
-        const buildGameMap = (map) => {
+        const buildGameMap = (map, size) => {
 
             scenes.gameScene.gameCanvas.elementsBg = new PIXI.Container()
             scenes.gameScene.gameCanvas.addChild(scenes.gameScene.gameCanvas.elementsBg)
@@ -860,8 +893,11 @@
 
             scenes.gameScene.gameCanvas.elementsBg.addChild(tilingSprite);
 
-            tilingSprite.tileScale.x = 25
-            tilingSprite.tileScale.y = 25
+            tilingSprite.tileScale.x = size
+            tilingSprite.tileScale.y = size
+            
+            //console.log(map)
+            
             tilingSprite.tint = 0xf0ffff
 
             map.forEach(element => {
@@ -887,7 +923,7 @@
                         const coin = new PIXI.Graphics()
                         scenes.gameScene.gameCanvas.elements.addChild(coin)
 
-                        element.r = levels[currentLevelNum].size / 2
+                        element.r = size - 5
                         coin.lineStyle(7, 0x000000, 1);
                         coin.beginFill(colors[10])
                         coin.drawCircle(0, 0, element.r)
@@ -941,7 +977,7 @@
                         enemy.beginFill(0x4040ff)
                         switch (element.shape) {
                             case "circle":
-                                element.r = levels[currentLevelNum].size / 2
+                                element.r = size - 5
                                 enemy.drawCircle(0, 0, element.r)
                                 enemy.x = element.x || element.xStart
                                 enemy.y = element.y || element.yStart
@@ -977,25 +1013,26 @@
                                 }
                                 //console.log(enemy.speed)
 
-                                enemy.movement = () => {
-                                    if (enemy.x + enemy.speed.x >= element.xEnd) {
+                                enemy.movement = (deltaTime) => {
+                                    var speed = { x: enemy.speed.x * deltaTime, y: enemy.speed.y * deltaTime }
+                                    if (enemy.x + speed.x >= element.xEnd) {
                                         enemy.x = element.xEnd
 
                                         enemy.speed.x = -enemy.speed.x
-                                    } else if (enemy.x + enemy.speed.x <= element.xStart) {
+                                    } else if (enemy.x + speed.x <= element.xStart) {
                                         enemy.speed.x = -enemy.speed.x
                                     } else {
-                                        enemy.x += enemy.speed.x
+                                        enemy.x += speed.x
                                     }
 
-                                    if (enemy.y + enemy.speed.y >= element.yEnd) {
+                                    if (enemy.y + speed.y >= element.yEnd) {
                                         enemy.y = element.yEnd
 
                                         enemy.speed.y = -enemy.speed.y
-                                    } else if (enemy.y + enemy.speed.y <= element.yStart) {
+                                    } else if (enemy.y + speed.y <= element.yStart) {
                                         enemy.speed.y = -enemy.speed.y
                                     } else {
-                                        enemy.y += enemy.speed.y
+                                        enemy.y += speed.y
                                     }
                                 }
                                 break
@@ -1037,7 +1074,8 @@
 
             // draw map
             const map = levels[currentLevelNum].map || {}
-            buildGameMap(map)
+            const size = levels[currentLevelNum].size || 25
+            buildGameMap(map, size)
 
             // draw player
             const player = levels[currentLevelNum].player || levels[0].player
@@ -1052,7 +1090,7 @@
             playerGraphic
                 .beginFill(0xFFFFFF)
                 .lineStyle(7, 0x000000, 1)
-                .drawRect(0, 0, levels[currentLevelNum].size, levels[currentLevelNum].size)
+                .drawRect(0, 0, size * 2 - 5, size * 2 - 5)
                 .endFill()
 
             playerGraphic.tint = 0xff2222
@@ -1095,12 +1133,12 @@
             if (keys[39] || keys[68])
                 x += 1
 
-            MovePlayer(x, y)
+            MovePlayer(x, y, deltaTime)
 
 
             scenes.gameScene.gameCanvas.elements.children.forEach(element => {
                 if (element.movement)
-                    element.movement()
+                    element.movement(deltaTime)
 
                 if (element.onPlayerInside)
                     element.onPlayerInside()
@@ -1256,11 +1294,13 @@
             return PlayerMapCollisionY(Math.round(newY * 0.4))
         }
 
-        MovePlayer = (x, y) => {
+        MovePlayer = (x, y, deltaTime) => {
             if (x != 0)
-                scenes.gameScene.gameCanvas.player.x += PlayerMapCollisionX(x * playerSpeed)
+                scenes.gameScene.gameCanvas.player.x += PlayerMapCollisionX(x * playerSpeed * deltaTime)
+
             if (y != 0)
-                scenes.gameScene.gameCanvas.player.y += PlayerMapCollisionY(y * playerSpeed)
+                scenes.gameScene.gameCanvas.player.y += PlayerMapCollisionY(y * playerSpeed * deltaTime)
+
         }
 
         createMenu()
