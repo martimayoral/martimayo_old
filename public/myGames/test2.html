@@ -330,9 +330,9 @@
 
         }
 
+        const points = []
 
 
-/* 
         function onDragStart(event) {
             // store a reference to the data
             // the reason for this is because of multitouch
@@ -352,22 +352,28 @@
         function onDragMove() {
             if (this.dragging) {
                 const newPosition = this.data.getLocalPosition(this.parent);
+                newPosition.x = Math.round(newPosition.x / 50) * 50
+                newPosition.y = Math.round(newPosition.y / 50) * 50
+
                 this.x = newPosition.x;
                 this.y = newPosition.y;
+
+                scenes.gameScene.gameCanvas.removeChild(this.line)
+                scenes.gameScene.gameCanvas.removeChild(this.other.line)
+                this.line = drawLine({ x: this.x, y: this.y }, this.other)
+                this.other.line = drawLine
+
                 this.text.text = Math.floor(this.x) + ", " + Math.floor(this.y) + "\n\n"
             }
-        } */
+        }
 
         const drawPoint = (x, y, d) => {
-            // not repeat points
-            const drawnPoint = points.filter(p => p.x == x && p.y == y)[0]
-            if (drawnPoint) {
-                return drawnPoint
-            }
 
             const diameter = d || 25
 
             const point = new PIXI.Container()
+
+            points.push(point)
 
             scenes.gameScene.ui.addChild(point);
             point.x = x
@@ -379,13 +385,7 @@
             point.graphic.beginFill(0xFFFFFF);
             point.graphic.drawCircle(0, 0, diameter);
             point.graphic.endFill();
-/* 
-            point.buttonMode = true
-            point.interactive = true
-            point.on('pointerdown', onDragStart)
-                .on('pointerup', onDragEnd)
-                .on('pointerupoutside', onDragEnd)
-                .on('pointermove', onDragMove) */
+
 
             point.text = new PIXI.Text(
                 x + ", " + y + "\n\n",
@@ -400,10 +400,14 @@
             point.text.anchor.set(0.5, 0.5);
             point.addChild(point.text)
 
+            point.UpdateText = (num) => {
+                point.text.text = point.x + ", " + point.y + "\n" + num + "\n"
+            }
+
             return point
         }
 
-        const drawLine = (wall, drawCorners) => {
+        const drawLine = (start, end) => {
             const line = new PIXI.Container()
             scenes.gameScene.gameCanvas.addChild(line)
 
@@ -411,22 +415,15 @@
             line.addChild(line.graphic)
 
             line.graphic.lineStyle(20, 0xFFFFFF, 0.8);
-            line.graphic.moveTo(wall.start.x, wall.start.y);
-            line.graphic.lineTo(wall.end.x, wall.end.y);
+            line.graphic.moveTo(start.x, start.y);
+            line.graphic.lineTo(end.x, end.y);
 
-            if (drawCorners) {
-                drawPoint(wall.start.x, wall.start.y, 20)
-                drawPoint(wall.end.x, wall.end.y, 20)
-            }
 
             return line
         }
 
         var middlePoint
 
-        var points = []
-        var corners = []
-        
         const initGame = (num) => {
             if (scenes.currentScene !== scenes.gameScene)
                 scenes.ChangeScene("game")
@@ -443,57 +440,37 @@
             scenes.gameScene.ui.removeChildren()
             scenes.gameScene.bg.removeChildren()
 
-            points = []
-            corners = []
+            points.length = 0
 
-            levels[currentLevelNum].walls.forEach(w =>
-                drawLine(w, true)
-            )
+            levels[currentLevelNum].walls.forEach(w => {
+                const line = drawLine(w.start, w.end)
 
-            const output = GetCorners(levels[currentLevelNum].walls)
+                const start = drawPoint(w.start.x, w.start.y, 20)
+                const end = drawPoint(w.end.x, w.end.y, 20)
 
-            createGround(output)
+                start.buttonMode = true
+                start.interactive = true
+                start.line = line
+                start.other = end
+                start.on('pointerdown', onDragStart)
+                    .on('pointerup', onDragEnd)
+                    .on('pointerupoutside', onDragEnd)
+                    .on('pointermove', onDragMove)
+
+                end.buttonMode = true
+                end.interactive = true
+                end.line = line
+                end.other = start
+                end.on('pointerdown', onDragStart)
+                    .on('pointerup', onDragEnd)
+                    .on('pointerupoutside', onDragEnd)
+                    .on('pointermove', onDragMove)
+
+            })
+
             //CheckPoints()
         }
 
-
-        CheckPoint = (iPointToCheck, checkState, height, width) => {
-            var pointA
-            var pointB
-
-            switch (checkState) {
-                case "top":
-                    pointA = { x: points[iPointToCheck].x, y: points[iPointToCheck].y - 5 }
-                    pointB = { x: points[iPointToCheck].x, y: points[iPointToCheck].y - height }
-                    break
-                case "right":
-                    pointA = { x: points[iPointToCheck].x + 5, y: points[iPointToCheck].y }
-                    pointB = { x: points[iPointToCheck].x + width, y: points[iPointToCheck].y }
-                    break
-                case "bot":
-                    pointA = { x: points[iPointToCheck].x, y: points[iPointToCheck].y + 5 }
-                    pointB = { x: points[iPointToCheck].x, y: points[iPointToCheck].y + height }
-                    break
-                case "left":
-                    pointA = { x: points[iPointToCheck].x - 5, y: points[iPointToCheck].y }
-                    pointB = { x: points[iPointToCheck].x - width, y: points[iPointToCheck].y }
-                    break
-                default:
-                    return
-            }
-
-            var isIntersecting = false
-            levels[currentLevelNum].walls.forEach(wall => {
-                if (IsIntersecting(wall.start, wall.end, pointA, pointB)) {
-                    isIntersecting = true
-                }
-            })
-
-            if (!isIntersecting)
-                if (!corners.includes(points[iPointToCheck]))
-                    corners.push(points[iPointToCheck])
-
-        }
 
         createGround = (corners) => {
             //console.log(corners)
@@ -514,100 +491,102 @@
             floor.alpha = 0.75
         }
 
-        function AddPoint(x, y) {
-            // not repeat points
-            const drawnPoint = points.filter(p => p.x == x && p.y == y)[0]
-            if (!drawnPoint) {
-                points.push({ x: x, y: y })
-            }
-        }
-
         function GetCorners(walls) {
-            var minx = 100000
-            var miny = 100000
-            var maxx = 0
-            var maxy = 0
+            const points = []
+
+            function AddPoint(x, y) {
+                // not repeat points
+                const drawnPoint = points.filter(p => p.x == x && p.y == y)[0]
+                if (!drawnPoint) {
+                    points.push({ x: x, y: y })
+                }
+            }
 
             walls.forEach(w => {
                 AddPoint(w.start.x, w.start.y)
                 AddPoint(w.end.x, w.end.y)
-
-                minx = Math.min(minx, w.start.x)
-                miny = Math.min(miny, w.start.y)
-                maxx = Math.max(maxx, w.start.x)
-                maxy = Math.max(maxy, w.start.y)
-
-                minx = Math.min(minx, w.end.x)
-                miny = Math.min(miny, w.end.y)
-                maxx = Math.max(maxx, w.end.x)
-                maxy = Math.max(maxy, w.end.y)
-            });
-
-
-            var width = maxx - minx
-            var height = maxy - miny
-            middlePoint = { x: minx + (maxx - minx) / 2, y: miny + (maxy - miny) / 2 }
-
-            var state = "top"
-            var i = 0
-            while (state != "over") {
-                CheckPoint(i, state, height, width)
-
-                i++
-                if (i == points.length) {
-                    //console.log(mycheckState)
-                    switch (state) {
-                        case "top":
-                            state = "right"
-                            break
-                        case "right":
-                            state = "bot"
-                            break
-                        case "bot":
-                            state = "left"
-                            break
-                        case "left":
-                            state = "over"
-                            break
-                        default:
-                            return
-                    }
-                    i = 0
-                }
-            }
-            corners.sort((a, b) => {
-                return getAngle(middlePoint, points[0], middlePoint, a) - getAngle(middlePoint, points[0], middlePoint, b)
             })
-            return corners
+
+            return points
+        }
+
+
+        // points defined by = [{x, y}, {x, y}, ... ]
+        function GetConvexHull(points) {
+            // there is no inside points
+            if (points.length <= 3) return points
+
+            // Start point: lowest Y coordinate
+            var start = points[0];
+            for (var i = 0; i < points.length; i++) {
+                if (
+                    points[i].y < start.y || // lowest Y coordinate
+                    (points[i].y === start.y && points[i].x < start.x) // if same Y, lowest x
+                )
+                    start = points[i];
+            }
+            /* console.log(start) */
+
+            // Sort them by lowest angle
+            for (var i = 0; i < points.length; i++) {
+                points[i].angleStart = Math.atan2(points[i].y - start.y, points[i].x - start.x)
+            }
+            points.sort((a, b) => {
+                // sort them by the angle with the start point, or by lowest x
+                return a.angleStart === b.angleStart
+                    ? a.x - b.x
+                    : a.angleStart - b.angleStart
+            })
+            
+            //console.log(points)
+
+            // Adding points to the result if they "turn left"
+            var result = [points[0]],
+                len = 1
+
+            for (var i = 1; i < points.length; i++) {
+                var a = result[len - 2],
+                    b = result[len - 1],
+                    point = points[i]
+
+                while (
+                    (len === 1 && b.x === point.x && b.y === point.y) || // same point case
+                    (len > 1 && (b.x - a.x) * (point.y - a.y) <= (b.y - a.y) * (point.x - a.x)) // if it turns right
+                ) {
+                    len--;
+                    b = a;
+                    a = result[len - 2]
+                }
+
+                result[len] = point
+                len++
+            }
+
+            // to close the polygon
+            result.length = len
+
+            return result
         }
 
         const gameTick = () => {
 
 
+            scenes.gameScene.bg.removeChildren()
 
-            /* 
-                        const mousePos = app.renderer.plugins.interaction.mouse.global
-            
-                        const pointA = { x: 100, y: 600 }
-                        const pointB = { x: 500, y: 600 }
-                        const pointC = { x: 600, y: 700 }
-                        const pointD = mousePos
-            
-                        scenes.gameScene.gameCanvas.removeChild(line)
-                        drawLine({
-                            start: pointA,
-                            end: pointB
-                        })
-            
-                        line = drawLine({
-                            start: pointC,
-                            end: pointD
-                        })
-            
-                        if (IsIntersecting(pointA, pointB, pointC, pointD))
-                            line.tint = 0xff4444
-                        console.log(getAngle(pointA, pointB, pointC, pointD))
-             */
+
+            const output = GetConvexHull(points)
+
+            var i = 0
+            points.forEach(point => {
+                if (output.includes(point)) {
+                    point.graphic.tint = 0x33ff33
+                    point.UpdateText(i++)
+                } else {
+                    point.graphic.tint = 0xeeeeee
+                    point.UpdateText("")
+                }
+            })
+            createGround(output)
         }
 
 
