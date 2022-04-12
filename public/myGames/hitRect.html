@@ -42,58 +42,31 @@
             {
                 canPlay: 1,
                 player: {
-                    x: 250,
+                    x: 400,
                     y: 300,
                 },
                 size: 25,
                 map: [
                     {
                         type: "ground",
-                        x: 200,
+                        x: 350,
                         y: 200,
                         w: 600,
                         h: 500
                     },
                     {
                         type: "ground",
-                        x: 700,
+                        x: 850,
                         y: 200,
                         w: 400,
                         h: 200
                     },
                     {
                         type: "ground",
-                        x: 900,
+                        x: 1050,
                         y: 200,
                         w: 200,
                         h: 500
-                    },
-                    {
-                        type: "enemy",
-                        shape: "circle",
-                        movement: "linear",
-                        x: 500,
-                        y: 650,
-                        dist: 400,
-                        rotation: 90
-                    },
-                    {
-                        type: "enemy",
-                        shape: "circle",
-                        movement: "linear",
-                        x: 550,
-                        y: 650,
-                        dist: 400,
-                        rotation: 90
-                    },
-                    {
-                        type: "enemy",
-                        shape: "circle",
-                        movement: "linear",
-                        x: 600,
-                        y: 650,
-                        dist: 400,
-                        rotation: 90
                     },
                     {
                         type: "enemy",
@@ -114,15 +87,42 @@
                         rotation: 90
                     },
                     {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        x: 750,
+                        y: 650,
+                        dist: 400,
+                        rotation: 90
+                    },
+                    {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        x: 800,
+                        y: 650,
+                        dist: 400,
+                        rotation: 90
+                    },
+                    {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        x: 850,
+                        y: 650,
+                        dist: 400,
+                        rotation: 90
+                    },
+                    {
                         type: "goal",
-                        x: 200,
+                        x: 350,
                         y: 200,
                         w: 200,
                         h: 500
                     },
                     {
                         type: "coin",
-                        x: 1000,
+                        x: 1150,
                         y: 600,
                     },
                 ]
@@ -281,6 +281,71 @@
                         h: 200
                     },
                 ]
+            },
+            {
+                player: {
+                    x: 255,
+                    y: 555,
+                },
+                size: 25,
+                map: [
+                    {
+                        type: "ground",
+                        x: 200,
+                        y: 400,
+                        w: 1200,
+                        h: 100
+                    },
+                    {
+                        type: "ground",
+                        x: 200,
+                        y: 400,
+                        w: 150,
+                        h: 250
+                    },
+                    {
+                        type: "ground",
+                        x: 400,
+                        y: 300,
+                        w: 100,
+                        h: 200
+                    },
+                    {
+                        type: "ground",
+                        x: 600,
+                        y: 400,
+                        w: 100,
+                        h: 200
+                    },
+                    {
+                        type: "ground",
+                        x: 800,
+                        y: 300,
+                        w: 100,
+                        h: 200
+                    },
+                    {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        x: 750,
+                        y: 450,
+                        dist: 1000,
+                        centered: true,
+                    },
+                    {
+                        type: "goal",
+                        x: 200,
+                        y: 500,
+                        w: 150,
+                        h: 150
+                    },
+                    {
+                        type: "coin",
+                        x: 1350,
+                        y: 450,
+                    },
+                ],
             },
             {
                 player: {
@@ -501,107 +566,42 @@
             },
             {
                 player: {
-                    x: 255,
-                    y: 555,
-                },
-                size: 25,
-                map: [
-                    {
-                        type: "ground",
-                        x: 200,
-                        y: 400,
-                        w: 1200,
-                        h: 100
-                    },
-                    {
-                        type: "ground",
-                        x: 200,
-                        y: 400,
-                        w: 150,
-                        h: 250
-                    },
-                    {
-                        type: "ground",
-                        x: 400,
-                        y: 300,
-                        w: 100,
-                        h: 200
-                    },
-                    {
-                        type: "ground",
-                        x: 600,
-                        y: 400,
-                        w: 100,
-                        h: 200
-                    },
-                    {
-                        type: "ground",
-                        x: 800,
-                        y: 300,
-                        w: 100,
-                        h: 200
-                    },
-                    {
-                        type: "enemy",
-                        shape: "circle",
-                        movement: "linear",
-                        x: 750,
-                        y: 450,
-                        dist: 1000,
-                        centered: true,
-                    },
-                    {
-                        type: "goal",
-                        x: 200,
-                        y: 500,
-                        w: 150,
-                        h: 150
-                    },
-                    {
-                        type: "coin",
-                        x: 1350,
-                        y: 450,
-                    },
-                ],
-            },
-            {
-                player: {
-                    x: 230,
+                    x: 280,
                     y: 430,
                 },
                 size: 25,
                 map: [
                     {
                         type: "ground",
-                        x: 500,
+                        x: 550,
                         y: 200,
                         w: 500,
                         h: 500
                     },
                     {
                         type: "ground",
-                        x: 550,
+                        x: 600,
                         y: 150,
                         w: 400,
                         h: 600
                     },
                     {
                         type: "ground",
-                        x: 450,
+                        x: 500,
                         y: 250,
                         w: 600,
                         h: 400
                     },
                     {
                         type: "ground",
-                        x: 200,
+                        x: 250,
                         y: 400,
                         w: 1100,
                         h: 100
                     },
                     {
                         type: "ground",
-                        x: 700,
+                        x: 750,
                         y: 100,
                         w: 100,
                         h: 700
@@ -610,7 +610,7 @@
                         type: "enemy",
                         shape: "circle",
                         movement: "linear",
-                        x: 750,
+                        x: 800,
                         y: 450,
                         dist: 600,
                         centered: true
@@ -619,7 +619,7 @@
                         type: "enemy",
                         shape: "circle",
                         movement: "linear",
-                        x: 750,
+                        x: 800,
                         y: 450,
                         dist: 600,
                         offset: 100,
@@ -630,7 +630,7 @@
                         type: "enemy",
                         shape: "circle",
                         movement: "linear",
-                        x: 750,
+                        x: 800,
                         y: 450,
                         dist: 600,
                         offset: 200,
@@ -641,7 +641,7 @@
                         type: "enemy",
                         shape: "circle",
                         movement: "linear",
-                        x: 750,
+                        x: 800,
                         y: 450,
                         dist: 600,
                         offset: 300,
@@ -652,7 +652,7 @@
                         type: "enemy",
                         shape: "circle",
                         movement: "linear",
-                        x: 750,
+                        x: 800,
                         y: 450,
                         dist: 600,
                         offset: 400,
@@ -663,7 +663,7 @@
                         type: "enemy",
                         shape: "circle",
                         movement: "linear",
-                        x: 750,
+                        x: 800,
                         y: 450,
                         dist: 600,
                         offset: 500,
@@ -672,29 +672,34 @@
                     },
                     {
                         type: "goal",
-                        x: 200,
+                        x: 250,
                         y: 400,
                         w: 100,
                         h: 100
                     },
                     {
                         type: "coin",
-                        x: 1250,
+                        x: 1300,
                         y: 450,
                     },
                     {
                         type: "coin",
-                        x: 550,
+                        x: 600,
                         y: 250,
                     },
                     {
                         type: "coin",
-                        x: 550,
+                        x: 600,
                         y: 650,
                     },
                     {
                         type: "coin",
-                        x: 950,
+                        x: 1000,
+                        y: 650,
+                    },
+                    {
+                        type: "coin",
+                        x: 1000,
                         y: 250,
                     },
                 ],
@@ -805,6 +810,268 @@
                     },
                 ],
             },
+            {
+                player: {
+                    x: 1075,
+                    y: 425,
+                },
+                size: 25,
+                map: [
+                    {
+                        type: "ground",
+                        x: 350,
+                        y: 325,
+                        w: 900,
+                        h: 50
+                    },
+                    {
+                        type: "ground",
+                        x: 350,
+                        y: 525,
+                        w: 900,
+                        h: 50
+                    },
+                    {
+                        type: "ground",
+                        x: 925,
+                        y: 250,
+                        w: 50,
+                        h: 400
+                    },
+                    {
+                        type: "ground",
+                        x: 1075,
+                        y: 325,
+                        w: 50,
+                        h: 250
+                    },
+                    {
+                        type: "ground",
+                        x: 1050,
+                        y: 400,
+                        w: 100,
+                        h: 100
+                    },
+                    {
+                        type: "ground",
+                        x: 785,
+                        y: 200,
+                        w: 30,
+                        h: 500
+                    },
+                    {
+                        type: "ground",
+                        x: 625,
+                        y: 250,
+                        w: 50,
+                        h: 400
+                    },
+                    {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        x: 800,
+                        y: 450,
+                        dist: 400,
+                        rotation: 90,
+                        centered: true
+                    },
+                    {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        x: 800,
+                        y: 550,
+                        dist: 800,
+                        centered: true
+                    },
+                    {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        x: 800,
+                        y: 350,
+                        offset: -200,
+                        dist: 800,
+                        centered: true
+                    },
+                    {
+                        type: "goal",
+                        x: 1050,
+                        y: 400,
+                        w: 100,
+                        h: 100
+                    },
+                    {
+                        type: "coin",
+                        x: 450,
+                        y: 550,
+                    },
+                    {
+                        type: "coin",
+                        x: 450,
+                        y: 350,
+                    },
+                ],
+            },
+            {
+                player: {
+                    x: 325,
+                    y: 425,
+                },
+                size: 25,
+                map: [
+                    {
+                        type: "ground",
+                        x: 300,
+                        y: 400,
+                        w: 200,
+                        h: 100
+                    },
+                    {
+                        type: "ground",
+                        x: 400,
+                        y: 200,
+                        w: 800,
+                        h: 500
+                    },
+                    {
+                        type: "ground",
+                        x: 1100,
+                        y: 400,
+                        w: 200,
+                        h: 100
+                    },
+                    {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        x: 500,
+                        y: 450,
+                        dist: 400,
+                        rotation: 90,
+                        centered: true
+                    },
+                    {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        x: 575,
+                        y: 450,
+                        dist: 400,
+                        rotation: -90,
+                        centered: true
+                    },
+                    {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        x: 650,
+                        y: 450,
+                        dist: 400,
+                        rotation: 90,
+                        centered: true
+                    },
+                    {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        x: 725,
+                        y: 450,
+                        dist: 400,
+                        rotation: -90,
+                        centered: true
+                    },
+                    {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        x: 800,
+                        y: 450,
+                        dist: 400,
+                        rotation: 90,
+                        centered: true
+                    },
+                    {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        x: 875,
+                        y: 450,
+                        dist: 400,
+                        rotation: -90,
+                        centered: true
+                    },
+                    {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        x: 950,
+                        y: 450,
+                        dist: 400,
+                        rotation: 90,
+                        centered: true
+                    },
+                    {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        x: 1025,
+                        y: 450,
+                        dist: 400,
+                        rotation: -90,
+                        centered: true
+                    },
+                    {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        x: 1100,
+                        y: 450,
+                        dist: 400,
+                        rotation: 90,
+                        centered: true
+                    },
+                    {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        x: 800,
+                        y: 650,
+                        dist: 700,
+                        centered: true
+                    },
+                    {
+                        type: "enemy",
+                        shape: "circle",
+                        movement: "linear",
+                        x: 800,
+                        y: 250,
+                        dist: 700,
+                        rotation: 180,
+                        centered: true
+                    },
+                    {
+                        type: "goal",
+                        x: 300,
+                        y: 400,
+                        w: 100,
+                        h: 100
+                    },
+                    {
+                        type: "goal",
+                        x: 1200,
+                        y: 400,
+                        w: 100,
+                        h: 100
+                    },
+                    {
+                        type: "coin",
+                        x: 800,
+                        y: 450,
+                    },
+                ]
+            },
         ]
 
 
@@ -821,10 +1088,9 @@
                 const prevScene = scenes.currentScene;
                 switch (prevScene.sceneName) {
                     case "menu":
-                        app.ticker.add(GameTick);
                         break;
                     case "game":
-                        app.ticker.remove(GameTick);
+                        app.ticker.remove(GameTick)
                         app.ticker.remove(EndTick)
                         break;
                     default: break;
@@ -839,15 +1105,17 @@
                         break;
                     case "game":
                         scene = scenes.gameScene
+                        app.ticker.add(GameTick)
                         break;
                     default:
-                        console.error("ERROR: Unknown scene: " + sceneName);
+                        console.error("ERROR: Unknown scene: " + sceneName)
                 }
                 scenes.currentScene = scene
                 app.stage.addChild(scene)
             }
-        }
-        scenes.gameScene.defaultLevel = 99
+        }/* 
+        scenes.gameScene.defaultLevel = 100
+        scenes.gameScene.canPlayAll = true */
 
         scenes.currentScene = scenes.menuScene
 
@@ -858,6 +1126,7 @@
 
 
         const baseSize = 100
+
         // UTILS
 
         IsPlayerInsideRect = (rect, addX, addY) => {
@@ -902,6 +1171,99 @@
 
             return false;
         }
+
+        // JOYSTICK
+        const joystick = new PIXI.Graphics()
+        scenes.gameScene.addChild(joystick)
+        joystick.size = 75
+
+        joystick.beginFill(0xFFFFFF, 0.0001);
+        joystick.drawRect(0, 0, app.screen.width, app.screen.height)
+        joystick.endFill()
+
+        joystick.interactive = true
+
+        joystick.static = new PIXI.Graphics()
+        joystick.static.lineStyle(5, 0xFFFFFF, 0.75);
+        joystick.static.beginFill(0xFFFFFF, 0.5);
+        joystick.static.drawCircle(0, 0, joystick.size)
+        if (!PIXI.isMobile.any)
+            joystick.static.filters = [new PIXI.filters.BlurFilter(2)]
+
+        joystick.draggable = new PIXI.Graphics()
+        joystick.draggable.lineStyle(5, 0xFFFFFF, 0.75);
+        joystick.draggable.beginFill(0xFFFFFF, 0.75);
+        joystick.draggable.drawCircle(0, 0, joystick.size / 2)
+        joystick.draggable.r = joystick.size * 2 / 3
+
+        if (!PIXI.isMobile.any)
+            joystick.draggable.filters = [new PIXI.filters.BlurFilter(2)]
+
+        joystick.static.endFill()
+
+        joystick.moveFn = function (deltaTime) {
+            if (joystick.moveX > .1 || joystick.moveY > .1 || joystick.moveY < .1 || joystick.moveY < .1)
+                MovePlayer(joystick.moveX, joystick.moveY, deltaTime)
+        }
+
+        joystick.onDragStart = function (event) {
+            this.data = event.data
+            this.dragging = true
+
+            this.initialPosition = this.data.getLocalPosition(this.parent)
+
+            scenes.gameScene.addChild(joystick.static)
+            joystick.static.x = this.initialPosition.x
+            joystick.static.y = this.initialPosition.y
+
+            scenes.gameScene.addChild(joystick.draggable)
+            joystick.draggable.x = this.initialPosition.x
+            joystick.draggable.y = this.initialPosition.y
+
+            app.ticker.add(joystick.moveFn)
+            joystick.moveX = 0
+            joystick.moveY = 0
+
+        }
+        joystick.onDragEnd = function () {
+            this.dragging = false
+
+            // set the interaction data to null
+            this.data = null
+
+            scenes.gameScene.removeChild(joystick.static)
+            scenes.gameScene.removeChild(joystick.draggable)
+
+            app.ticker.remove(joystick.moveFn)
+        }
+        joystick.onDragMove = function () {
+            if (this.dragging) {
+                const newPosition = this.data.getLocalPosition(this.parent)
+
+                const m = (newPosition.y - this.initialPosition.y) / (newPosition.x - this.initialPosition.x)
+                const angle = Math.atan(m)
+                const distance =
+                    Math.sqrt(
+                        ((newPosition.x - this.initialPosition.x) * (newPosition.x - this.initialPosition.x)) +
+                        ((newPosition.y - this.initialPosition.y) * (newPosition.y - this.initialPosition.y))) / joystick.draggable.r
+
+                const clampedDistance = Math.max(Math.min(distance, 1), -1)
+
+                const invert = Math.sign(newPosition.x - this.initialPosition.x) < 0 ? -1 : 1
+
+                joystick.moveX = invert * clampedDistance * Math.cos(angle)
+                joystick.moveY = invert * clampedDistance * Math.sin(angle)
+
+                joystick.draggable.x = joystick.draggable.r * joystick.moveX + this.initialPosition.x
+                joystick.draggable.y = joystick.draggable.r * joystick.moveY + this.initialPosition.y
+            }
+        }
+
+        joystick.on('pointerdown', joystick.onDragStart)
+            .on('pointerup', joystick.onDragEnd)
+            .on('pointerupoutside', joystick.onDragEnd)
+            .on('pointermove', joystick.onDragMove)
+
 
         // GAME
 
@@ -1059,7 +1421,27 @@
 
             //console.log(map)
 
-            tilingSprite.tint = 0xf0ffff
+            if (scenes.gameScene.defaultLevel) {
+                scenes.gameScene.bg.removeChildren()
+                for (let i = 0; i < app.screen.width; i += size * 2) {
+                    const graphic = new PIXI.Graphics()
+                    scenes.gameScene.bg.addChild(graphic)
+                    const lineColor = i % (app.screen.width / 8) ? 0xFFFFFF : (i % (app.screen.width / 2) ? 0xFFFF00 : 0xFF5555)
+                    graphic.lineStyle(5, lineColor, 0.5);
+                    graphic.moveTo(i, 0);
+                    graphic.lineTo(i, app.screen.height);
+                }
+                for (let j = 0; j < app.screen.height; j += size * 2) {
+                    const graphic = new PIXI.Graphics()
+                    scenes.gameScene.bg.addChild(graphic)
+                    const lineColor = j % (app.screen.height / 6) ? 0xFFFFFF : 0xFFFF00
+                    graphic.lineStyle(5, lineColor, 0.5);
+                    graphic.moveTo(0, j);
+                    graphic.lineTo(app.screen.width, j);
+                }
+            }
+
+            tilingSprite.tint = 0xc0cccc
 
             map.forEach(element => {
 
@@ -1243,13 +1625,13 @@
             playerGraphic
                 .beginFill(0xFFFFFF)
                 .lineStyle(7, 0x000000, 1)
-                .drawRect(0, 0, size * 2 - 5, size * 2 - 5)
+                .drawRect(0, 0, size * 2 - 3, size * 2 - 3)
                 .endFill()
 
             playerGraphic.tint = 0xff2222
 
-            scenes.gameScene.gameCanvas.player.x = player.x
-            scenes.gameScene.gameCanvas.player.y = player.y
+            scenes.gameScene.gameCanvas.player.x = player.x + 0.5
+            scenes.gameScene.gameCanvas.player.y = player.y + 0.5
 
             //console.log(scenes.gameScene.gameCanvas.player)
         }
@@ -1374,7 +1756,7 @@
 
                 const type = canPlay ? canPlay : -1
                 const button = CreateButton(baseSize, type, i + 1, baseSize / 2, () => initGame(i))
-                if (!canPlay) {
+                if (!canPlay && !scenes.gameScene.canPlayAll) {
                     button.alpha = 0.5
                     button.graphic.interactive = false
                     button.graphic.buttonMode = false
@@ -1447,12 +1829,12 @@
             return PlayerMapCollisionY(Math.round(newY * 0.4))
         }
 
-        MovePlayer = (x, y, deltaTime) => {
+        function MovePlayer(x, y, deltaTime) {
             if (x != 0)
-                scenes.gameScene.gameCanvas.player.x += PlayerMapCollisionX(x * playerSpeed * deltaTime)
+                scenes.gameScene.gameCanvas.player.x += Math.round(PlayerMapCollisionX(x * playerSpeed * deltaTime))
 
             if (y != 0)
-                scenes.gameScene.gameCanvas.player.y += PlayerMapCollisionY(y * playerSpeed * deltaTime)
+                scenes.gameScene.gameCanvas.player.y += Math.round(PlayerMapCollisionY(y * playerSpeed * deltaTime))
 
         }
 
@@ -1491,7 +1873,7 @@
                             initGame(e.key - 1)
                             break
                         case 32: // space
-                            initGame()
+                            initGame(levels[currentLevelNum + 1].canPlay ? currentLevelNum + 1 : currentLevelNum)
                             break;
                         default: break;
 
@@ -1528,6 +1910,9 @@
                             initGame()
                             //reverse()
                             break;
+                        case 32: // space
+                            if (scenes.gameScene.collactablesToGet < 0)
+                                initGame(levels[currentLevelNum + 1].canPlay ? currentLevelNum + 1 : currentLevelNum)
                         case 84: // t
                             //transpose()
                             break;
