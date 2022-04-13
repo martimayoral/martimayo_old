@@ -1239,6 +1239,11 @@
         joystick.onDragMove = function () {
             if (this.dragging) {
                 const newPosition = this.data.getLocalPosition(this.parent)
+                if (newPosition.y == this.initialPosition.y && newPosition.x == this.initialPosition.x) {
+                    joystick.draggable.x = this.initialPosition.x
+                    joystick.draggable.y = this.initialPosition.y
+                    return
+                }
 
                 const m = (newPosition.y - this.initialPosition.y) / (newPosition.x - this.initialPosition.x)
                 const angle = Math.atan(m)
@@ -1668,7 +1673,8 @@
             if (keys[39] || keys[68])
                 x += 1
 
-            MovePlayer(x, y, deltaTime)
+            if (!joystick.dragging)
+                MovePlayer(x, y, deltaTime)
 
 
             scenes.gameScene.gameCanvas.elements.children.forEach(element => {
@@ -1830,12 +1836,13 @@
         }
 
         function MovePlayer(x, y, deltaTime) {
-            if (x != 0)
+            if (x != 0) {
                 scenes.gameScene.gameCanvas.player.x += Math.round(PlayerMapCollisionX(x * playerSpeed * deltaTime))
-
-            if (y != 0)
+            }
+            if (y != 0) {
                 scenes.gameScene.gameCanvas.player.y += Math.round(PlayerMapCollisionY(y * playerSpeed * deltaTime))
 
+            }
         }
 
         createMenu()

@@ -15,6 +15,7 @@ import mmayoGamesLogo from "./mmayogames.png"
 import icon2048 from "./icons/logo2048_128.png"
 import iconLiu from "./icons/lightItUpLogo.png"
 import iconBubbleMatch from "./icons/bubbleMatch.png"
+import hitRect from "./icons/hitRect.png"
 import testLogo from "./icons/tests.png"
 
 
@@ -51,7 +52,7 @@ function Games() {
         },
         hitRect: {
             name: "Hit Rect",
-            icon: testLogo,
+            icon: hitRect,
             gameLink: "/myGames/hitRect.html",
             aspectRatio: 16 / 9
         },
@@ -62,6 +63,8 @@ function Games() {
         const game = games[gameId];
         const [isFullScreen, setIsFullScreen] = useState(false)
         const [liked, setLiked] = useState(false)
+        console.log(game)
+        document.getElementById("favicon").href = game.icon
 
         if (!game)
             return <h3>Unknown game</h3>
@@ -231,6 +234,7 @@ function Games() {
                             <Route exact path={match.path}>
                                 <Container>
                                     <Row>
+                                        {(document.getElementById("favicon").href = iconLiu) === ""}
                                         <h3>All Games</h3>
                                         <hr />
                                         {
